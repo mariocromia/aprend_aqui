@@ -2,6 +2,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     
     // Inicialização de todas as funcionalidades
+    initFAQ();
     initNavigation();
     initScrollEffects();
     initContactForm();
@@ -409,6 +410,11 @@ function initSmoothScrolling() {
     const internalLinks = document.querySelectorAll('a[href^="#"]');
     
     internalLinks.forEach(link => {
+        // Pula links que estão dentro do FAQ
+        if (link.closest('.faq-item')) {
+            return;
+        }
+        
         link.addEventListener('click', function(e) {
             e.preventDefault();
             
@@ -474,6 +480,99 @@ function initPerformanceOptimizations() {
         scrollTimeout = setTimeout(function() {
             // Executa código de scroll otimizado
         }, 16);
+    });
+}
+
+// FAQ Accordion
+function initFAQ() {
+    const faqItems = document.querySelectorAll('.faq-item');
+    
+    console.log('FAQ items found:', faqItems.length);
+    
+    if (faqItems.length === 0) return;
+    
+    faqItems.forEach((item, index) => {
+        const question = item.querySelector('.faq-question');
+        const answer = item.querySelector('.faq-answer');
+        const icon = item.querySelector('.faq-icon i');
+        
+        // Adiciona evento de clique
+        question.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('FAQ item clicked');
+            const isActive = item.classList.contains('active');
+            
+            // Fecha todos os outros itens
+            faqItems.forEach(otherItem => {
+                if (otherItem !== item) {
+                    otherItem.classList.remove('active');
+                    const otherIcon = otherItem.querySelector('.faq-icon i');
+                    const otherAnswer = otherItem.querySelector('.faq-answer');
+                    if (otherIcon) {
+                        otherIcon.className = 'fas fa-plus';
+                    }
+                    if (otherAnswer) {
+                        otherAnswer.style.display = 'none';
+                        otherAnswer.style.opacity = '0';
+                    }
+                }
+            });
+            
+            // Toggle do item atual
+            if (isActive) {
+                item.classList.remove('active');
+                icon.className = 'fas fa-plus';
+                answer.style.display = 'none';
+                answer.style.opacity = '0';
+                console.log('Closing FAQ item');
+            } else {
+                item.classList.add('active');
+                icon.className = 'fas fa-minus';
+                console.log('Opening FAQ item');
+                
+                // Força a exibição como backup
+                answer.style.display = 'block';
+                answer.style.opacity = '1';
+            }
+        });
+        
+        // Adiciona animação de entrada escalonada
+        item.style.animationDelay = `${index * 0.1}s`;
+        item.classList.add('fade-in-up');
+        
+        // Adiciona efeito de hover no ícone
+        question.addEventListener('mouseenter', function() {
+            if (!item.classList.contains('active')) {
+                icon.style.transform = 'scale(1.1)';
+            }
+        });
+        
+        question.addEventListener('mouseleave', function() {
+            if (!item.classList.contains('active')) {
+                icon.style.transform = 'scale(1)';
+            }
+        });
+    });
+    
+    // Adiciona observador de interseção para animações
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    });
+    
+    faqItems.forEach(item => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(30px)';
+        item.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        observer.observe(item);
     });
 }
 
@@ -667,8 +766,7 @@ style.textContent = `
     }
     
     .header.scrolled {
-        background: rgba(255, 255, 255, 0.98);
-        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        /* Estilo removido - agora controlado pelo CSS principal */
     }
     
     .nav-toggle.active .bar:nth-child(1) {

@@ -47,6 +47,9 @@
                             <a href="#pricing" class="nav-link">Preços</a>
                         </li>
                         <li class="nav-item">
+                            <a href="#faq" class="nav-link">FAQ</a>
+                        </li>
+                        <li class="nav-item">
                             <a href="#contact" class="nav-link">Contato</a>
                         </li>
                     </ul>
@@ -335,6 +338,36 @@
                         <p>E-commerce</p>
                     </div>
                 </div>
+                
+                <div class="portfolio-item">
+                    <div class="portfolio-image">
+                        <img src="assets/images/portfolio-5.jpg" alt="Motion Graphics">
+                        <div class="portfolio-overlay">
+                            <a href="#" class="portfolio-link">
+                                <i class="fas fa-play"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="portfolio-info">
+                        <h3>Motion Graphics</h3>
+                        <p>Animação Corporativa</p>
+                    </div>
+                </div>
+                
+                <div class="portfolio-item">
+                    <div class="portfolio-image">
+                        <img src="assets/images/portfolio-6.jpg" alt="Publicidade Digital">
+                        <div class="portfolio-overlay">
+                            <a href="#" class="portfolio-link">
+                                <i class="fas fa-play"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="portfolio-info">
+                        <h3>Publicidade Digital</h3>
+                        <p>Campanha Publicitária</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -420,6 +453,130 @@
                     <i class="fas fa-rocket"></i>
                     Começar Agora
                 </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="faq">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Perguntas Frequentes</h2>
+                <p class="section-subtitle">Tire suas dúvidas sobre nossos serviços de criação de vídeos com IA</p>
+            </div>
+            
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Quanto tempo demora para criar um vídeo?</h3>
+                        <div class="faq-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-content">
+                            <p>Nosso prazo padrão é de 24 horas para a maioria dos projetos. Vídeos mais complexos podem levar até 48-72 horas. Oferecemos também serviço express de 12 horas com custo adicional.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Posso solicitar revisões no meu vídeo?</h3>
+                        <div class="faq-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-content">
+                            <p>Sim! Todos os nossos planos incluem revisões. O plano Básico inclui 2 revisões, o Profissional 5 revisões e o Enterprise revisões ilimitadas. Queremos que você fique 100% satisfeito com o resultado.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Que tipos de vídeo vocês criam?</h3>
+                        <div class="faq-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-content">
+                            <p>Criamos vídeos institucionais, VSL (Video Sales Letter), Reels e Stories para redes sociais, motion graphics, publicidade digital e conteúdo personalizado com IA. Trabalhamos com diversos formatos e estilos.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Como funciona o processo de criação com IA?</h3>
+                        <div class="faq-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-content">
+                            <p>Utilizamos ferramentas de IA de última geração para acelerar o processo criativo. Você fornece o briefing, nossa IA gera múltiplas opções criativas, e nossa equipe especializada refina e personaliza o resultado final.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Qual formato de arquivo recebo?</h3>
+                        <div class="faq-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-content">
+                            <p>Entregamos os vídeos em MP4 (Full HD 1080p), otimizados para redes sociais. Também fornecemos versões específicas para cada plataforma (Instagram, YouTube, TikTok) sem custo adicional.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Vocês oferecem garantia de satisfação?</h3>
+                        <div class="faq-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-content">
+                            <p>Sim! Oferecemos 100% de garantia de satisfação. Se não ficar completamente satisfeito com o resultado final, devolvemos seu dinheiro em até 7 dias após a entrega.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Preciso fornecer algum material?</h3>
+                        <div class="faq-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-content">
+                            <p>Depende do projeto. Para vídeos institucionais, pedimos logo, cores da marca e texto/roteiro. Para VSL, precisamos do roteiro de vendas. Nossa IA pode gerar imagens e elementos visuais, mas materiais próprios sempre enriquecem o resultado.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Como é feito o pagamento?</h3>
+                        <div class="faq-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-content">
+                            <p>Aceitamos PIX, cartão de crédito (até 12x), boleto bancário e transferência. Para planos mensais, o pagamento é recorrente. Para projetos avulsos, cobramos 50% no início e 50% na entrega.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
