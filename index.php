@@ -52,7 +52,20 @@
                         <li class="nav-item">
                             <a href="#contact" class="nav-link">Contato</a>
                         </li>
+                        <li class="nav-item nav-cta-mobile">
+                            <a href="gerador_prompt.php" class="nav-link btn-mobile-cta">
+                                <i class="fas fa-magic"></i>
+                                Gerador de Prompt
+                            </a>
+                        </li>
                     </ul>
+                </div>
+                
+                <div class="nav-cta">
+                    <a href="gerador_prompt.php" class="btn btn-prompt-generator">
+                        <i class="fas fa-magic"></i>
+                        <span>Gerador de Prompt</span>
+                    </a>
                 </div>
                 
                 <div class="nav-toggle" id="nav-toggle">
@@ -281,9 +294,12 @@
             <div class="portfolio-grid">
                 <div class="portfolio-item">
                     <div class="portfolio-image">
-                        <img src="assets/images/portfolio-1.jpg" alt="Vídeo Institucional">
+                        <video muted loop preload="metadata" class="portfolio-video">
+                            <source src="midia/cena02.mp4" type="video/mp4">
+                            <img src="assets/images/portfolio-1.jpg" alt="Vídeo Institucional">
+                        </video>
                         <div class="portfolio-overlay">
-                            <a href="#" class="portfolio-link">
+                            <a href="midia/cena02.mp4" class="portfolio-link" target="_blank">
                                 <i class="fas fa-play"></i>
                             </a>
                         </div>

@@ -319,15 +319,105 @@ function initPortfolioModal() {
     const portfolioItems = document.querySelectorAll('.portfolio-item');
     
     portfolioItems.forEach(item => {
+        const video = item.querySelector('.portfolio-video');
+        
+        // Adiciona funcionalidade de hover para vídeos
+        if (video) {
+            item.addEventListener('mouseenter', function() {
+                video.play().catch(e => console.log('Autoplay prevented'));
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                video.pause();
+                video.currentTime = 0;
+            });
+        }
+        
         item.addEventListener('click', function(e) {
             e.preventDefault();
             
+            const portfolioLink = this.querySelector('.portfolio-link');
             const title = this.querySelector('h3').textContent;
             const category = this.querySelector('p').textContent;
-            const image = this.querySelector('img').src;
+            const image = this.querySelector('img');
             
-            showPortfolioModal(title, category, image);
+            // Verifica se é um link de vídeo
+            if (portfolioLink && portfolioLink.getAttribute('href').endsWith('.mp4')) {
+                const videoSrc = portfolioLink.getAttribute('href');
+                showVideoModal(title, category, videoSrc);
+            } else {
+                const imageSrc = image ? image.src : '';
+                showPortfolioModal(title, category, imageSrc);
+            }
         });
+    });
+}
+
+// Mostra modal de vídeo
+function showVideoModal(title, category, videoSrc) {
+    // Remove modais existentes
+    const existingModals = document.querySelectorAll('.video-modal, .portfolio-modal');
+    existingModals.forEach(modal => modal.remove());
+    
+    // Cria modal de vídeo
+    const modal = document.createElement('div');
+    modal.className = 'video-modal';
+    modal.innerHTML = `
+        <div class="modal-overlay"></div>
+        <div class="modal-content video-modal-content">
+            <div class="modal-header">
+                <h3>${title}</h3>
+                <span class="modal-category">${category}</span>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body video-modal-body">
+                <video controls autoplay style="width: 100%; height: 300px; border-radius: 10px;">
+                    <source src="${videoSrc}" type="video/mp4">
+                    Seu navegador não suporta o elemento de vídeo.
+                </video>
+            </div>
+            <div class="modal-footer">
+                <p>📹 Vídeo criado com tecnologia de IA avançada</p>
+            </div>
+        </div>
+    `;
+    
+    // Estilos do modal de vídeo (tamanho reduzido)
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.3s ease-out;
+    `;
+    
+    // Adiciona ao DOM
+    document.body.appendChild(modal);
+    
+    // Fecha modal ao clicar no overlay ou botão
+    const overlay = modal.querySelector('.modal-overlay');
+    const closeBtn = modal.querySelector('.modal-close');
+    
+    [overlay, closeBtn].forEach(element => {
+        element.addEventListener('click', function() {
+            modal.style.animation = 'fadeOut 0.3s ease-out';
+            setTimeout(() => modal.remove(), 300);
+        });
+    });
+    
+    // Fecha com ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            modal.style.animation = 'fadeOut 0.3s ease-out';
+            setTimeout(() => modal.remove(), 300);
+        }
     });
 }
 
@@ -755,6 +845,32 @@ style.textContent = `
     
     .notification-close:hover {
         background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .video-modal-content {
+        background: white;
+        border-radius: 20px;
+        max-width: 600px;
+        width: 90%;
+        overflow-y: auto;
+        position: relative;
+        z-index: 1;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+    }
+    
+    .video-modal-body {
+        padding: 0;
+        background: #000;
+        border-radius: 0 0 20px 20px;
+    }
+    
+    .video-modal .modal-footer {
+        padding: 1rem 2rem;
+        text-align: center;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        color: #64748b;
+        font-size: 0.9rem;
+        border-radius: 0 0 20px 20px;
     }
     
     .nav-link.active {
