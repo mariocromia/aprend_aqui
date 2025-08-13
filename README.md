@@ -432,3 +432,5 @@ Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalh
 **Desenvolvido com ❤️ pela CentroService**
 
 *Transformando marcas através de vídeos profissionais criados com tecnologia de IA de ponta.*
+#   a p r e n d _ a q u i  
+ 
