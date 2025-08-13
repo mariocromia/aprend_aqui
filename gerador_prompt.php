@@ -44,7 +44,7 @@
                 <div class="progress-fill" id="progressFill"></div>
             </div>
             <div class="step-indicator">
-                <span class="current-step">Etapa <span id="currentStepNumber">1</span> de 6</span>
+                <span class="current-step">Etapa <span id="currentStepNumber">1</span> de 7</span>
                 <span class="step-title" id="currentStepTitle">Tipo de Conteúdo</span>
             </div>
         </section>
@@ -63,7 +63,7 @@
                         <i class="fas fa-chevron-left"></i>
                     </button>
                     <div class="nav-info">
-                        <span id="navSteps">1 / 6</span>
+                        <span id="navSteps">1 / 7</span>
                     </div>
                     <button class="btn-nav btn-next" id="nextBtn">
                         <i class="fas fa-chevron-right"></i>
@@ -132,7 +132,7 @@
                 <div class="help-content">
                     <div class="help-section">
                         <h4><i class="fas fa-list-ol"></i> Etapas</h4>
-                        <p>Siga as 10 etapas para construir seu prompt perfeito. Você pode navegar entre as etapas a qualquer momento.</p>
+                        <p>Siga as 7 etapas para construir seu prompt perfeito. Você pode navegar entre as etapas a qualquer momento.</p>
                     </div>
                     <div class="help-section">
                         <h4><i class="fas fa-mouse-pointer"></i> Seleções</h4>
@@ -177,14 +177,21 @@
                         description: 'Ambientes naturais e paisagens', 
                         icon: 'fas fa-tree',
                         subcategories: [
-                            { id: 'praia', title: 'Praia', description: 'Costa marítima com areia e ondas', icon: 'fas fa-umbrella-beach' },
-                            { id: 'cachoeira', title: 'Cachoeira', description: 'Quedas d\'água em meio à natureza', icon: 'fas fa-water' },
-                            { id: 'montanha', title: 'Montanha', description: 'Picos elevados e vales', icon: 'fas fa-mountain' },
-                            { id: 'deserto', title: 'Deserto', description: 'Paisagens áridas e dunas', icon: 'fas fa-sun' },
-                            { id: 'floresta', title: 'Floresta', description: 'Mata densa com árvores altas', icon: 'fas fa-tree' },
-                            { id: 'canyon', title: 'Canyon', description: 'Formações rochosas profundas', icon: 'fas fa-mountain' },
-                            { id: 'lago', title: 'Lago', description: 'Espelho d\'água tranquilo', icon: 'fas fa-water' },
-                            { id: 'campo_flores', title: 'Campo de Flores', description: 'Pradaria colorida florida', icon: 'fas fa-seedling' }
+                            { id: 'praia_tropical', title: 'Praia Tropical', description: 'Paraíso com palmeiras e águas cristalinas', icon: 'fas fa-umbrella-beach' },
+                            { id: 'cachoeira_gigante', title: 'Cachoeira Gigante', description: 'Queda d\'água majestosa em penhasco', icon: 'fas fa-water' },
+                            { id: 'montanha_nevada', title: 'Montanha Nevada', description: 'Picos cobertos de neve eterna', icon: 'fas fa-mountain' },
+                            { id: 'deserto_sahara', title: 'Deserto do Sahara', description: 'Dunas infinitas sob sol escaldante', icon: 'fas fa-sun' },
+                            { id: 'floresta_amazonica', title: 'Floresta Amazônica', description: 'Selva densa com biodiversidade', icon: 'fas fa-tree' },
+                            { id: 'canyon_colorado', title: 'Canyon do Colorado', description: 'Formação rochosa estratificada', icon: 'fas fa-mountain' },
+                            { id: 'lago_montanha', title: 'Lago de Montanha', description: 'Espelho d\'água em altitude', icon: 'fas fa-water' },
+                            { id: 'campo_lavanda', title: 'Campo de Lavanda', description: 'Ondas roxas aromáticas', icon: 'fas fa-seedling' },
+                            { id: 'vulcao_ativo', title: 'Vulcão Ativo', description: 'Cratera com lava incandescente', icon: 'fas fa-fire' },
+                            { id: 'geleira_antartica', title: 'Geleira Antártica', description: 'Vastidão de gelo azul-cristalino', icon: 'fas fa-snowflake' },
+                            { id: 'savana_africana', title: 'Savana Africana', description: 'Planície com acácias esparsas', icon: 'fas fa-tree' },
+                            { id: 'fiorde_noruegues', title: 'Fiorde Norueguês', description: 'Vale glacial inundado', icon: 'fas fa-water' },
+                            { id: 'bambuzal_asiatico', title: 'Bambuzal Asiático', description: 'Floresta de bambu zen', icon: 'fas fa-leaf' },
+                            { id: 'oasis_desertico', title: 'Oásis Desértico', description: 'Refúgio verdejante no deserto', icon: 'fas fa-tint' },
+                            { id: 'taiga_siberiana', title: 'Taiga Siberiana', description: 'Floresta boreal congelada', icon: 'fas fa-tree' }
                         ]
                     },
                     { 
@@ -193,14 +200,20 @@
                         description: 'Ambientes de cidade e construções', 
                         icon: 'fas fa-city',
                         subcategories: [
-                            { id: 'centro_cidade', title: 'Centro da Cidade', description: 'Área central urbana movimentada', icon: 'fas fa-building' },
-                            { id: 'arranha_ceus', title: 'Arranha-céus', description: 'Edifícios altos modernos', icon: 'fas fa-city' },
-                            { id: 'rua_comercial', title: 'Rua Comercial', description: 'Via com lojas e comércios', icon: 'fas fa-store' },
-                            { id: 'ponte', title: 'Ponte', description: 'Estrutura sobre rio ou vale', icon: 'fas fa-bridge' },
-                            { id: 'parque_urbano', title: 'Parque Urbano', description: 'Área verde na cidade', icon: 'fas fa-tree' },
-                            { id: 'estacao_trem', title: 'Estação de Trem', description: 'Terminal ferroviário', icon: 'fas fa-train' },
-                            { id: 'aeroporto', title: 'Aeroporto', description: 'Terminal de aviação', icon: 'fas fa-plane' },
-                            { id: 'porto', title: 'Porto', description: 'Área portuária marítima', icon: 'fas fa-ship' }
+                            { id: 'manhattan_ny', title: 'Manhattan NY', description: 'Selva de concreto e vidro', icon: 'fas fa-building' },
+                            { id: 'tokyo_neon', title: 'Tóquio Neon', description: 'Metrópole futurística japonesa', icon: 'fas fa-city' },
+                            { id: 'veneza_canais', title: 'Veneza dos Canais', description: 'Cidade aquática histórica', icon: 'fas fa-water' },
+                            { id: 'paris_boulevards', title: 'Boulevards de Paris', description: 'Elegância urbana francesa', icon: 'fas fa-road' },
+                            { id: 'favela_brasileira', title: 'Favela Brasileira', description: 'Comunidade colorida nas encostas', icon: 'fas fa-home' },
+                            { id: 'dubai_futurista', title: 'Dubai Futurista', description: 'Oásis moderno no deserto', icon: 'fas fa-building' },
+                            { id: 'mercado_marrakech', title: 'Mercado de Marrakech', description: 'Bazar árabe tradicional', icon: 'fas fa-store' },
+                            { id: 'chinatown_hong_kong', title: 'Chinatown Hong Kong', description: 'Densidade urbana asiática', icon: 'fas fa-city' },
+                            { id: 'estacao_central', title: 'Estação Central', description: 'Terminal ferroviário histórico', icon: 'fas fa-train' },
+                            { id: 'ponte_golden_gate', title: 'Ponte Golden Gate', description: 'Ícone arquitetônico suspenso', icon: 'fas fa-bridge' },
+                            { id: 'praca_publica', title: 'Praça Pública', description: 'Coração social da cidade', icon: 'fas fa-fountain' },
+                            { id: 'beco_graffiti', title: 'Beco com Graffiti', description: 'Arte urbana em vielas', icon: 'fas fa-spray-can' },
+                            { id: 'rooftop_urbano', title: 'Rooftop Urbano', description: 'Terraço com vista da cidade', icon: 'fas fa-building' },
+                            { id: 'metro_subterraneo', title: 'Metrô Subterrâneo', description: 'Túneis de transporte urbano', icon: 'fas fa-subway' }
                         ]
                     },
                     { 
@@ -209,14 +222,20 @@
                         description: 'Ambientes fechados e construções internas', 
                         icon: 'fas fa-home',
                         subcategories: [
-                            { id: 'sala_estar', title: 'Sala de Estar', description: 'Ambiente de convivência familiar', icon: 'fas fa-couch' },
-                            { id: 'cozinha', title: 'Cozinha', description: 'Espaço culinário moderno', icon: 'fas fa-utensils' },
-                            { id: 'quarto', title: 'Quarto', description: 'Dormitório aconchegante', icon: 'fas fa-bed' },
-                            { id: 'escritorio', title: 'Escritório', description: 'Ambiente de trabalho', icon: 'fas fa-desktop' },
-                            { id: 'biblioteca', title: 'Biblioteca', description: 'Espaço repleto de livros', icon: 'fas fa-book' },
-                            { id: 'atelier', title: 'Ateliê', description: 'Estúdio artístico criativo', icon: 'fas fa-palette' },
-                            { id: 'cafe', title: 'Café', description: 'Cafeteria aconchegante', icon: 'fas fa-coffee' },
-                            { id: 'museu', title: 'Museu', description: 'Galeria de arte ou história', icon: 'fas fa-university' }
+                            { id: 'loft_industrial', title: 'Loft Industrial', description: 'Espaço amplo com estética fabril', icon: 'fas fa-industry' },
+                            { id: 'penthouse_luxo', title: 'Penthouse de Luxo', description: 'Cobertura sofisticada', icon: 'fas fa-crown' },
+                            { id: 'cozinha_rustica', title: 'Cozinha Rústica', description: 'Ambiente campestre acolhedor', icon: 'fas fa-utensils' },
+                            { id: 'biblioteca_antiga', title: 'Biblioteca Antiga', description: 'Acervo centenário em madeira', icon: 'fas fa-book-open' },
+                            { id: 'atelier_artista', title: 'Ateliê de Artista', description: 'Estúdio criativo com luz natural', icon: 'fas fa-palette' },
+                            { id: 'spa_zen', title: 'Spa Zen', description: 'Santuário de relaxamento', icon: 'fas fa-leaf' },
+                            { id: 'wine_cellar', title: 'Adega de Vinhos', description: 'Cave subterrânea para vinhos', icon: 'fas fa-wine-bottle' },
+                            { id: 'home_theater', title: 'Home Theater', description: 'Cinema particular luxuoso', icon: 'fas fa-film' },
+                            { id: 'greenhouse', title: 'Estufa/Greenhouse', description: 'Jardim interno climatizado', icon: 'fas fa-seedling' },
+                            { id: 'laboratory', title: 'Laboratório', description: 'Espaço científico high-tech', icon: 'fas fa-flask' },
+                            { id: 'dance_studio', title: 'Estúdio de Dança', description: 'Sala com espelhos e barras', icon: 'fas fa-music' },
+                            { id: 'recording_studio', title: 'Estúdio de Gravação', description: 'Cabine acústica profissional', icon: 'fas fa-microphone' },
+                            { id: 'game_room', title: 'Sala de Jogos', description: 'Ambiente gamer com neon', icon: 'fas fa-gamepad' },
+                            { id: 'chapel_interior', title: 'Interior de Capela', description: 'Espaço sacro contemplativo', icon: 'fas fa-cross' }
                         ]
                     },
                     { 
@@ -225,14 +244,100 @@
                         description: 'Ambientes mágicos e fantásticos', 
                         icon: 'fas fa-magic',
                         subcategories: [
-                            { id: 'castelo_magico', title: 'Castelo Mágico', description: 'Fortaleza encantada', icon: 'fas fa-chess-rook' },
-                            { id: 'floresta_encantada', title: 'Floresta Encantada', description: 'Mata com seres mágicos', icon: 'fas fa-tree' },
-                            { id: 'portal_dimensional', title: 'Portal Dimensional', description: 'Passagem entre mundos', icon: 'fas fa-portal-exit' },
-                            { id: 'cidade_flutuante', title: 'Cidade Flutuante', description: 'Metrópole nas nuvens', icon: 'fas fa-cloud' },
-                            { id: 'underwater_kingdom', title: 'Reino Subaquático', description: 'Civilização no fundo do mar', icon: 'fas fa-fish' },
-                            { id: 'cristal_cave', title: 'Caverna de Cristal', description: 'Gruta com formações luminosas', icon: 'fas fa-gem' },
-                            { id: 'sky_temple', title: 'Templo Celestial', description: 'Santuário nas alturas', icon: 'fas fa-place-of-worship' },
-                            { id: 'magic_garden', title: 'Jardim Mágico', description: 'Horto com plantas fantásticas', icon: 'fas fa-seedling' }
+                            { id: 'castelo_nuvens', title: 'Castelo nas Nuvens', description: 'Fortaleza flutuante etérea', icon: 'fas fa-cloud' },
+                            { id: 'floresta_bioluminescente', title: 'Floresta Bioluminescente', description: 'Mata que brilha no escuro', icon: 'fas fa-tree' },
+                            { id: 'portal_temporal', title: 'Portal Temporal', description: 'Passagem através do tempo', icon: 'fas fa-clock' },
+                            { id: 'cidade_steampunk', title: 'Cidade Steampunk', description: 'Metrópole vitoriana futurista', icon: 'fas fa-cogs' },
+                            { id: 'palacio_atlantico', title: 'Palácio Atlântico', description: 'Reino subaquático majestoso', icon: 'fas fa-fish' },
+                            { id: 'caverna_dragoes', title: 'Caverna dos Dragões', description: 'Covil repleto de tesouros', icon: 'fas fa-dragon' },
+                            { id: 'observatorio_espacial', title: 'Observatório Espacial', description: 'Torre celestial para as estrelas', icon: 'fas fa-telescope' },
+                            { id: 'jardim_suspenso', title: 'Jardins Suspensos', description: 'Paraíso botânico aéreo', icon: 'fas fa-seedling' },
+                            { id: 'biblioteca_infinita', title: 'Biblioteca Infinita', description: 'Acervo interdimensional', icon: 'fas fa-infinity' },
+                            { id: 'vulcao_magico', title: 'Vulcão Mágico', description: 'Cratera com energia arcana', icon: 'fas fa-fire' },
+                            { id: 'labirinto_cristal', title: 'Labirinto de Cristal', description: 'Maze refratário luminoso', icon: 'fas fa-gem' },
+                            { id: 'nave_espacial', title: 'Nave Espacial', description: 'Interior futurístico alienígena', icon: 'fas fa-rocket' },
+                            { id: 'dimensao_sombrias', title: 'Dimensão das Sombras', description: 'Plano etéreo sombrio', icon: 'fas fa-ghost' },
+                            { id: 'templo_elementais', title: 'Templo dos Elementais', description: 'Santuário dos quatro elementos', icon: 'fas fa-yin-yang' }
+                        ]
+                    },
+                    { 
+                        id: 'historico', 
+                        title: 'Histórico', 
+                        description: 'Épocas e civilizações do passado', 
+                        icon: 'fas fa-landmark',
+                        subcategories: [
+                            { id: 'coliseu_romano', title: 'Coliseu Romano', description: 'Arena gladiatorial épica', icon: 'fas fa-chess-rook' },
+                            { id: 'piramide_egipcia', title: 'Pirâmide Egípcia', description: 'Monumento faraônico grandioso', icon: 'fas fa-mountain' },
+                            { id: 'castelo_medieval', title: 'Castelo Medieval', description: 'Fortaleza da Idade Média', icon: 'fas fa-chess-rook' },
+                            { id: 'templo_grego', title: 'Templo Grego', description: 'Arquitetura clássica ateniense', icon: 'fas fa-university' },
+                            { id: 'vila_viking', title: 'Vila Viking', description: 'Assentamento nórdico guerreiro', icon: 'fas fa-ship' },
+                            { id: 'pagode_chines', title: 'Pagode Chinês', description: 'Torre oriental tradicional', icon: 'fas fa-pagoda' },
+                            { id: 'machu_picchu', title: 'Machu Picchu', description: 'Cidade inca perdida', icon: 'fas fa-mountain' },
+                            { id: 'stonehenge', title: 'Stonehenge', description: 'Círculo megalítico misterioso', icon: 'fas fa-circle' },
+                            { id: 'palacio_versalhes', title: 'Palácio de Versalhes', description: 'Opulência barroca francesa', icon: 'fas fa-crown' },
+                            { id: 'cidade_pompeia', title: 'Cidade de Pompeia', description: 'Ruínas preservadas pelo vulcão', icon: 'fas fa-fire' },
+                            { id: 'taj_mahal', title: 'Taj Mahal', description: 'Mausoléu de mármore indiano', icon: 'fas fa-mosque' },
+                            { id: 'muralha_china', title: 'Muralha da China', description: 'Fortificação milenar serpenteante', icon: 'fas fa-wall-brick' }
+                        ]
+                    },
+                    { 
+                        id: 'futurista', 
+                        title: 'Futurista', 
+                        description: 'Visões do amanhã e ficção científica', 
+                        icon: 'fas fa-rocket',
+                        subcategories: [
+                            { id: 'metropole_2080', title: 'Metrópole 2080', description: 'Cidade neo-futurística', icon: 'fas fa-city' },
+                            { id: 'estacao_espacial', title: 'Estação Espacial', description: 'Habitat orbital avançado', icon: 'fas fa-satellite' },
+                            { id: 'laboratorio_genetico', title: 'Laboratório Genético', description: 'Centro de bioengenharia', icon: 'fas fa-dna' },
+                            { id: 'datacenter_quantic', title: 'Datacenter Quântico', description: 'Supercomputador holográfico', icon: 'fas fa-microchip' },
+                            { id: 'fazenda_vertical', title: 'Fazenda Vertical', description: 'Agricultura hidropônica urbana', icon: 'fas fa-seedling' },
+                            { id: 'portal_teletransporte', title: 'Portal Teletransporte', description: 'Tecnologia de viagem instantânea', icon: 'fas fa-bolt' },
+                            { id: 'cidade_marte', title: 'Cidade em Marte', description: 'Colônia no planeta vermelho', icon: 'fas fa-globe-mars' },
+                            { id: 'fabrica_robots', title: 'Fábrica de Robôs', description: 'Linha de produção automatizada', icon: 'fas fa-robot' },
+                            { id: 'habitat_lunar', title: 'Habitat Lunar', description: 'Base científica na Lua', icon: 'fas fa-moon' },
+                            { id: 'cybercafe_neural', title: 'Cybercafé Neural', description: 'Interface cérebro-computador', icon: 'fas fa-brain' },
+                            { id: 'parque_holografico', title: 'Parque Holográfico', description: 'Recreação em realidade virtual', icon: 'fas fa-vr-cardboard' },
+                            { id: 'nave_intergalactica', title: 'Nave Intergaláctica', description: 'Explorador do espaço profundo', icon: 'fas fa-space-shuttle' }
+                        ]
+                    },
+                    { 
+                        id: 'subaquatico', 
+                        title: 'Subaquático', 
+                        description: 'Mundos aquáticos e oceânicos', 
+                        icon: 'fas fa-fish',
+                        subcategories: [
+                            { id: 'recife_coral', title: 'Recife de Coral', description: 'Ecossistema marinho colorido', icon: 'fas fa-seedling' },
+                            { id: 'abismo_oceanico', title: 'Abismo Oceânico', description: 'Profundezas misteriosas', icon: 'fas fa-water' },
+                            { id: 'navio_naufragado', title: 'Navio Naufragado', description: 'Destroços históricos submersos', icon: 'fas fa-ship' },
+                            { id: 'cidade_atlantis', title: 'Cidade de Atlântis', description: 'Civilização subaquática perdida', icon: 'fas fa-city' },
+                            { id: 'caverna_submarina', title: 'Caverna Submarina', description: 'Gruta inundada com ar', icon: 'fas fa-mountain' },
+                            { id: 'kelp_forest', title: 'Floresta de Kelp', description: 'Algas gigantes ondulantes', icon: 'fas fa-tree' },
+                            { id: 'fonte_termal', title: 'Fonte Termal Submarina', description: 'Oásis geotérmico no oceano', icon: 'fas fa-fire' },
+                            { id: 'banco_tubaroes', title: 'Banco de Tubarões', description: 'Predadores em formação', icon: 'fas fa-fish' },
+                            { id: 'jardim_anemonas', title: 'Jardim de Anêmonas', description: 'Flores do mar dançantes', icon: 'fas fa-seedling' },
+                            { id: 'laboratorio_subaquatico', title: 'Laboratório Subaquático', description: 'Estação de pesquisa marinha', icon: 'fas fa-flask' },
+                            { id: 'cemiterio_baleias', title: 'Cemitério de Baleias', description: 'Ossadas no fundo oceânico', icon: 'fas fa-skull' },
+                            { id: 'vulcao_submarino', title: 'Vulcão Submarino', description: 'Erupção nas profundezas', icon: 'fas fa-fire' }
+                        ]
+                    },
+                    { 
+                        id: 'aereo', 
+                        title: 'Aéreo', 
+                        description: 'Alturas, céus e atmosfera', 
+                        icon: 'fas fa-plane',
+                        subcategories: [
+                            { id: 'topo_everest', title: 'Topo do Everest', description: 'Pico mais alto do mundo', icon: 'fas fa-mountain' },
+                            { id: 'balao_ar_quente', title: 'Balão de Ar Quente', description: 'Voo panorâmico sereno', icon: 'fas fa-hot-tub' },
+                            { id: 'cockpit_avioes', title: 'Cockpit de Aviões', description: 'Cabine de comando aérea', icon: 'fas fa-plane' },
+                            { id: 'base_nuvens', title: 'Base nas Nuvens', description: 'Plataforma flutuante etérea', icon: 'fas fa-cloud' },
+                            { id: 'paraglider_voo', title: 'Voo de Paraglider', description: 'Planando entre montanhas', icon: 'fas fa-parachute-box' },
+                            { id: 'tempestade_raios', title: 'Tempestade com Raios', description: 'Fenômeno elétrico atmosférico', icon: 'fas fa-bolt' },
+                            { id: 'aurora_boreal', title: 'Aurora Boreal', description: 'Luzes dançantes polares', icon: 'fas fa-star' },
+                            { id: 'dirigivel_vintage', title: 'Dirigível Vintage', description: 'Aeronave retrô elegante', icon: 'fas fa-plane' },
+                            { id: 'plataforma_petroleo', title: 'Plataforma Petrolífera', description: 'Estrutura oceânica elevada', icon: 'fas fa-industry' },
+                            { id: 'torre_controle', title: 'Torre de Controle', description: 'Central de tráfego aéreo', icon: 'fas fa-tower' },
+                            { id: 'parapente_montanha', title: 'Parapente na Montanha', description: 'Voo livre alpino', icon: 'fas fa-mountain' },
+                            { id: 'helicoptero_resgate', title: 'Helicóptero Resgate', description: 'Missão aérea heroica', icon: 'fas fa-helicopter' }
                         ]
                     }
                 ]
@@ -287,6 +392,113 @@
                     { id: 'textura', title: 'Texturas', description: 'Texturas detalhadas e táteis', icon: 'fas fa-th' },
                     { id: 'profundidade', title: 'Profundidade', description: 'Efeito de profundidade de campo', icon: 'fas fa-layer-group' },
                     { id: 'atmosfera', title: 'Atmosfera', description: 'Elementos atmosféricos como névoa', icon: 'fas fa-cloud-meatball' }
+                ]
+            },
+            7: {
+                title: 'Seres',
+                description: 'Defina os personagens e criaturas da sua criação',
+                icon: 'fas fa-users',
+                options: [
+                    { 
+                        id: 'humanos', 
+                        title: 'Humanos', 
+                        description: 'Personagens humanos em diferentes estilos', 
+                        icon: 'fas fa-user',
+                        subcategories: [
+                            { id: 'homem_jovem', title: 'Homem Jovem', description: 'Entre 18-30 anos, físico atlético', icon: 'fas fa-male' },
+                            { id: 'mulher_jovem', title: 'Mulher Jovem', description: 'Entre 18-30 anos, elegante e moderna', icon: 'fas fa-female' },
+                            { id: 'homem_maduro', title: 'Homem Maduro', description: 'Entre 40-60 anos, experiente e confiante', icon: 'fas fa-user-tie' },
+                            { id: 'mulher_madura', title: 'Mulher Madura', description: 'Entre 40-60 anos, sofisticada e sábia', icon: 'fas fa-user-graduate' },
+                            { id: 'crianca_menino', title: 'Criança Menino', description: 'Entre 5-12 anos, brincalhão e curioso', icon: 'fas fa-child' },
+                            { id: 'crianca_menina', title: 'Criança Menina', description: 'Entre 5-12 anos, alegre e expressiva', icon: 'fas fa-baby' },
+                            { id: 'idoso', title: 'Idoso', description: 'Acima de 65 anos, sábio e respeitável', icon: 'fas fa-user-clock' },
+                            { id: 'idosa', title: 'Idosa', description: 'Acima de 65 anos, carinhosa e experiente', icon: 'fas fa-female' },
+                            { id: 'executivo', title: 'Executivo', description: 'Profissional em traje formal', icon: 'fas fa-briefcase' },
+                            { id: 'artista', title: 'Artista', description: 'Criativo com estilo bohemio', icon: 'fas fa-palette' },
+                            { id: 'atleta', title: 'Atleta', description: 'Físico musculoso e definido', icon: 'fas fa-running' },
+                            { id: 'estudante', title: 'Estudante', description: 'Jovem acadêmico com livros', icon: 'fas fa-graduation-cap' }
+                        ]
+                    },
+                    { 
+                        id: 'animais', 
+                        title: 'Animais', 
+                        description: 'Criaturas do reino animal', 
+                        icon: 'fas fa-paw',
+                        subcategories: [
+                            { id: 'cachorro_labrador', title: 'Cachorro Labrador', description: 'Cão amigável e leal, porte grande', icon: 'fas fa-dog' },
+                            { id: 'gato_persa', title: 'Gato Persa', description: 'Felino elegante de pelo longo', icon: 'fas fa-cat' },
+                            { id: 'cavalo_arabe', title: 'Cavalo Árabe', description: 'Equino nobre e majestoso', icon: 'fas fa-horse' },
+                            { id: 'leao_africano', title: 'Leão Africano', description: 'Rei da selva, poderoso e imponente', icon: 'fas fa-chess-king' },
+                            { id: 'aguia_real', title: 'Águia Real', description: 'Ave de rapina majestosa em voo', icon: 'fas fa-dove' },
+                            { id: 'lobo_cinzento', title: 'Lobo Cinzento', description: 'Predador selvagem e astuto', icon: 'fas fa-wolf-pack-battalion' },
+                            { id: 'urso_pardo', title: 'Urso Pardo', description: 'Gigante da floresta, forte e imponente', icon: 'fas fa-bear' },
+                            { id: 'elefante_africano', title: 'Elefante Africano', description: 'Colosso gentil com presas de marfim', icon: 'fas fa-elephant' },
+                            { id: 'golfinho_nariz_garrafa', title: 'Golfinho Nariz-de-garrafa', description: 'Mamífero marinho inteligente', icon: 'fas fa-fish' },
+                            { id: 'tigre_siberiano', title: 'Tigre Siberiano', description: 'Felino listrado feroz e solitário', icon: 'fas fa-cat' },
+                            { id: 'panda_gigante', title: 'Panda Gigante', description: 'Urso preto e branco adorável', icon: 'fas fa-yin-yang' },
+                            { id: 'coruja_buraqueira', title: 'Coruja Buraqueira', description: 'Ave noturna sábia e observadora', icon: 'fas fa-eye' }
+                        ]
+                    },
+                    { 
+                        id: 'fantasticos', 
+                        title: 'Seres Fantásticos', 
+                        description: 'Criaturas mágicas e mitológicas', 
+                        icon: 'fas fa-dragon',
+                        subcategories: [
+                            { id: 'dragao_fogo', title: 'Dragão de Fogo', description: 'Criatura alada que cospe chamas', icon: 'fas fa-fire' },
+                            { id: 'unicornio_branco', title: 'Unicórnio Branco', description: 'Cavalo mágico com chifre espiralado', icon: 'fas fa-horse-head' },
+                            { id: 'fenix_dourada', title: 'Fênix Dourada', description: 'Ave imortal que renasce das cinzas', icon: 'fas fa-dove' },
+                            { id: 'elfo_florestal', title: 'Elfo Florestal', description: 'Ser mágico guardião da natureza', icon: 'fas fa-tree' },
+                            { id: 'sereia_oceano', title: 'Sereia do Oceano', description: 'Meio mulher, meio peixe, encantadora', icon: 'fas fa-fish' },
+                            { id: 'centauro_guerreiro', title: 'Centauro Guerreiro', description: 'Meio homem, meio cavalo, nobre', icon: 'fas fa-chess-knight' },
+                            { id: 'grifo_real', title: 'Grifo Real', description: 'Meio águia, meio leão, majestoso', icon: 'fas fa-crow' },
+                            { id: 'pegasus_alado', title: 'Pégasus Alado', description: 'Cavalo branco com asas divinas', icon: 'fas fa-feather' },
+                            { id: 'minotauro_labirinto', title: 'Minotauro do Labirinto', description: 'Meio homem, meio touro, guardião', icon: 'fas fa-chess-rook' },
+                            { id: 'sphinx_enigmatica', title: 'Esfinge Enigmática', description: 'Criatura com corpo de leão e cabeça humana', icon: 'fas fa-question-circle' },
+                            { id: 'anjo_guardiao', title: 'Anjo Guardião', description: 'Ser celestial com asas luminosas', icon: 'fas fa-angel' },
+                            { id: 'demonio_sombras', title: 'Demônio das Sombras', description: 'Entidade sombria com chifres', icon: 'fas fa-ghost' }
+                        ]
+                    },
+                    { 
+                        id: 'robots', 
+                        title: 'Robôs e IA', 
+                        description: 'Seres artificiais e tecnológicos', 
+                        icon: 'fas fa-robot',
+                        subcategories: [
+                            { id: 'androide_humanoid', title: 'Androide Humanóide', description: 'Robô com aparência humana avançada', icon: 'fas fa-user-astronaut' },
+                            { id: 'robo_combate', title: 'Robô de Combate', description: 'Máquina de guerra blindada', icon: 'fas fa-shield-alt' },
+                            { id: 'cyborg_militar', title: 'Cyborg Militar', description: 'Humano com implantes cibernéticos', icon: 'fas fa-cogs' },
+                            { id: 'ia_holografica', title: 'IA Holográfica', description: 'Inteligência artificial em projeção', icon: 'fas fa-cube' },
+                            { id: 'robo_assistente', title: 'Robô Assistente', description: 'Ajudante doméstico amigável', icon: 'fas fa-hands-helping' },
+                            { id: 'mech_gigante', title: 'Mech Gigante', description: 'Robô pilotado de grande porte', icon: 'fas fa-robot' },
+                            { id: 'nano_bots', title: 'Nano-bots', description: 'Enxame de micro-robôs', icon: 'fas fa-microchip' },
+                            { id: 'robo_explorador', title: 'Robô Explorador', description: 'Máquina para expedições', icon: 'fas fa-search' },
+                            { id: 'synth_avatar', title: 'Avatar Sintético', description: 'Corpo artificial para consciência digital', icon: 'fas fa-user-circle' },
+                            { id: 'guardian_ai', title: 'IA Guardiã', description: 'Inteligência protetora da humanidade', icon: 'fas fa-shield-check' },
+                            { id: 'worker_bot', title: 'Robô Operário', description: 'Máquina industrial especializada', icon: 'fas fa-hard-hat' },
+                            { id: 'companion_droid', title: 'Droide Companheiro', description: 'Robô de companhia emocional', icon: 'fas fa-heart' }
+                        ]
+                    },
+                    { 
+                        id: 'aliens', 
+                        title: 'Aliens', 
+                        description: 'Seres extraterrestres de outros mundos', 
+                        icon: 'fas fa-user-astronaut',
+                        subcategories: [
+                            { id: 'grey_classico', title: 'Grey Clássico', description: 'Alien pequeno, pele cinza, olhos grandes', icon: 'fas fa-eye' },
+                            { id: 'reptiliano_verde', title: 'Reptiliano Verde', description: 'Humanoide com características de réptil', icon: 'fas fa-dragon' },
+                            { id: 'nordico_alto', title: 'Nórdico Alto', description: 'Alien humanóide loiro e alto', icon: 'fas fa-user-tie' },
+                            { id: 'insectoide_mantis', title: 'Insectóide Mantis', description: 'Criatura com características de inseto', icon: 'fas fa-bug' },
+                            { id: 'cristalino_energia', title: 'Ser Cristalino', description: 'Entidade feita de energia cristalizada', icon: 'fas fa-gem' },
+                            { id: 'aquatico_tentaculos', title: 'Aquático Tentáculos', description: 'Ser marinho com múltiplos tentáculos', icon: 'fas fa-octopus' },
+                            { id: 'gasoso_eterico', title: 'Ser Gasoso', description: 'Entidade semi-transparente etérea', icon: 'fas fa-cloud' },
+                            { id: 'mecanico_hibrido', title: 'Mecânico Híbrido', description: 'Alien com partes orgânicas e mecânicas', icon: 'fas fa-cogs' },
+                            { id: 'avatar_azul', title: 'Avatar Azul', description: 'Humanoide alto de pele azul', icon: 'fas fa-user-circle' },
+                            { id: 'shapeshifter', title: 'Metamorfo', description: 'Ser capaz de mudar de forma', icon: 'fas fa-exchange-alt' },
+                            { id: 'energy_being', title: 'Ser de Energia', description: 'Entidade de energia pura luminosa', icon: 'fas fa-bolt' },
+                            { id: 'plant_alien', title: 'Alien Vegetal', description: 'Criatura com características vegetais', icon: 'fas fa-leaf' }
+                        ]
+                    }
                 ]
             }
         };
@@ -377,18 +589,18 @@
             document.getElementById('currentStepTitle').textContent = substep > 0 ? 
                 `${stepData.title} - ${stepData.options.find(opt => opt.id === selectedChoices[step])?.title || ''}` : 
                 stepData.title;
-            document.getElementById('navSteps').textContent = `${step} / 6`;
+            document.getElementById('navSteps').textContent = `${step} / 7`;
             
             // Atualizar barra de progresso
             const progressFill = document.getElementById('progressFill');
-            progressFill.style.width = `${(step / 6) * 100}%`;
+            progressFill.style.width = `${(step / 7) * 100}%`;
 
             // Atualizar botões de navegação
             const hasSubcategories = substep === 0 && selectedChoices[step] && 
                 stepData.options.find(opt => opt.id === selectedChoices[step])?.subcategories;
             
             document.getElementById('prevBtn').disabled = step === 1 && substep === 0;
-            document.getElementById('nextBtn').disabled = (step === 6 && substep === 0) || 
+            document.getElementById('nextBtn').disabled = (step === 7 && substep === 0) || 
                 (hasSubcategories && !selectedSubcategories[step]);
         }
 
@@ -586,6 +798,107 @@
                 }
             }
 
+            // Etapa 7: Seres
+            if (selectedChoices[7]) {
+                let seresText = '';
+                
+                if (selectedSubcategories[7]) {
+                    // Usar subcategoria específica
+                    const seresDetalhados = {
+                        // Humanos
+                        'homem_jovem': 'apresentando um homem jovem atlético e confiante',
+                        'mulher_jovem': 'com uma mulher jovem elegante e moderna',
+                        'homem_maduro': 'mostrando um homem maduro experiente e respeitável',
+                        'mulher_madura': 'com uma mulher madura sofisticada e sábia',
+                        'crianca_menino': 'incluindo uma criança menino brincalhona e curiosa',
+                        'crianca_menina': 'com uma criança menina alegre e expressiva',
+                        'idoso': 'apresentando um idoso sábio e respeitável',
+                        'idosa': 'mostrando uma idosa carinhosa e experiente',
+                        'executivo': 'com um executivo profissional em traje formal',
+                        'artista': 'incluindo um artista criativo com estilo bohemio',
+                        'atleta': 'mostrando um atleta com físico musculoso e definido',
+                        'estudante': 'com um jovem estudante acadêmico portando livros',
+                        
+                        // Animais
+                        'cachorro_labrador': 'com um labrador amigável e leal de porte grande',
+                        'gato_persa': 'incluindo um gato persa elegante de pelo longo',
+                        'cavalo_arabe': 'mostrando um majestoso cavalo árabe',
+                        'leao_africano': 'com um poderoso leão africano, rei da selva',
+                        'aguia_real': 'apresentando uma águia real majestosa em voo',
+                        'lobo_cinzento': 'incluindo um lobo cinzento selvagem e astuto',
+                        'urso_pardo': 'com um imponente urso pardo, gigante da floresta',
+                        'elefante_africano': 'mostrando um colossal elefante africano gentil',
+                        'golfinho_nariz_garrafa': 'com um inteligente golfinho nariz-de-garrafa',
+                        'tigre_siberiano': 'incluindo um feroz tigre siberiano listrado',
+                        'panda_gigante': 'apresentando um adorável panda gigante',
+                        'coruja_buraqueira': 'com uma sábia coruja buraqueira observadora',
+                        
+                        // Seres Fantásticos
+                        'dragao_fogo': 'com um majestoso dragão de fogo cuspindo chamas',
+                        'unicornio_branco': 'incluindo um unicórnio branco com chifre espiralado',
+                        'fenix_dourada': 'mostrando uma fênix dourada renascendo das cinzas',
+                        'elfo_florestal': 'com um elfo florestal guardião da natureza',
+                        'sereia_oceano': 'apresentando uma sereia encantadora do oceano',
+                        'centauro_guerreiro': 'incluindo um nobre centauro guerreiro',
+                        'grifo_real': 'com um majestoso grifo real meio águia meio leão',
+                        'pegasus_alado': 'mostrando um pégasus alado com asas divinas',
+                        'minotauro_labirinto': 'incluindo um minotauro guardião do labirinto',
+                        'sphinx_enigmatica': 'com uma esfinge enigmática de corpo felino',
+                        'anjo_guardiao': 'apresentando um anjo guardião com asas luminosas',
+                        'demonio_sombras': 'mostrando um demônio sombrio das trevas',
+                        
+                        // Robôs e IA
+                        'androide_humanoid': 'com um androide humanóide de aparência avançada',
+                        'robo_combate': 'incluindo um robô de combate blindado',
+                        'cyborg_militar': 'mostrando um cyborg militar com implantes',
+                        'ia_holografica': 'com uma IA holográfica em projeção',
+                        'robo_assistente': 'apresentando um robô assistente amigável',
+                        'mech_gigante': 'incluindo um mech gigante pilotado',
+                        'nano_bots': 'com um enxame de nano-bots microscópicos',
+                        'robo_explorador': 'mostrando um robô explorador especializado',
+                        'synth_avatar': 'incluindo um avatar sintético avançado',
+                        'guardian_ai': 'com uma IA guardiã protetora',
+                        'worker_bot': 'apresentando um robô operário industrial',
+                        'companion_droid': 'mostrando um droide companheiro emocional',
+                        
+                        // Aliens
+                        'grey_classico': 'com um alien grey clássico de olhos grandes',
+                        'reptiliano_verde': 'incluindo um reptiliano verde humanoide',
+                        'nordico_alto': 'mostrando um alien nórdico alto e loiro',
+                        'insectoide_mantis': 'com um insectóide mantis de múltiplos braços',
+                        'cristalino_energia': 'apresentando um ser cristalino de energia',
+                        'aquatico_tentaculos': 'incluindo um ser aquático com tentáculos',
+                        'gasoso_eterico': 'mostrando um ser gasoso semi-transparente',
+                        'mecanico_hibrido': 'com um alien mecânico híbrido orgânico',
+                        'avatar_azul': 'incluindo um avatar azul de pele azulada',
+                        'shapeshifter': 'apresentando um metamorfo em transformação',
+                        'energy_being': 'mostrando um ser de energia pura luminosa',
+                        'plant_alien': 'com um alien vegetal de características vegetais'
+                    };
+                    
+                    if (seresDetalhados[selectedSubcategories[7]]) {
+                        seresText = seresDetalhados[selectedSubcategories[7]];
+                    }
+                } else {
+                    // Usar categoria geral
+                    const seres = {
+                        'humanos': 'incluindo personagens humanos',
+                        'animais': 'com criaturas do reino animal',
+                        'fantasticos': 'apresentando seres fantásticos e mitológicos',
+                        'robots': 'incluindo robôs e inteligências artificiais',
+                        'aliens': 'com seres extraterrestres'
+                    };
+                    
+                    if (seres[selectedChoices[7]]) {
+                        seresText = seres[selectedChoices[7]];
+                    }
+                }
+                
+                if (seresText) {
+                    parts.push(seresText);
+                }
+            }
+
             // Construir prompt final
             if (parts.length > 0) {
                 prompt += ' ' + parts.join(', ');
@@ -603,11 +916,11 @@
         document.getElementById('nextBtn').addEventListener('click', () => {
             if (currentSubstep > 0) {
                 // Está em subcategoria, voltar para próxima etapa principal
-                if (currentStep < 6) {
+                if (currentStep < 7) {
                     currentStep++;
                     loadStep(currentStep, 0);
                 }
-            } else if (currentStep < 6) {
+            } else if (currentStep < 7) {
                 // Verificar se tem subcategorias pendentes
                 const stepData = steps[currentStep];
                 const selectedCategory = selectedChoices[currentStep];
