@@ -2,11 +2,18 @@
 class PromptBuilder {
     constructor() {
         this.currentStep = 1;
-        this.totalSteps = 10;
+        this.totalSteps = 6; // Mudou para 6 etapas: Tipo + 5 categorias principais
         this.userChoices = {};
+        this.selectedCategories = {
+            ambiente: {},
+            seres: {},
+            acao: {},
+            camera: {},
+            fala: {}
+        };
         this.promptTemplate = {
-            image: `[SUBJECT], [STYLE] style, [LIGHTING] lighting, [CAMERA] composition, [ENVIRONMENT] setting, [CHARACTERS] details, [QUALITY] quality`,
-            video: `[SUBJECT], [STYLE] style, [LIGHTING] lighting, [CAMERA] shot, [ENVIRONMENT] environment, [CHARACTERS] featuring, [DURATION] duration, [QUALITY] quality`
+            image: `Crie uma imagem`,
+            video: `Crie um vídeo`
         };
         
         this.init();
@@ -20,62 +27,61 @@ class PromptBuilder {
 
     bindEvents() {
         // Navegação entre etapas
-        document.getElementById('prevBtn').addEventListener('click', () => this.previousStep());
-        document.getElementById('nextBtn').addEventListener('click', () => this.nextStep());
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
         
-        // Stepper clickável
-        document.querySelectorAll('.step').forEach(step => {
-            step.addEventListener('click', (e) => {
-                const stepNumber = parseInt(e.currentTarget.dataset.step);
-                this.goToStep(stepNumber);
-            });
-        });
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => this.previousStep());
+        }
+        
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => this.nextStep());
+        }
 
         // Ações do prompt
-        document.getElementById('copyBtn').addEventListener('click', () => this.copyPrompt());
-        document.getElementById('clearBtn').addEventListener('click', () => this.clearAll());
-        document.getElementById('exportBtn').addEventListener('click', () => this.exportJSON());
+        const copyBtn = document.getElementById('copyBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const exportBtn = document.getElementById('exportBtn');
+        
+        if (copyBtn) {
+            copyBtn.addEventListener('click', () => this.copyPrompt());
+        }
+        
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => this.clearAll());
+        }
+        
+        if (exportBtn) {
+            exportBtn.addEventListener('click', () => this.exportJSON());
+        }
 
         // Modal de ajuda
-        document.getElementById('helpBtn').addEventListener('click', () => this.showHelp());
-        document.getElementById('closeHelp').addEventListener('click', () => this.hideHelp());
+        const helpBtn = document.getElementById('helpBtn');
+        const closeHelp = document.getElementById('closeHelp');
+        const helpModal = document.getElementById('helpModal');
         
-        // Fechar modal clicando no overlay
-        document.getElementById('helpModal').addEventListener('click', (e) => {
-            if (e.target === e.currentTarget || e.target.classList.contains('modal-overlay')) {
-                this.hideHelp();
-            }
-        });
+        if (helpBtn) {
+            helpBtn.addEventListener('click', () => this.showHelp());
+        }
+        
+        if (closeHelp) {
+            closeHelp.addEventListener('click', () => this.hideHelp());
+        }
+        
+        if (helpModal) {
+            // Fechar modal clicando no overlay
+            helpModal.addEventListener('click', (e) => {
+                if (e.target === e.currentTarget || e.target.classList.contains('modal-overlay')) {
+                    this.hideHelp();
+                }
+            });
+        }
 
         // Salvar automaticamente
         setInterval(() => this.saveToStorage(), 5000);
     }
 
-    loadStep(step) {
-        const stepContent = document.getElementById('stepContent');
-        const stepData = this.getStepData(step);
-        
-        stepContent.innerHTML = `
-            <h2 class="step-title">
-                <i class="${stepData.icon}"></i>
-                ${stepData.title}
-            </h2>
-            <p class="step-description">${stepData.description}</p>
-            <div class="options-grid" id="optionsGrid">
-                ${stepData.options.map(option => this.createOptionCard(option)).join('')}
-            </div>
-            ${stepData.customField ? this.createCustomField(stepData.customField) : ''}
-        `;
-
-        // Bind events para as opções
-        this.bindOptionEvents();
-        
-        // Restaurar seleções
-        this.restoreSelections(step);
-        
-        // Atualizar prompt
-        this.updatePrompt();
-    }
+    // Função original removida - usando a nova loadStep mais abaixo
 
     getStepData(step) {
         const steps = {
@@ -89,143 +95,573 @@ class PromptBuilder {
                 ]
             },
             2: {
-                title: 'Assunto/Cena Principal',
-                description: 'Defina o tema central da sua criação',
-                icon: 'fas fa-eye',
+                title: 'Ambiente',
+                description: 'Configure o cenário e localização da cena',
+                icon: 'fas fa-globe',
+                isCategory: true,
+                categoryType: 'ambiente',
                 options: [
-                    { id: 'person', title: 'Pessoa', description: 'Retrato ou figura humana', icon: 'fas fa-user' },
-                    { id: 'animal', title: 'Animal', description: 'Criaturas e vida selvagem', icon: 'fas fa-paw' },
-                    { id: 'landscape', title: 'Paisagem', description: 'Cenários naturais', icon: 'fas fa-mountain' },
-                    { id: 'object', title: 'Objeto', description: 'Produtos ou itens', icon: 'fas fa-cube' },
-                    { id: 'architecture', title: 'Arquitetura', description: 'Edifícios e estruturas', icon: 'fas fa-building' },
-                    { id: 'abstract', title: 'Abstrato', description: 'Arte conceitual', icon: 'fas fa-palette' }
+                    { 
+                        id: 'natureza', 
+                        title: 'Natureza', 
+                        description: 'Ambientes naturais e paisagens', 
+                        icon: 'fas fa-tree',
+                        subcategories: {
+                            'montanha': {
+                                title: 'Montanha',
+                                options: ['pico nevado', 'cordilheira', 'montanha rochosa', 'colina verde', 'vale montanhoso', 'encosta', 'precipício', 'planalto']
+                            },
+                            'cachoeira': {
+                                title: 'Cachoeira',
+                                options: ['cascata alta', 'queda d\'água', 'cachoeira tropical', 'piscina natural', 'rio com corredeira', 'cachoeira congelada']
+                            },
+                            'praia': {
+                                title: 'Praia',
+                                options: ['praia tropical', 'costa rochosa', 'praia deserta', 'praia com palmeiras', 'praia ao pôr do sol', 'praia de areia branca', 'praia vulcânica']
+                            },
+                            'deserto': {
+                                title: 'Deserto',
+                                options: ['dunas de areia', 'deserto rochoso', 'oásis', 'deserto com cactos', 'deserto gelado', 'deserto vermelho']
+                            },
+                            'floresta': {
+                                title: 'Floresta',
+                                options: ['floresta tropical', 'floresta temperada', 'floresta de pinheiros', 'floresta encantada', 'floresta densa', 'clareira', 'floresta bamboo']
+                            },
+                            'lago': {
+                                title: 'Lago',
+                                options: ['lago cristalino', 'lago de montanha', 'lagoa azul', 'lago congelado', 'lago com nenúfares', 'lago refletindo']
+                            },
+                            'campo': {
+                                title: 'Campo',
+                                options: ['campo de flores', 'pradaria', 'campo de trigo', 'pastagem verde', 'campo lavanda', 'savana']
+                            },
+                            'oceano': {
+                                title: 'Oceano',
+                                options: ['mar aberto', 'recife de coral', 'fundo do mar', 'ondas gigantes', 'mar calmo', 'tempestade marítima']
+                            }
+                        }
+                    },
+                    { 
+                        id: 'urbano', 
+                        title: 'Urbano', 
+                        description: 'Ambientes de cidade e construções', 
+                        icon: 'fas fa-city',
+                        subcategories: {
+                            'avenida': {
+                                title: 'Avenida',
+                                options: ['avenida movimentada', 'avenida à noite', 'avenida comercial', 'avenida arborizada', 'avenida principal']
+                            },
+                            'rua': {
+                                title: 'Rua',
+                                options: ['rua residencial', 'rua estreita', 'rua de paralelepípedos', 'rua com lojas', 'rua vazia', 'beco urbano']
+                            },
+                            'transito': {
+                                title: 'Trânsito',
+                                options: ['engarrafamento', 'cruzamento movimentado', 'semáforo', 'passagem de pedestres', 'estacionamento']
+                            },
+                            'predio': {
+                                title: 'Prédio',
+                                options: ['arranha-céu', 'prédio comercial', 'prédio residencial', 'edifício histórico', 'prédio moderno', 'fachada de vidro']
+                            },
+                            'praca': {
+                                title: 'Praça',
+                                options: ['praça central', 'praça com fonte', 'praça arborizada', 'praça de alimentação', 'praça histórica']
+                            },
+                            'ponte': {
+                                title: 'Ponte',
+                                options: ['ponte suspensa', 'ponte de pedra', 'ponte moderna', 'ponte sobre rio', 'viaduto urbano']
+                            }
+                        }
+                    },
+                    { 
+                        id: 'interior', 
+                        title: 'Interior', 
+                        description: 'Ambientes fechados e construções internas', 
+                        icon: 'fas fa-home',
+                        subcategories: {
+                            'casa': {
+                                title: 'Casa',
+                                options: ['sala de estar', 'cozinha moderna', 'quarto aconchegante', 'banheiro luxuoso', 'biblioteca', 'sótão', 'porão']
+                            },
+                            'escritorio': {
+                                title: 'Escritório',
+                                options: ['escritório corporativo', 'home office', 'sala de reunião', 'coworking', 'escritório moderno']
+                            },
+                            'loja': {
+                                title: 'Loja',
+                                options: ['shopping center', 'loja de roupas', 'supermercado', 'livraria', 'café', 'restaurante', 'loja de tecnologia']
+                            },
+                            'escola': {
+                                title: 'Escola',
+                                options: ['sala de aula', 'biblioteca escolar', 'laboratório', 'auditório', 'pátio escolar', 'universidade']
+                            },
+                            'hospital': {
+                                title: 'Hospital',
+                                options: ['quarto de hospital', 'centro cirúrgico', 'recepção médica', 'ambulância', 'laboratório médico']
+                            },
+                            'igreja': {
+                                title: 'Igreja',
+                                options: ['catedral gótica', 'igreja moderna', 'capela', 'altar', 'vitral colorido']
+                            }
+                        }
+                    },
+                    { 
+                        id: 'fantasia', 
+                        title: 'Fantasia', 
+                        description: 'Ambientes mágicos e fantásticos', 
+                        icon: 'fas fa-magic',
+                        subcategories: {
+                            'magico': {
+                                title: 'Mágico',
+                                options: ['floresta encantada', 'castelo flutuante', 'portal mágico', 'caverna cristalina', 'jardim mágico']
+                            },
+                            'medieval': {
+                                title: 'Medieval',
+                                options: ['castelo medieval', 'vila medieval', 'taverna', 'fortaleza', 'torre do mago', 'dungeon']
+                            },
+                            'futurista': {
+                                title: 'Futurista',
+                                options: ['cidade futurista', 'nave espacial', 'laboratório sci-fi', 'colônia espacial', 'planeta alienígena']
+                            },
+                            'apocaliptico': {
+                                title: 'Apocalíptico',
+                                options: ['cidade em ruínas', 'wasteland', 'bunker', 'mundo pós-apocalíptico', 'zona radioativa']
+                            }
+                        }
+                    }
                 ],
-                customField: { label: 'Descreva sua cena personalizada', type: 'textarea', placeholder: 'Ex: Uma sereia nadando em águas cristalinas...' }
+                customField: { label: 'Ambiente personalizado', type: 'textarea', placeholder: 'Descreva um ambiente específico...' }
             },
             3: {
-                title: 'Estilo Visual',
-                description: 'Escolha o estilo artístico desejado',
-                icon: 'fas fa-paint-brush',
+                title: 'Seres',
+                description: 'Defina os personagens e seres presentes na cena',
+                icon: 'fas fa-users',
+                isCategory: true,
+                categoryType: 'seres',
                 options: [
-                    { id: 'realistic', title: 'Realista', description: 'Fotorrealismo detalhado', icon: 'fas fa-camera' },
-                    { id: 'cinematic', title: 'Cinematográfico', description: 'Estilo de filme', icon: 'fas fa-film' },
-                    { id: 'illustration', title: 'Ilustração', description: 'Arte digital ilustrativa', icon: 'fas fa-pencil-alt' },
-                    { id: 'oil_painting', title: 'Pintura a Óleo', description: 'Estilo clássico de pintura', icon: 'fas fa-palette' },
-                    { id: 'watercolor', title: 'Aquarela', description: 'Estilo aquarela suave', icon: 'fas fa-tint' },
-                    { id: 'cartoon', title: 'Cartoon', description: 'Estilo animado/cartoon', icon: 'fas fa-smile' },
-                    { id: 'anime', title: 'Anime', description: 'Estilo anime japonês', icon: 'fas fa-star' },
-                    { id: 'pixar', title: 'Pixar-like', description: 'Estilo 3D Pixar', icon: 'fas fa-cube' }
+                    { 
+                        id: 'humanos', 
+                        title: 'Humanos', 
+                        description: 'Pessoas e personagens humanos', 
+                        icon: 'fas fa-user',
+                        subcategories: {
+                            'pessoa': {
+                                title: 'Pessoa',
+                                options: ['homem', 'mulher', 'criança', 'idoso', 'jovem', 'adolescente', 'bebê']
+                            },
+                            'profissao': {
+                                title: 'Profissão',
+                                options: ['médico', 'professor', 'policial', 'bombeiro', 'chef', 'artista', 'engenheiro', 'advogado', 'agricultor']
+                            },
+                            'estilo': {
+                                title: 'Estilo',
+                                options: ['casual', 'formal', 'esportivo', 'elegante', 'vintage', 'moderno', 'bohemio']
+                            }
+                        }
+                    },
+                    { 
+                        id: 'animais', 
+                        title: 'Animais', 
+                        description: 'Fauna e vida selvagem', 
+                        icon: 'fas fa-paw',
+                        subcategories: {
+                            'domesticos': {
+                                title: 'Domésticos',
+                                options: ['cão', 'gato', 'pássaro', 'coelho', 'hamster', 'peixe', 'cavalo']
+                            },
+                            'selvagens': {
+                                title: 'Selvagens',
+                                options: ['leão', 'tigre', 'elefante', 'urso', 'lobo', 'raposa', 'veado', 'águia']
+                            },
+                            'marinhos': {
+                                title: 'Marinhos',
+                                options: ['baleia', 'golfinho', 'tubarão', 'polvo', 'tartaruga marinha', 'peixe colorido']
+                            }
+                        }
+                    },
+                    { 
+                        id: 'fantasticos', 
+                        title: 'Fantásticos', 
+                        description: 'Criaturas míticas e fantásticas', 
+                        icon: 'fas fa-dragon',
+                        subcategories: {
+                            'mitologicos': {
+                                title: 'Mitológicos',
+                                options: ['dragão', 'unicórnio', 'fênix', 'grifo', 'centauro', 'sereia', 'minotauro']
+                            },
+                            'magicos': {
+                                title: 'Mágicos',
+                                options: ['fada', 'duende', 'elfo', 'mago', 'bruxa', 'anjo', 'demônio']
+                            }
+                        }
+                    }
                 ],
-                customField: { label: 'Referência de estilo personalizada', type: 'input', placeholder: 'Ex: No estilo de Van Gogh, Art Nouveau...' }
+                customField: { label: 'Ser personalizado', type: 'textarea', placeholder: 'Descreva um personagem específico...' }
             },
             4: {
-                title: 'Iluminação',
-                description: 'Configure a iluminação da cena',
-                icon: 'fas fa-lightbulb',
+                title: 'Ação',
+                description: 'Defina o que está acontecendo na cena',
+                icon: 'fas fa-running',
+                isCategory: true,
+                categoryType: 'acao',
                 options: [
-                    { id: 'natural', title: 'Natural', description: 'Luz solar natural', icon: 'fas fa-sun' },
-                    { id: 'golden_hour', title: 'Hora Dourada', description: 'Luz quente do entardecer', icon: 'fas fa-sun' },
-                    { id: 'studio', title: 'Estúdio', description: 'Iluminação controlada', icon: 'fas fa-lightbulb' },
-                    { id: 'dramatic', title: 'Dramática', description: 'Contraste forte', icon: 'fas fa-adjust' },
-                    { id: 'soft', title: 'Suave', description: 'Luz difusa e suave', icon: 'fas fa-cloud' },
-                    { id: 'neon', title: 'Neon', description: 'Luzes neon coloridas', icon: 'fas fa-lightbulb' },
-                    { id: 'night', title: 'Noturna', description: 'Cena noturna', icon: 'fas fa-moon' },
-                    { id: 'backlight', title: 'Contraluz', description: 'Iluminação traseira', icon: 'fas fa-circle' }
+                    { 
+                        id: 'movimento', 
+                        title: 'Movimento', 
+                        description: 'Ações de movimento e deslocamento', 
+                        icon: 'fas fa-running',
+                        subcategories: {
+                            'caminhando': {
+                                title: 'Caminhando',
+                                options: ['caminhando lentamente', 'passeando', 'caminhada rápida', 'andando pela rua', 'caminhada no parque']
+                            },
+                            'correndo': {
+                                title: 'Correndo',
+                                options: ['correndo rápido', 'corrida matinal', 'fugindo', 'corrida esportiva', 'sprint']
+                            },
+                            'voando': {
+                                title: 'Voando',
+                                options: ['voando alto', 'planando', 'voo rasante', 'voando em círculos', 'voo majestoso']
+                            },
+                            'nadando': {
+                                title: 'Nadando',
+                                options: ['nadando na piscina', 'mergulhando', 'flutuando', 'nado borboleta', 'nadando no mar']
+                            }
+                        }
+                    },
+                    { 
+                        id: 'interacao', 
+                        title: 'Interação', 
+                        description: 'Ações sociais e de relacionamento', 
+                        icon: 'fas fa-handshake',
+                        subcategories: {
+                            'conversando': {
+                                title: 'Conversando',
+                                options: ['conversa amigável', 'discussão', 'sussurrando', 'gritando', 'apresentação']
+                            },
+                            'abraçando': {
+                                title: 'Abraçando',
+                                options: ['abraço carinhoso', 'abraço de despedida', 'abraço de grupo', 'abraço romântico']
+                            },
+                            'brincando': {
+                                title: 'Brincando',
+                                options: ['jogando bola', 'brincadeira infantil', 'jogos de tabuleiro', 'videogame']
+                            }
+                        }
+                    },
+                    { 
+                        id: 'trabalho', 
+                        title: 'Trabalho', 
+                        description: 'Ações profissionais e produtivas', 
+                        icon: 'fas fa-briefcase',
+                        subcategories: {
+                            'escrevendo': {
+                                title: 'Escrevendo',
+                                options: ['digitando no computador', 'escrevendo à mão', 'tomando notas', 'assinando documento']
+                            },
+                            'construindo': {
+                                title: 'Construindo',
+                                options: ['martelando', 'pintando parede', 'soldando', 'usando ferramentas']
+                            },
+                            'cozinhando': {
+                                title: 'Cozinhando',
+                                options: ['preparando comida', 'cortando legumes', 'mexendo panela', 'assando']
+                            }
+                        }
+                    }
                 ],
-                customField: { label: 'Iluminação personalizada', type: 'input', placeholder: 'Ex: Luz de velas, holofotes azuis...' }
+                customField: { label: 'Ação personalizada', type: 'textarea', placeholder: 'Descreva uma ação específica...' }
             },
             5: {
-                title: 'Câmera e Composição',
+                title: 'Câmera',
                 description: 'Defina o enquadramento e perspectiva',
                 icon: 'fas fa-camera',
+                isCategory: true,
+                categoryType: 'camera',
                 options: [
-                    { id: 'close_up', title: 'Close-up', description: 'Plano fechado/próximo', icon: 'fas fa-search-plus' },
-                    { id: 'medium_shot', title: 'Plano Médio', description: 'Enquadramento médio', icon: 'fas fa-expand-arrows-alt' },
-                    { id: 'wide_shot', title: 'Plano Geral', description: 'Visão ampla da cena', icon: 'fas fa-expand' },
-                    { id: 'low_angle', title: 'Ângulo Baixo', description: 'Câmera de baixo para cima', icon: 'fas fa-arrow-up' },
-                    { id: 'high_angle', title: 'Ângulo Alto', description: 'Câmera de cima para baixo', icon: 'fas fa-arrow-down' },
-                    { id: 'birds_eye', title: 'Vista Aérea', description: 'Visão de cima', icon: 'fas fa-plane' },
-                    { id: 'portrait', title: 'Retrato', description: 'Orientação vertical', icon: 'fas fa-mobile-alt' },
-                    { id: 'landscape', title: 'Paisagem', description: 'Orientação horizontal', icon: 'fas fa-desktop' }
+                    { 
+                        id: 'enquadramento', 
+                        title: 'Enquadramento', 
+                        description: 'Tipos de planos e enquadramentos', 
+                        icon: 'fas fa-crop',
+                        subcategories: {
+                            'plano': {
+                                title: 'Plano',
+                                options: ['close-up', 'plano médio', 'plano geral', 'primeiro plano', 'plano americano', 'plano conjunto']
+                            },
+                            'angulo': {
+                                title: 'Ângulo',
+                                options: ['ângulo baixo', 'ângulo alto', 'vista aérea', 'ângulo holandês', 'contra-plongée', 'plongée']
+                            },
+                            'perspectiva': {
+                                title: 'Perspectiva',
+                                options: ['perspectiva frontal', 'perfil', 'três quartos', 'costas', 'vista lateral']
+                            }
+                        }
+                    },
+                    { 
+                        id: 'tecnica', 
+                        title: 'Técnica', 
+                        description: 'Técnicas fotográficas e cinematográficas', 
+                        icon: 'fas fa-camera-retro',
+                        subcategories: {
+                            'foco': {
+                                title: 'Foco',
+                                options: ['foco seletivo', 'profundidade de campo rasa', 'tudo em foco', 'desfoque de fundo', 'macro']
+                            },
+                            'movimento': {
+                                title: 'Movimento',
+                                options: ['câmera estática', 'panorâmica', 'travelling', 'zoom', 'câmera na mão']
+                            },
+                            'composicao': {
+                                title: 'Composição',
+                                options: ['regra dos terços', 'simetria', 'linhas guia', 'enquadramento natural', 'padrões']
+                            }
+                        }
+                    },
+                    { 
+                        id: 'iluminacao', 
+                        title: 'Iluminação', 
+                        description: 'Tipos de iluminação e atmosfera', 
+                        icon: 'fas fa-lightbulb',
+                        subcategories: {
+                            'natural': {
+                                title: 'Natural',
+                                options: ['luz do sol', 'hora dourada', 'luz difusa', 'contraluz', 'luz da manhã', 'pôr do sol']
+                            },
+                            'artificial': {
+                                title: 'Artificial',
+                                options: ['luz de estúdio', 'neon', 'luz de vela', 'luz fria', 'luz quente', 'holofotes']
+                            },
+                            'atmosfera': {
+                                title: 'Atmosfera',
+                                options: ['dramática', 'suave', 'misteriosa', 'romântica', 'sombria', 'brilhante']
+                            }
+                        }
+                    }
                 ],
                 customField: { label: 'Configuração de câmera personalizada', type: 'input', placeholder: 'Ex: lente 85mm, DOF raso, foco seletivo...' }
             },
             6: {
-                title: 'Personagens e Objetos',
-                description: 'Detalhe os elementos principais da cena',
-                icon: 'fas fa-users',
+                title: 'Fala',
+                description: 'Adicione diálogos e elementos de comunicação',
+                icon: 'fas fa-comment',
+                isCategory: true,
+                categoryType: 'fala',
                 options: [
-                    { id: 'single_person', title: 'Uma Pessoa', description: 'Personagem individual', icon: 'fas fa-user' },
-                    { id: 'multiple_people', title: 'Múltiplas Pessoas', description: 'Grupo de personagens', icon: 'fas fa-users' },
-                    { id: 'children', title: 'Crianças', description: 'Personagens infantis', icon: 'fas fa-child' },
-                    { id: 'elderly', title: 'Idosos', description: 'Personagens idosos', icon: 'fas fa-blind' },
-                    { id: 'professional', title: 'Profissional', description: 'Vestuário corporativo', icon: 'fas fa-briefcase' },
-                    { id: 'casual', title: 'Casual', description: 'Roupas casuais', icon: 'fas fa-tshirt' },
-                    { id: 'fantasy', title: 'Fantasia', description: 'Personagens fantásticos', icon: 'fas fa-dragon' },
-                    { id: 'historical', title: 'Histórico', description: 'Período histórico', icon: 'fas fa-landmark' }
+                    { 
+                        id: 'dialogo', 
+                        title: 'Diálogo', 
+                        description: 'Conversas e falas entre personagens', 
+                        icon: 'fas fa-comments',
+                        subcategories: {
+                            'conversa': {
+                                title: 'Conversa',
+                                options: ['conversa casual', 'conversa séria', 'discussão', 'sussurro', 'grito']
+                            },
+                            'emocao': {
+                                title: 'Emoção',
+                                options: ['feliz', 'triste', 'raiva', 'surpresa', 'medo', 'amor', 'desprezo']
+                            },
+                            'tom': {
+                                title: 'Tom',
+                                options: ['calmo', 'agitado', 'autoritário', 'gentil', 'sarcástico', 'romântico']
+                            }
+                        }
+                    },
+                    { 
+                        id: 'expressao', 
+                        title: 'Expressão', 
+                        description: 'Expressões faciais e corporais', 
+                        icon: 'fas fa-smile',
+                        subcategories: {
+                            'facial': {
+                                title: 'Facial',
+                                options: ['sorrindo', 'franzindo a testa', 'olhos arregalados', 'piscando', 'chorando', 'rindo']
+                            },
+                            'corporal': {
+                                title: 'Corporal',
+                                options: ['acenando', 'apontando', 'abraçando', 'gesticulando', 'encolhendo os ombros']
+                            }
+                        }
+                    },
+                    { 
+                        id: 'texto', 
+                        title: 'Texto', 
+                        description: 'Elementos textuais na cena', 
+                        icon: 'fas fa-font',
+                        subcategories: {
+                            'balao': {
+                                title: 'Balão de Fala',
+                                options: ['balão simples', 'balão de pensamento', 'balão de grito', 'balão sussurro']
+                            },
+                            'legenda': {
+                                title: 'Legenda',
+                                options: ['legenda inferior', 'título', 'texto sobreposto', 'nome do personagem']
+                            },
+                            'placas': {
+                                title: 'Placas e Sinais',
+                                options: ['placa de rua', 'outdoor', 'cartaz', 'letreiro luminoso', 'placa de trânsito']
+                            }
+                        }
+                    }
                 ],
-                customField: { label: 'Descrição detalhada dos personagens', type: 'textarea', placeholder: 'Ex: mulher jovem, cabelos castanhos, sorrindo, vestido azul...' }
-            },
-            7: {
-                title: 'Ambiente e Locação',
-                description: 'Configure o cenário e atmosfera',
-                icon: 'fas fa-globe',
-                options: [
-                    { id: 'indoor', title: 'Interior', description: 'Ambiente fechado', icon: 'fas fa-home' },
-                    { id: 'outdoor', title: 'Exterior', description: 'Ambiente aberto', icon: 'fas fa-tree' },
-                    { id: 'urban', title: 'Urbano', description: 'Cidade/ambiente urbano', icon: 'fas fa-city' },
-                    { id: 'nature', title: 'Natureza', description: 'Ambiente natural', icon: 'fas fa-leaf' },
-                    { id: 'beach', title: 'Praia', description: 'Cenário praiano', icon: 'fas fa-umbrella-beach' },
-                    { id: 'forest', title: 'Floresta', description: 'Ambiente florestal', icon: 'fas fa-tree' },
-                    { id: 'desert', title: 'Deserto', description: 'Ambiente árido', icon: 'fas fa-sun' },
-                    { id: 'space', title: 'Espacial', description: 'Ambiente espacial/sci-fi', icon: 'fas fa-rocket' }
-                ],
-                customField: { label: 'Descrição do ambiente', type: 'textarea', placeholder: 'Ex: laboratório futurista, biblioteca antiga, café parisiense...' }
-            },
-            8: {
-                title: 'Qualidade e Formato',
-                description: 'Defina a qualidade e proporções',
-                icon: 'fas fa-cog',
-                options: [
-                    { id: 'square', title: '1:1 (Quadrado)', description: 'Formato quadrado', icon: 'fas fa-square' },
-                    { id: 'portrait', title: '3:4 (Retrato)', description: 'Vertical para redes sociais', icon: 'fas fa-mobile-alt' },
-                    { id: 'landscape', title: '4:3 (Paisagem)', description: 'Horizontal tradicional', icon: 'fas fa-desktop' },
-                    { id: 'widescreen', title: '16:9 (Widescreen)', description: 'Formato cinema', icon: 'fas fa-tv' },
-                    { id: 'instagram', title: '9:16 (Stories)', description: 'Vertical para stories', icon: 'fas fa-mobile' },
-                    { id: 'hd', title: 'HD (1920x1080)', description: 'Alta definição', icon: 'fas fa-video' },
-                    { id: '4k', title: '4K (3840x2160)', description: 'Ultra alta definição', icon: 'fas fa-video' },
-                    { id: '8k', title: '8K (7680x4320)', description: 'Máxima qualidade', icon: 'fas fa-video' }
-                ],
-                customField: { label: 'Configurações personalizadas', type: 'input', placeholder: 'Ex: 300 DPI, formato PNG, duração 30s...' }
-            },
-            9: {
-                title: 'Parâmetros Avançados',
-                description: 'Configure parâmetros técnicos do modelo de IA',
-                icon: 'fas fa-sliders-h',
-                options: [
-                    { id: 'cfg_low', title: 'CFG Baixo (5-7)', description: 'Mais criativo, menos aderente', icon: 'fas fa-unlock' },
-                    { id: 'cfg_medium', title: 'CFG Médio (8-12)', description: 'Equilibrado (recomendado)', icon: 'fas fa-balance-scale' },
-                    { id: 'cfg_high', title: 'CFG Alto (13-20)', description: 'Mais aderente ao prompt', icon: 'fas fa-lock' },
-                    { id: 'steps_low', title: 'Steps Baixo (20-30)', description: 'Rápido, menos detalhado', icon: 'fas fa-tachometer-alt' },
-                    { id: 'steps_medium', title: 'Steps Médio (30-50)', description: 'Equilibrado', icon: 'fas fa-equals' },
-                    { id: 'steps_high', title: 'Steps Alto (50-100)', description: 'Lento, mais detalhado', icon: 'fas fa-search' },
-                    { id: 'seed_random', title: 'Seed Aleatória', description: 'Resultado sempre diferente', icon: 'fas fa-random' },
-                    { id: 'seed_fixed', title: 'Seed Fixa', description: 'Resultado reproduzível', icon: 'fas fa-anchor' }
-                ],
-                customField: { label: 'Prompt negativo (o que NÃO incluir)', type: 'textarea', placeholder: 'Ex: low quality, blurry, distorted, ugly...' }
-            },
-            10: {
-                title: 'Revisão Final',
-                description: 'Revise e ajuste seu prompt antes de finalizar',
-                icon: 'fas fa-check-circle',
-                options: [
-                    { id: 'review_complete', title: 'Prompt Completo', description: 'Todas as etapas preenchidas', icon: 'fas fa-check-circle' },
-                    { id: 'review_partial', title: 'Ajustes Necessários', description: 'Algumas etapas precisam de revisão', icon: 'fas fa-exclamation-triangle' }
-                ]
-            }
-        };
+                customField: { label: 'Fala personalizada', type: 'textarea', placeholder: 'Adicione diálogos ou textos específicos...' }
+            };
 
         return steps[step] || steps[1];
+    }
+
+    // Nova função para lidar com categorias hierárquicas
+    createCategoryInterface(stepData) {
+        if (!stepData.isCategory) {
+            return this.createStandardInterface(stepData);
+        }
+
+        let html = `
+            <h2 class="step-title">
+                <i class="${stepData.icon}"></i>
+                ${stepData.title}
+            </h2>
+            <p class="step-description">${stepData.description}</p>
+        `;
+
+        // Se não há seleção de categoria principal ainda
+        const categoryState = this.selectedCategories[stepData.categoryType];
+        
+        if (!categoryState.mainCategory) {
+            html += `<div class="category-grid">`;
+            stepData.options.forEach(category => {
+                html += `
+                    <div class="category-card" data-category="${category.id}">
+                        <div class="category-icon">
+                            <i class="${category.icon}"></i>
+                        </div>
+                        <div class="category-title">${category.title}</div>
+                        <div class="category-description">${category.description}</div>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+        }
+        // Se categoria principal foi selecionada, mostrar subcategorias
+        else if (!this.selectedCategories[stepData.categoryType].subCategory) {
+            const mainCategory = stepData.options.find(cat => 
+                cat.id === this.selectedCategories[stepData.categoryType].mainCategory
+            );
+            
+            html += `
+                <div class="breadcrumb">
+                    <span class="breadcrumb-item active">${mainCategory.title}</span>
+                    <button class="btn-back" onclick="promptBuilder.resetCategory('${stepData.categoryType}', 'main')">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </button>
+                </div>
+                <div class="subcategory-grid">
+            `;
+            
+            Object.keys(mainCategory.subcategories).forEach(subKey => {
+                const sub = mainCategory.subcategories[subKey];
+                html += `
+                    <div class="subcategory-card" data-subcategory="${subKey}">
+                        <div class="subcategory-title">${sub.title}</div>
+                        <div class="subcategory-count">${sub.options.length} opções</div>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+        }
+        // Se subcategoria foi selecionada, mostrar opções finais
+        else {
+            const mainCategory = stepData.options.find(cat => 
+                cat.id === this.selectedCategories[stepData.categoryType].mainCategory
+            );
+            const subCategory = mainCategory.subcategories[this.selectedCategories[stepData.categoryType].subCategory];
+            
+            html += `
+                <div class="breadcrumb">
+                    <span class="breadcrumb-item">${mainCategory.title}</span>
+                    <i class="fas fa-chevron-right"></i>
+                    <span class="breadcrumb-item active">${subCategory.title}</span>
+                    <button class="btn-back" onclick="promptBuilder.resetCategory('${stepData.categoryType}', 'sub')">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </button>
+                </div>
+                <div class="options-grid">
+            `;
+            
+            subCategory.options.forEach(option => {
+                const isSelected = this.selectedCategories[stepData.categoryType].finalOption === option ? 'selected' : '';
+                html += `
+                    <div class="option-card ${isSelected}" data-option="${option}">
+                        <div class="option-title">${option}</div>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+        }
+
+        if (stepData.customField) {
+            html += this.createCustomField(stepData.customField);
+        }
+
+        return html;
+    }
+
+    createStandardInterface(stepData) {
+        const optionsHTML = stepData.options.map(option => this.createOptionCard(option)).join('');
+        
+        return `
+            <h2 class="step-title">
+                <i class="${stepData.icon}"></i>
+                ${stepData.title}
+            </h2>
+            <p class="step-description">${stepData.description}</p>
+            <div class="options-grid">
+                ${optionsHTML}
+            </div>
+            ${stepData.customField ? this.createCustomField(stepData.customField) : ''}
+        `;
+    }
+
+    resetCategory(categoryType, level) {
+        if (level === 'main') {
+            this.selectedCategories[categoryType] = {};
+        } else if (level === 'sub') {
+            delete this.selectedCategories[categoryType].subCategory;
+            delete this.selectedCategories[categoryType].finalOption;
+        }
+        this.loadStep(this.currentStep);
+        this.updatePrompt();
+    }
+
+    loadStep(step) {
+        const stepContent = document.getElementById('stepContent');
+        if (!stepContent) {
+            console.error('stepContent element not found!');
+            return;
+        }
+        
+        const stepData = this.getStepData(step);
+        if (!stepData) {
+            console.error('No step data found for step:', step);
+            return;
+        }
+        
+        try {
+            stepContent.innerHTML = stepData.isCategory ? 
+                this.createCategoryInterface(stepData) : 
+                this.createStandardInterface(stepData);
+
+            // Bind events para as opções
+            this.bindOptionEvents();
+            
+            // Atualizar prompt
+            this.updatePrompt();
+        } catch (error) {
+            console.error('Error loading step:', error);
+            stepContent.innerHTML = '<h2>Erro ao carregar etapa</h2><p>Por favor, recarregue a página.</p>';
+        }
     }
 
     createOptionCard(option) {
@@ -261,11 +697,43 @@ class PromptBuilder {
     }
 
     bindOptionEvents() {
-        // Cards de opção
+        // Cards de categoria principal
+        document.querySelectorAll('.category-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                const category = e.currentTarget.dataset.category;
+                const stepData = this.getStepData(this.currentStep);
+                this.selectedCategories[stepData.categoryType].mainCategory = category;
+                this.loadStep(this.currentStep);
+            });
+        });
+
+        // Cards de subcategoria
+        document.querySelectorAll('.subcategory-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                const subcategory = e.currentTarget.dataset.subcategory;
+                const stepData = this.getStepData(this.currentStep);
+                this.selectedCategories[stepData.categoryType].subCategory = subcategory;
+                this.loadStep(this.currentStep);
+            });
+        });
+
+        // Cards de opção final
         document.querySelectorAll('.option-card').forEach(card => {
             card.addEventListener('click', (e) => {
                 const option = e.currentTarget.dataset.option;
-                this.toggleOption(option);
+                const stepData = this.getStepData(this.currentStep);
+                
+                if (stepData.isCategory) {
+                    // Para categorias hierárquicas
+                    this.selectedCategories[stepData.categoryType].finalOption = option;
+                    // Atualizar visual
+                    document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+                    e.currentTarget.classList.add('selected');
+                } else {
+                    // Para opções normais
+                    this.toggleOption(option);
+                }
+                this.updatePrompt();
             });
         });
 
@@ -313,83 +781,84 @@ class PromptBuilder {
         const contentType = this.userChoices[1]?.[0] || 'image';
         let prompt = '';
 
-        // Construir prompt baseado nas escolhas
+        // Início do prompt
+        if (contentType === 'image') {
+            prompt = 'Crie uma imagem';
+        } else {
+            prompt = 'Crie um vídeo';
+        }
+
         const parts = [];
 
-        // Assunto (etapa 2)
-        if (this.userChoices[2]) {
-            const subjects = this.userChoices[2].map(s => this.getOptionLabel(2, s)).join(', ');
-            parts.push(subjects);
+        // Ambiente (etapa 2)
+        const ambienteData = this.selectedCategories.ambiente;
+        if (ambienteData.finalOption) {
+            const mainCat = this.getStepData(2).options.find(opt => opt.id === ambienteData.mainCategory);
+            if (mainCat) {
+                if (ambienteData.mainCategory === 'natureza') {
+                    parts.push(`de um ambiente natural`);
+                } else if (ambienteData.mainCategory === 'urbano') {
+                    parts.push(`de um ambiente urbano`);
+                } else if (ambienteData.mainCategory === 'interior') {
+                    parts.push(`de um ambiente interno`);
+                } else if (ambienteData.mainCategory === 'fantasia') {
+                    parts.push(`de um ambiente fantástico`);
+                }
+                parts.push(`de ${ambienteData.finalOption}`);
+            }
         }
         if (this.userChoices['2_custom']) {
-            parts.push(this.userChoices['2_custom']);
+            parts.push(`de ${this.userChoices['2_custom']}`);
         }
 
-        // Estilo (etapa 3)
-        if (this.userChoices[3]) {
-            const styles = this.userChoices[3].map(s => this.getOptionLabel(3, s)).join(', ');
-            parts.push(`${styles} style`);
+        // Seres (etapa 3)
+        const seresData = this.selectedCategories.seres;
+        if (seresData.finalOption) {
+            const mainCat = this.getStepData(3).options.find(opt => opt.id === seresData.mainCategory);
+            if (mainCat) {
+                if (seresData.mainCategory === 'humanos') {
+                    parts.push(`com ${seresData.finalOption}`);
+                } else if (seresData.mainCategory === 'animais') {
+                    parts.push(`com ${seresData.finalOption}`);
+                } else if (seresData.mainCategory === 'fantasticos') {
+                    parts.push(`com ${seresData.finalOption}`);
+                }
+            }
         }
         if (this.userChoices['3_custom']) {
-            parts.push(this.userChoices['3_custom']);
+            parts.push(`com ${this.userChoices['3_custom']}`);
         }
 
-        // Iluminação (etapa 4)
-        if (this.userChoices[4]) {
-            const lighting = this.userChoices[4].map(l => this.getOptionLabel(4, l)).join(', ');
-            parts.push(`${lighting} lighting`);
+        // Ação (etapa 4)
+        const acaoData = this.selectedCategories.acao;
+        if (acaoData.finalOption) {
+            parts.push(`${acaoData.finalOption}`);
         }
         if (this.userChoices['4_custom']) {
             parts.push(this.userChoices['4_custom']);
         }
 
         // Câmera (etapa 5)
-        if (this.userChoices[5]) {
-            const camera = this.userChoices[5].map(c => this.getOptionLabel(5, c)).join(', ');
-            parts.push(`${camera} shot`);
+        const cameraData = this.selectedCategories.camera;
+        if (cameraData.finalOption) {
+            parts.push(`${cameraData.finalOption}`);
         }
         if (this.userChoices['5_custom']) {
             parts.push(this.userChoices['5_custom']);
         }
 
-        // Personagens (etapa 6)
-        if (this.userChoices[6]) {
-            const characters = this.userChoices[6].map(c => this.getOptionLabel(6, c)).join(', ');
-            parts.push(`featuring ${characters}`);
+        // Fala (etapa 6)
+        const falaData = this.selectedCategories.fala;
+        if (falaData.finalOption) {
+            parts.push(`${falaData.finalOption}`);
         }
         if (this.userChoices['6_custom']) {
             parts.push(this.userChoices['6_custom']);
         }
 
-        // Ambiente (etapa 7)
-        if (this.userChoices[7]) {
-            const environment = this.userChoices[7].map(e => this.getOptionLabel(7, e)).join(', ');
-            parts.push(`${environment} setting`);
-        }
-        if (this.userChoices['7_custom']) {
-            parts.push(this.userChoices['7_custom']);
-        }
-
-        // Qualidade (etapa 8)
-        if (this.userChoices[8]) {
-            const quality = this.userChoices[8].map(q => this.getOptionLabel(8, q)).join(', ');
-            parts.push(`${quality}`);
-        }
-        if (this.userChoices['8_custom']) {
-            parts.push(this.userChoices['8_custom']);
-        }
-
-        // Parâmetros (etapa 9)
-        if (this.userChoices[9]) {
-            const params = this.userChoices[9].map(p => this.getOptionLabel(9, p)).join(', ');
-            parts.push(`${params}`);
-        }
-
-        prompt = parts.filter(p => p.trim()).join(', ');
-
-        // Prompt negativo
-        if (this.userChoices['9_custom']) {
-            prompt += `\n\nNegative prompt: ${this.userChoices['9_custom']}`;
+        // Construir prompt final
+        if (parts.length > 0) {
+            prompt += ' ' + parts.join(', ');
         }
 
         // Atualizar textarea
@@ -415,19 +884,7 @@ class PromptBuilder {
         document.getElementById('tokenEstimate').textContent = `~${tokens} tokens`;
     }
 
-    restoreSelections(step) {
-        if (this.userChoices[step]) {
-            this.userChoices[step].forEach(option => {
-                const card = document.querySelector(`[data-option="${option}"]`);
-                if (card) card.classList.add('selected');
-            });
-        }
-
-        const customField = document.getElementById('customField');
-        if (customField && this.userChoices[`${step}_custom`]) {
-            customField.value = this.userChoices[`${step}_custom`];
-        }
-    }
+    // Função restoreSelections removida - não é mais necessária com o novo sistema hierárquico
 
     nextStep() {
         if (this.currentStep < this.totalSteps) {
@@ -444,11 +901,6 @@ class PromptBuilder {
     goToStep(step) {
         if (step < 1 || step > this.totalSteps) return;
 
-        // Marcar etapa anterior como completa
-        if (step > this.currentStep) {
-            document.querySelector(`[data-step="${this.currentStep}"]`).classList.add('completed');
-        }
-
         this.currentStep = step;
         this.updateStepper();
         this.loadStep(step);
@@ -456,29 +908,47 @@ class PromptBuilder {
     }
 
     updateStepper() {
-        document.querySelectorAll('.step').forEach(step => {
-            const stepNum = parseInt(step.dataset.step);
-            step.classList.remove('active');
-            
-            if (stepNum === this.currentStep) {
-                step.classList.add('active');
-            } else if (stepNum < this.currentStep) {
-                step.classList.add('completed');
-            }
-        });
+        // Atualizar barra de progresso compacta
+        const progressFill = document.getElementById('progressFill');
+        const currentStepNumber = document.getElementById('currentStepNumber');
+        const currentStepTitle = document.getElementById('currentStepTitle');
+        const navSteps = document.getElementById('navSteps');
+        
+        if (progressFill) {
+            const progressPercentage = (this.currentStep / this.totalSteps) * 100;
+            progressFill.style.width = `${progressPercentage}%`;
+        }
+        
+        if (currentStepNumber) {
+            currentStepNumber.textContent = this.currentStep;
+        }
+        
+        if (currentStepTitle) {
+            const stepData = this.getStepData(this.currentStep);
+            currentStepTitle.textContent = stepData.title;
+        }
+        
+        if (navSteps) {
+            navSteps.textContent = `${this.currentStep} / ${this.totalSteps}`;
+        }
     }
 
     updateNavigation() {
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
 
-        prevBtn.disabled = this.currentStep === 1;
+        if (prevBtn) {
+            prevBtn.disabled = this.currentStep === 1;
+        }
         
-        if (this.currentStep === this.totalSteps) {
-            nextBtn.textContent = 'Finalizar';
-            nextBtn.innerHTML = '<i class="fas fa-check"></i> Finalizar';
-        } else {
-            nextBtn.innerHTML = 'Próximo <i class="fas fa-chevron-right"></i>';
+        if (nextBtn) {
+            if (this.currentStep === this.totalSteps) {
+                nextBtn.innerHTML = '<i class="fas fa-check"></i>';
+                nextBtn.title = 'Finalizar';
+            } else {
+                nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+                nextBtn.title = 'Próxima etapa';
+            }
         }
     }
 
@@ -503,6 +973,13 @@ class PromptBuilder {
     clearAll() {
         if (confirm('Tem certeza que deseja limpar todas as seleções?')) {
             this.userChoices = {};
+            this.selectedCategories = {
+                ambiente: {},
+                seres: {},
+                acao: {},
+                camera: {},
+                fala: {}
+            };
             this.currentStep = 1;
             this.updateStepper();
             this.loadStep(1);
@@ -510,6 +987,7 @@ class PromptBuilder {
             document.getElementById('promptText').value = '';
             this.updateStats('');
             localStorage.removeItem('promptBuilder_choices');
+            localStorage.removeItem('promptBuilder_categories');
             this.showToast('Todas as seleções foram limpas', 'success');
         }
     }
@@ -517,6 +995,7 @@ class PromptBuilder {
     exportJSON() {
         const data = {
             choices: this.userChoices,
+            categories: this.selectedCategories,
             prompt: document.getElementById('promptText').value,
             timestamp: new Date().toISOString()
         };
@@ -567,15 +1046,21 @@ class PromptBuilder {
 
     saveToStorage() {
         localStorage.setItem('promptBuilder_choices', JSON.stringify(this.userChoices));
+        localStorage.setItem('promptBuilder_categories', JSON.stringify(this.selectedCategories));
         localStorage.setItem('promptBuilder_step', this.currentStep.toString());
     }
 
     loadFromStorage() {
         const savedChoices = localStorage.getItem('promptBuilder_choices');
+        const savedCategories = localStorage.getItem('promptBuilder_categories');
         const savedStep = localStorage.getItem('promptBuilder_step');
 
         if (savedChoices) {
             this.userChoices = JSON.parse(savedChoices);
+        }
+
+        if (savedCategories) {
+            this.selectedCategories = JSON.parse(savedCategories);
         }
 
         if (savedStep) {
@@ -587,9 +1072,55 @@ class PromptBuilder {
     }
 }
 
-// Inicializar quando o DOM estiver carregado
+// Variável global para acessar o prompt builder
+let promptBuilder;
+
+// Teste simples primeiro
 document.addEventListener('DOMContentLoaded', function() {
-    new PromptBuilder();
+    console.log('DOM loaded');
+    
+    // Teste se o elemento existe
+    const stepContent = document.getElementById('stepContent');
+    console.log('stepContent found:', stepContent);
+    
+    if (stepContent) {
+        // Inserir conteúdo de teste diretamente
+        stepContent.innerHTML = `
+            <h2 class="step-title">
+                <i class="fas fa-image"></i>
+                Tipo de Conteúdo - TESTE
+            </h2>
+            <p class="step-description">Escolha o tipo de conteúdo que deseja gerar</p>
+            <div class="options-grid">
+                <div class="option-card" style="background: lightblue; padding: 20px; margin: 10px; cursor: pointer;">
+                    <div class="option-icon">
+                        <i class="fas fa-image"></i>
+                    </div>
+                    <div class="option-title">Imagem TESTE</div>
+                    <div class="option-description">Gerar imagem estática</div>
+                </div>
+                <div class="option-card" style="background: lightgreen; padding: 20px; margin: 10px; cursor: pointer;">
+                    <div class="option-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="option-title">Vídeo TESTE</div>
+                    <div class="option-description">Gerar vídeo/animação</div>
+                </div>
+            </div>
+        `;
+        console.log('Test content inserted');
+    } else {
+        console.error('stepContent element not found!');
+    }
+    
+    // Comentar a inicialização do PromptBuilder temporariamente
+    /*
+    try {
+        promptBuilder = new PromptBuilder();
+    } catch (error) {
+        console.error('Error creating PromptBuilder:', error);
+    }
+    */
 });
 
 // Prevenir perda de dados ao sair da página

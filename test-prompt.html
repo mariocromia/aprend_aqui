@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Prompt Builder</title>
+    <link rel="stylesheet" href="assets/css/prompt-builder.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <main class="main-container">
+        <section class="progress-compact">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="step-indicator">
+                <span class="current-step">Etapa <span id="currentStepNumber">1</span> de 6</span>
+                <span class="step-title" id="currentStepTitle">Tipo de Conteúdo</span>
+            </div>
+        </section>
+
+        <div class="content-grid">
+            <section class="options-column">
+                <div class="step-content" id="stepContent">
+                    <h2>Carregando...</h2>
+                </div>
+                
+                <div class="navigation-compact">
+                    <button class="btn-nav btn-prev" id="prevBtn" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="nav-info">
+                        <span id="navSteps">1 / 6</span>
+                    </div>
+                    <button class="btn-nav btn-next" id="nextBtn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </section>
+
+            <section class="prompt-column">
+                <div class="prompt-header-compact">
+                    <h3>
+                        <i class="fas fa-code"></i>
+                        Prompt Gerado
+                    </h3>
+                </div>
+                
+                <div class="prompt-textarea-container">
+                    <textarea 
+                        id="promptText" 
+                        placeholder="Seu prompt será construído conforme você faz suas escolhas..."
+                        readonly
+                    ></textarea>
+                </div>
+                
+                <div class="prompt-actions-compact">
+                    <button class="btn-action btn-copy" id="copyBtn" title="Copiar Prompt">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                    <button class="btn-action btn-clear" id="clearBtn" title="Limpar Tudo">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        console.log('Test page loaded');
+        document.getElementById('stepContent').innerHTML = `
+            <h2 class="step-title">
+                <i class="fas fa-image"></i>
+                Tipo de Conteúdo
+            </h2>
+            <p class="step-description">Escolha o tipo de conteúdo que deseja gerar</p>
+            <div class="options-grid">
+                <div class="option-card" data-option="image">
+                    <div class="option-icon">
+                        <i class="fas fa-image"></i>
+                    </div>
+                    <div class="option-title">Imagem</div>
+                    <div class="option-description">Gerar imagem estática</div>
+                </div>
+                <div class="option-card" data-option="video">
+                    <div class="option-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="option-title">Vídeo</div>
+                    <div class="option-description">Gerar vídeo/animação</div>
+                </div>
+            </div>
+        `;
+    </script>
+    <script src="assets/js/prompt-builder.js"></script>
+</body>
+</html>
