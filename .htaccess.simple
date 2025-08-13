@@ -1,0 +1,32 @@
+# Arquivo .htaccess simplificado para teste
+# CentroService - Configurações básicas
+
+# Ativar compressão GZIP básica
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css application/javascript
+</IfModule>
+
+# Cache básico
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+</IfModule>
+
+# Headers de segurança básicos
+<IfModule mod_headers.c>
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-Content-Type-Options "nosniff"
+</IfModule>
+
+# Configurações básicas de diretório
+Options -Indexes
+DirectoryIndex index.php index.html
+
+# Tratamento de erros
+ErrorDocument 404 /404.php
+ErrorDocument 500 /500.php

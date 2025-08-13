@@ -1,0 +1,13 @@
+# Arquivo .htaccess mínimo e compatível com XAMPP
+# CentroService - Configurações básicas
+
+# Configurações básicas de diretório
+Options -Indexes
+DirectoryIndex index.php index.html
+
+# Configurações básicas de cache (opcional)
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+</IfModule>
