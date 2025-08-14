@@ -196,6 +196,7 @@
         let currentSubstep = 0; // 0 = categoria principal, 1+ = subcategorias
         let selectedChoices = {};
         let selectedSubcategories = {};
+        let customDescriptions = {}; // Armazena descrições personalizadas por etapa
         let configuredSeres = [];
         let editingSerIndex = -1;
 
@@ -356,6 +357,90 @@
                         ]
                     },
                     { 
+                        id: 'aquatico', 
+                        title: 'Aquático', 
+                        description: 'Mundos subaquáticos e marinhos', 
+                        icon: 'fas fa-fish',
+                        subcategories: [
+                            { id: 'oceano_profundo', title: 'Oceano Profundo', description: 'Abismo marinho misterioso', icon: 'fas fa-water' },
+                            { id: 'recife_coral', title: 'Recife de Coral', description: 'Jardim submarino colorido', icon: 'fas fa-leaf' },
+                            { id: 'caverna_submarina', title: 'Caverna Submarina', description: 'Gruta aquática misteriosa', icon: 'fas fa-mountain' },
+                            { id: 'cidade_atlantis', title: 'Cidade de Atlântida', description: 'Civilização submersa perdida', icon: 'fas fa-city' },
+                            { id: 'fossa_marianas', title: 'Fossa das Marianas', description: 'Ponto mais profundo da Terra', icon: 'fas fa-arrow-down' },
+                            { id: 'naufragio_antigo', title: 'Naufrágio Antigo', description: 'Embarcação histórica submersa', icon: 'fas fa-anchor' },
+                            { id: 'kelp_forest', title: 'Floresta de Kelp', description: 'Algas gigantes ondulantes', icon: 'fas fa-tree' },
+                            { id: 'termal_vents', title: 'Fontes Termais Submarinas', description: 'Geysers do fundo oceânico', icon: 'fas fa-fire' },
+                            { id: 'iceberg_submerso', title: 'Iceberg Submerso', description: 'Massa de gelo polar submarina', icon: 'fas fa-snowflake' },
+                            { id: 'lago_subterraneo', title: 'Lago Subterrâneo', description: 'Espelho d\'água em caverna', icon: 'fas fa-tint' },
+                            { id: 'cenote_mexicano', title: 'Cenote Mexicano', description: 'Poço natural sagrado maia', icon: 'fas fa-circle' },
+                            { id: 'piscina_natural', title: 'Piscina Natural', description: 'Formação rochosa aquática', icon: 'fas fa-swimming-pool' }
+                        ]
+                    },
+                    { 
+                        id: 'espacial', 
+                        title: 'Espacial', 
+                        description: 'Cosmos e ambientes extraterrestres', 
+                        icon: 'fas fa-rocket',
+                        subcategories: [
+                            { id: 'estacao_espacial', title: 'Estação Espacial', description: 'Laboratório orbital futurista', icon: 'fas fa-satellite' },
+                            { id: 'superficie_lua', title: 'Superfície Lunar', description: 'Paisagem cinzenta com crateras', icon: 'fas fa-moon' },
+                            { id: 'marte_vermelho', title: 'Marte Vermelho', description: 'Planeta desértico oxidado', icon: 'fas fa-globe-mars' },
+                            { id: 'aneis_saturno', title: 'Anéis de Saturno', description: 'Majestoso sistema planetário', icon: 'fas fa-ring' },
+                            { id: 'nebula_colorida', title: 'Nebulosa Colorida', description: 'Nuvem cósmica multicolorida', icon: 'fas fa-cloud' },
+                            { id: 'buraco_negro', title: 'Buraco Negro', description: 'Singularidade espacial gravitacional', icon: 'fas fa-circle' },
+                            { id: 'chuva_meteoros', title: 'Chuva de Meteoros', description: 'Espetáculo celestial noturno', icon: 'fas fa-meteor' },
+                            { id: 'via_lactea', title: 'Via Láctea', description: 'Nossa galáxia espiral', icon: 'fas fa-star' },
+                            { id: 'exoplaneta', title: 'Exoplaneta', description: 'Mundo alienígena distante', icon: 'fas fa-globe' },
+                            { id: 'asteroid_belt', title: 'Cinturão de Asteroides', description: 'Campo de rochas espaciais', icon: 'fas fa-meteor' },
+                            { id: 'jupiter_tempestade', title: 'Tempestade em Júpiter', description: 'Grande mancha vermelha gasosa', icon: 'fas fa-hurricane' },
+                            { id: 'sol_corona', title: 'Corona Solar', description: 'Atmosfera externa ardente', icon: 'fas fa-sun' }
+                        ]
+                    },
+                    { 
+                        id: 'pos_apocaliptico', 
+                        title: 'Pós-Apocalíptico', 
+                        description: 'Mundos devastados e sobrevivência', 
+                        icon: 'fas fa-skull',
+                        subcategories: [
+                            { id: 'cidade_ruinas', title: 'Cidade em Ruínas', description: 'Metrópole abandonada decadente', icon: 'fas fa-building' },
+                            { id: 'deserto_nuclear', title: 'Deserto Nuclear', description: 'Paisagem radioativa desolada', icon: 'fas fa-radiation-alt' },
+                            { id: 'floresta_morta', title: 'Floresta Morta', description: 'Árvores carbonizadas sem vida', icon: 'fas fa-tree' },
+                            { id: 'abrigo_subterraneo', title: 'Abrigo Subterrâneo', description: 'Bunker de sobrevivência', icon: 'fas fa-shield-alt' },
+                            { id: 'fabrica_abandonada', title: 'Fábrica Abandonada', description: 'Complexo industrial em ruínas', icon: 'fas fa-industry' },
+                            { id: 'hospital_fantasma', title: 'Hospital Fantasma', description: 'Centro médico assombrado', icon: 'fas fa-hospital' },
+                            { id: 'shopping_destruido', title: 'Shopping Destruído', description: 'Centro comercial devastado', icon: 'fas fa-store' },
+                            { id: 'ponte_quebrada', title: 'Ponte Quebrada', description: 'Estrutura colapsada perigosa', icon: 'fas fa-bridge' },
+                            { id: 'cemiterio_carros', title: 'Cemitério de Carros', description: 'Ferro-velho gigantesco', icon: 'fas fa-car-crash' },
+                            { id: 'zona_quarentena', title: 'Zona de Quarentena', description: 'Área isolada contaminada', icon: 'fas fa-biohazard' },
+                            { id: 'acampamento_refugiados', title: 'Acampamento de Refugiados', description: 'Sobreviventes organizados', icon: 'fas fa-campground' },
+                            { id: 'tempestade_areia', title: 'Tempestade de Areia', description: 'Fenômeno devastador constante', icon: 'fas fa-wind' }
+                        ]
+                    },
+                    { 
+                        id: 'historico', 
+                        title: 'Histórico', 
+                        description: 'Épocas e civilizações do passado', 
+                        icon: 'fas fa-landmark',
+                        subcategories: [
+                            { id: 'egito_antigo', title: 'Egito Antigo', description: 'Pirâmides e hieróglifos faraônicos', icon: 'fas fa-monument' },
+                            { id: 'roma_imperio', title: 'Império Romano', description: 'Coliseu e arquitetura clássica', icon: 'fas fa-columns' },
+                            { id: 'grecia_classica', title: 'Grécia Clássica', description: 'Berço da filosofia ocidental', icon: 'fas fa-university' },
+                            { id: 'idade_media', title: 'Idade Média', description: 'Castelos e cavaleiros medievais', icon: 'fas fa-chess-rook' },
+                            { id: 'vikings_nordicos', title: 'Vikings Nórdicos', description: 'Guerreiros navegadores bárbaros', icon: 'fas fa-ship' },
+                            { id: 'samurai_japao', title: 'Japão Samurai', description: 'Bushido e honor feudal', icon: 'fas fa-torii-gate' },
+                            { id: 'maias_aztecas', title: 'Maias e Astecas', description: 'Templos piramidais mesoamericanos', icon: 'fas fa-step-forward' },
+                            { id: 'old_west', title: 'Velho Oeste', description: 'Cowboys e cidades fronteiriças', icon: 'fas fa-horse' },
+                            { id: 'era_vitoriana', title: 'Era Vitoriana', description: 'Elegância inglesa do século XIX', icon: 'fas fa-crown' },
+                            { id: 'belle_epoque', title: 'Belle Époque', description: 'Paris fin de siècle romântica', icon: 'fas fa-wine-glass' },
+                            { id: 'revolucao_industrial', title: 'Revolução Industrial', description: 'Máquinas a vapor transformadoras', icon: 'fas fa-cogs' },
+                            { id: 'primeira_guerra', title: 'Primeira Guerra Mundial', description: 'Trincheiras e conflito global', icon: 'fas fa-helmet-battle' },
+                            { id: 'anos_20', title: 'Anos 20', description: 'Jazz Age e prosperidade americana', icon: 'fas fa-music' },
+                            { id: 'segunda_guerra', title: 'Segunda Guerra Mundial', description: 'Conflito mundial devastador', icon: 'fas fa-plane' },
+                            { id: 'anos_50', title: 'Anos 50', description: 'Era dourada americana', icon: 'fas fa-car' },
+                            { id: 'anos_60', title: 'Anos 60', description: 'Revolução cultural e liberdade', icon: 'fas fa-peace' }
+                        ]
+                    },
+                    { 
                         id: 'fantasia', 
                         title: 'Fantasia', 
                         description: 'Ambientes mágicos e fantásticos', 
@@ -499,7 +584,49 @@
                     { id: 'cartoon', title: 'Cartoon', description: 'Estilo de desenho animado', icon: 'fas fa-smile' },
                     { id: 'pintura', title: 'Pintura', description: 'Estilo de pintura artística', icon: 'fas fa-brush' },
                     { id: 'minimalista', title: 'Minimalista', description: 'Estilo limpo e simples', icon: 'fas fa-circle' },
-                    { id: 'cyberpunk', title: 'Cyberpunk', description: 'Estilo futurístico e neon', icon: 'fas fa-robot' }
+                    { id: 'cyberpunk', title: 'Cyberpunk', description: 'Estilo futurístico e neon', icon: 'fas fa-robot' },
+                    { id: 'steampunk', title: 'Steampunk', description: 'Era vitoriana com tecnologia a vapor', icon: 'fas fa-cogs' },
+                    { id: 'dieselpunk', title: 'Dieselpunk', description: 'Anos 20-50 com estética industrial', icon: 'fas fa-industry' },
+                    { id: 'art_nouveau', title: 'Art Nouveau', description: 'Ornamentos florais e curvas orgânicas', icon: 'fas fa-leaf' },
+                    { id: 'art_deco', title: 'Art Déco', description: 'Geometria elegante dos anos 20', icon: 'fas fa-gem' },
+                    { id: 'impressionista', title: 'Impressionista', description: 'Pinceladas soltas e luz natural', icon: 'fas fa-sun' },
+                    { id: 'expressionista', title: 'Expressionista', description: 'Cores vibrantes e emoção intensa', icon: 'fas fa-fire' },
+                    { id: 'surrealista', title: 'Surrealista', description: 'Realidade distorcida e onírica', icon: 'fas fa-eye' },
+                    { id: 'cubista', title: 'Cubista', description: 'Formas geométricas fragmentadas', icon: 'fas fa-cube' },
+                    { id: 'pop_art', title: 'Pop Art', description: 'Cores saturadas e cultura popular', icon: 'fas fa-paint-brush' },
+                    { id: 'pixel_art', title: 'Pixel Art', description: 'Arte digital retro pixelizada', icon: 'fas fa-th' },
+                    { id: 'vaporwave', title: 'Vaporwave', description: 'Estética nostálgica anos 80-90', icon: 'fas fa-compact-disc' },
+                    { id: 'synthwave', title: 'Synthwave', description: 'Neon retrô futurista', icon: 'fas fa-wave-square' },
+                    { id: 'low_poly', title: 'Low Poly', description: 'Polígonos baixos e geométricos', icon: 'fas fa-shapes' },
+                    { id: 'watercolor', title: 'Aquarela', description: 'Transparências e fluidez da água', icon: 'fas fa-tint' },
+                    { id: 'oil_painting', title: 'Pintura a Óleo', description: 'Textura rica e cores profundas', icon: 'fas fa-palette' },
+                    { id: 'pencil_sketch', title: 'Esboço a Lápis', description: 'Traços delicados em grafite', icon: 'fas fa-pencil-alt' },
+                    { id: 'charcoal', title: 'Carvão', description: 'Contraste dramático em preto e branco', icon: 'fas fa-fire-alt' },
+                    { id: 'vintage_poster', title: 'Pôster Vintage', description: 'Propaganda retro dos anos 40-60', icon: 'fas fa-scroll' },
+                    { id: 'noir', title: 'Film Noir', description: 'Alto contraste preto e branco dramático', icon: 'fas fa-mask' },
+                    { id: 'gothic', title: 'Gótico', description: 'Arquitetura medieval sombria', icon: 'fas fa-cross' },
+                    { id: 'baroque', title: 'Barroco', description: 'Ornamentação exuberante e dourada', icon: 'fas fa-crown' },
+                    { id: 'renaissance', title: 'Renascentista', description: 'Perfeição clássica e proporção áurea', icon: 'fas fa-university' },
+                    { id: 'abstract', title: 'Abstrato', description: 'Formas não-representativas livres', icon: 'fas fa-puzzle-piece' },
+                    { id: 'photorealistic', title: 'Fotorrealista', description: 'Hiper-realismo detalhado extremo', icon: 'fas fa-camera-retro' },
+                    { id: 'hyperrealistic', title: 'Hiper-realista', description: 'Realismo além da fotografia', icon: 'fas fa-eye-dropper' },
+                    { id: 'studio_ghibli', title: 'Studio Ghibli', description: 'Animação japonesa poética', icon: 'fas fa-leaf' },
+                    { id: 'disney_classic', title: 'Disney Clássico', description: 'Animação tradicional americana', icon: 'fas fa-castle' },
+                    { id: 'comic_book', title: 'História em Quadrinhos', description: 'Cores sólidas e contornos marcados', icon: 'fas fa-book-open' },
+                    { id: 'graffiti', title: 'Grafite', description: 'Arte urbana em spray colorido', icon: 'fas fa-spray-can' },
+                    { id: 'tattoo', title: 'Tatuagem', description: 'Linhas boldas estilo tattoo tradicional', icon: 'fas fa-heart' },
+                    { id: 'stained_glass', title: 'Vitral', description: 'Vidro colorido translúcido medieval', icon: 'fas fa-church' },
+                    { id: 'mosaic', title: 'Mosaico', description: 'Pequenas peças formando imagem', icon: 'fas fa-th-large' },
+                    { id: 'papercraft', title: 'Papercraft', description: 'Arte em papel recortado dimensional', icon: 'fas fa-cut' },
+                    { id: 'origami', title: 'Origami', description: 'Dobraduras geométricas japonesas', icon: 'fas fa-paper-plane' },
+                    { id: 'claymation', title: 'Stop Motion', description: 'Animação com massinha ou bonecos', icon: 'fas fa-play-circle' },
+                    { id: 'silhouette', title: 'Silhueta', description: 'Contornos escuros contra luz', icon: 'fas fa-user-secret' },
+                    { id: 'thermal', title: 'Visão Térmica', description: 'Cores baseadas em temperatura', icon: 'fas fa-thermometer-full' },
+                    { id: 'x_ray', title: 'Raio-X', description: 'Visão através de estruturas', icon: 'fas fa-bone' },
+                    { id: 'blueprint', title: 'Projeto Técnico', description: 'Desenho técnico azul e branco', icon: 'fas fa-drafting-compass' },
+                    { id: 'holographic', title: 'Holográfico', description: 'Efeito iridescente futurístico', icon: 'fas fa-prism' },
+                    { id: 'glitch', title: 'Glitch Art', description: 'Falhas digitais artísticas', icon: 'fas fa-bug' },
+                    { id: 'double_exposure', title: 'Dupla Exposição', description: 'Sobreposição transparente de imagens', icon: 'fas fa-layer-group' }
                 ]
             },
             4: {
@@ -512,7 +639,45 @@
                     { id: 'noturna', title: 'Noturna', description: 'Iluminação noturna', icon: 'fas fa-moon' },
                     { id: 'neon', title: 'Neon', description: 'Luzes coloridas e vibrantes', icon: 'fas fa-bolt' },
                     { id: 'dramatica', title: 'Dramática', description: 'Contraste alto e sombras', icon: 'fas fa-theater-masks' },
-                    { id: 'suave', title: 'Suave', description: 'Luz difusa e suave', icon: 'fas fa-cloud' }
+                    { id: 'suave', title: 'Suave', description: 'Luz difusa e suave', icon: 'fas fa-cloud' },
+                    { id: 'azul_hora', title: 'Hora Azul', description: 'Crepúsculo com céu azul profundo', icon: 'fas fa-moon' },
+                    { id: 'contralluz', title: 'Contraluz', description: 'Silhueta contra fonte de luz', icon: 'fas fa-circle' },
+                    { id: 'rim_light', title: 'Rim Light', description: 'Luz de contorno destacando bordas', icon: 'fas fa-circle-outline' },
+                    { id: 'volumetrica', title: 'Volumétrica', description: 'Raios de luz através de fumaca/poeira', icon: 'fas fa-cloud-sun' },
+                    { id: 'candlelight', title: 'Luz de Vela', description: 'Iluminação íntima e cálida', icon: 'fas fa-fire' },
+                    { id: 'firelight', title: 'Luz de Fogueira', description: 'Iluminação dansante alaranjada', icon: 'fas fa-fire-alt' },
+                    { id: 'lightning', title: 'Relâmpago', description: 'Iluminação instantânea e intensa', icon: 'fas fa-bolt' },
+                    { id: 'aurora', title: 'Aurora Boreal', description: 'Luzes dansantes coloridas polares', icon: 'fas fa-star' },
+                    { id: 'underwater', title: 'Submersa', description: 'Luz filtrada pela água', icon: 'fas fa-water' },
+                    { id: 'studio', title: 'Estúdio', description: 'Iluminação profissional controlada', icon: 'fas fa-video' },
+                    { id: 'harsh', title: 'Dura', description: 'Luz direta criando sombras marcadas', icon: 'fas fa-sun' },
+                    { id: 'soft_box', title: 'Soft Box', description: 'Luz difusa de equipamento profissional', icon: 'fas fa-square' },
+                    { id: 'spot_light', title: 'Spot Light', description: 'Foco direcionado e concentrado', icon: 'fas fa-circle' },
+                    { id: 'flood_light', title: 'Flood Light', description: 'Iluminação ampla e uniforme', icon: 'fas fa-lightbulb' },
+                    { id: 'led_strip', title: 'Fita LED', description: 'Iluminação linear colorida moderna', icon: 'fas fa-minus' },
+                    { id: 'black_light', title: 'Luz Negra', description: 'Ultravioleta fazendo objetos fluorescerem', icon: 'fas fa-magic' },
+                    { id: 'laser', title: 'Laser', description: 'Feixes de luz concentrados coloridos', icon: 'fas fa-burn' },
+                    { id: 'strobe', title: 'Estroboscópica', description: 'Flashes rápidos e intermitentes', icon: 'fas fa-exclamation' },
+                    { id: 'ambient', title: 'Ambiente', description: 'Iluminação geral difusa', icon: 'fas fa-lightbulb' },
+                    { id: 'accent', title: 'Acento', description: 'Destaque em pontos específicos', icon: 'fas fa-star' },
+                    { id: 'mood', title: 'Mood', description: 'Iluminação criando atmosfera', icon: 'fas fa-heart' },
+                    { id: 'fluorescent', title: 'Fluorescente', description: 'Luz branca fria de tubo', icon: 'fas fa-lightbulb' },
+                    { id: 'halogen', title: 'Halógena', description: 'Luz quente e intensa', icon: 'fas fa-fire' },
+                    { id: 'daylight', title: 'Luz do Dia', description: 'Iluminação natural balanceada', icon: 'fas fa-sun' },
+                    { id: 'sunset', title: 'Pôr do Sol', description: 'Tons alaranjados e avermelhados', icon: 'fas fa-sun' },
+                    { id: 'sunrise', title: 'Nascer do Sol', description: 'Luz dourada matinal suave', icon: 'fas fa-sun' },
+                    { id: 'overcast', title: 'Nublado', description: 'Luz difusa através de nuvens', icon: 'fas fa-cloud' },
+                    { id: 'indoor', title: 'Interior', description: 'Iluminação artificial doméstica', icon: 'fas fa-home' },
+                    { id: 'outdoor', title: 'Exterior', description: 'Iluminação natural externa', icon: 'fas fa-tree' },
+                    { id: 'cinematic', title: 'Cinemática', description: 'Iluminação dramática de filme', icon: 'fas fa-film' },
+                    { id: 'theatrical', title: 'Teatral', description: 'Iluminação cênica espetacular', icon: 'fas fa-theater-masks' },
+                    { id: 'retro', title: 'Retrô', description: 'Iluminação vintage nostalgica', icon: 'fas fa-history' },
+                    { id: 'futuristic', title: 'Futurística', description: 'Iluminação sci-fi avancada', icon: 'fas fa-rocket' },
+                    { id: 'magical', title: 'Mágica', description: 'Iluminação sobrenatural brilhante', icon: 'fas fa-magic' },
+                    { id: 'ethereal', title: 'Etérea', description: 'Luz celestial e transcendente', icon: 'fas fa-cloud' },
+                    { id: 'gothic', title: 'Gótica', description: 'Iluminação sombria e mistériosa', icon: 'fas fa-cross' },
+                    { id: 'warm', title: 'Cálida', description: 'Tons amarelados e aconchegantes', icon: 'fas fa-fire' },
+                    { id: 'cool', title: 'Fria', description: 'Tons azulados e refrescantes', icon: 'fas fa-snowflake' }
                 ]
             },
             5: {
@@ -525,7 +690,52 @@
                     { id: 'hdr', title: 'HDR', description: 'Alto contraste dinâmico', icon: 'fas fa-adjust' },
                     { id: 'macro', title: 'Macro', description: 'Detalhes extremamente próximos', icon: 'fas fa-search-plus' },
                     { id: 'panoramica', title: 'Panorâmica', description: 'Vista ampla e abrangente', icon: 'fas fa-expand-arrows-alt' },
-                    { id: 'vintage', title: 'Vintage', description: 'Estilo retro e nostálgico', icon: 'fas fa-history' }
+                    { id: 'vintage', title: 'Vintage', description: 'Estilo retro e nostálgico', icon: 'fas fa-history' },
+                    { id: '8k', title: '8K Ultra HD', description: 'Resolução extrema futurística', icon: 'fas fa-desktop' },
+                    { id: 'imax', title: 'IMAX', description: 'Formato de cinema gigante', icon: 'fas fa-expand' },
+                    { id: 'anamorphic', title: 'Anamórfico', description: 'Lente cinemática widescreen', icon: 'fas fa-film' },
+                    { id: 'tilt_shift', title: 'Tilt-Shift', description: 'Efeito miniatura seletivo', icon: 'fas fa-eye' },
+                    { id: 'fisheye', title: 'Fisheye', description: 'Lente olho de peixe distorcida', icon: 'fas fa-circle' },
+                    { id: 'telephoto', title: 'Teleobjetiva', description: 'Lente longa comprimindo perspectiva', icon: 'fas fa-search' },
+                    { id: 'wide_angle', title: 'Grande Angular', description: 'Campo de visão amplo expansivo', icon: 'fas fa-expand-arrows-alt' },
+                    { id: 'portrait', title: 'Retrato', description: 'Orientação vertical clássica', icon: 'fas fa-portrait' },
+                    { id: 'landscape', title: 'Paisagem', description: 'Orientação horizontal ampla', icon: 'fas fa-image' },
+                    { id: 'square', title: 'Quadrado', description: 'Formato 1:1 harmônico', icon: 'fas fa-square' },
+                    { id: 'ultra_wide', title: 'Ultra Wide', description: 'Proporção cinemática 21:9', icon: 'fas fa-window-maximize' },
+                    { id: 'vertical_pano', title: 'Panorama Vertical', description: 'Vista alta e estreita', icon: 'fas fa-arrows-alt-v' },
+                    { id: 'depth_field', title: 'Profundidade Campo', description: 'Foco seletivo artístico', icon: 'fas fa-layer-group' },
+                    { id: 'bokeh', title: 'Bokeh', description: 'Desfoque de fundo cremoso', icon: 'fas fa-circle' },
+                    { id: 'sharp', title: 'Nítido', description: 'Foco perfeito em todos detalhes', icon: 'fas fa-eye' },
+                    { id: 'grain', title: 'Granulado', description: 'Textura de filme analógico', icon: 'fas fa-th' },
+                    { id: 'clean', title: 'Limpo', description: 'Imagem digital pristina', icon: 'fas fa-sparkles' },
+                    { id: 'noir', title: 'Noir', description: 'Alto contraste preto e branco', icon: 'fas fa-adjust' },
+                    { id: 'sepia', title: 'Sépia', description: 'Tons marrons vintage clássicos', icon: 'fas fa-palette' },
+                    { id: 'duotone', title: 'Duotom', description: 'Duas cores contrastantes', icon: 'fas fa-yin-yang' },
+                    { id: 'monochrome', title: 'Monocromático', description: 'Variações de uma única cor', icon: 'fas fa-circle' },
+                    { id: 'saturated', title: 'Saturado', description: 'Cores intensas e vibrantes', icon: 'fas fa-fire' },
+                    { id: 'desaturated', title: 'Dessaturado', description: 'Cores suaves e apagadas', icon: 'fas fa-cloud' },
+                    { id: 'high_contrast', title: 'Alto Contraste', description: 'Diferenças extremas de luz', icon: 'fas fa-adjust' },
+                    { id: 'low_contrast', title: 'Baixo Contraste', description: 'Transições suaves e graduais', icon: 'fas fa-minus' },
+                    { id: 'cross_process', title: 'Cross Process', description: 'Processamento químico alternativo', icon: 'fas fa-exchange-alt' },
+                    { id: 'polaroid', title: 'Polaroid', description: 'Estética instantânea retrô', icon: 'fas fa-square' },
+                    { id: 'lomography', title: 'Lomografia', description: 'Câmeras toy com vazamentos luz', icon: 'fas fa-camera' },
+                    { id: 'double_exposure', title: 'Dupla Exposição', description: 'Sobreposição de duas imagens', icon: 'fas fa-layer-group' },
+                    { id: 'long_exposure', title: 'Longa Exposição', description: 'Movimento capturado em trilhas', icon: 'fas fa-clock' },
+                    { id: 'time_lapse', title: 'Time Lapse', description: 'Tempo comprimido acelerado', icon: 'fas fa-fast-forward' },
+                    { id: 'slow_motion', title: 'Câmera Lenta', description: 'Movimento expandido fluido', icon: 'fas fa-play' },
+                    { id: 'freeze_frame', title: 'Congelamento', description: 'Momento capturado instantâneo', icon: 'fas fa-pause' },
+                    { id: 'motion_blur', title: 'Borro Movimento', description: 'Dinamismo em desfoque direcional', icon: 'fas fa-wind' },
+                    { id: 'focus_stacking', title: 'Empilhamento Foco', description: 'Foco estendido através camadas', icon: 'fas fa-layer-group' },
+                    { id: 'infrared', title: 'Infravermelho', description: 'Espectro além da visão humana', icon: 'fas fa-thermometer-three-quarters' },
+                    { id: 'ultraviolet', title: 'Ultravioleta', description: 'Espectro invisible revelado', icon: 'fas fa-eye-slash' },
+                    { id: 'microscopic', title: 'Microscópico', description: 'Mundo invisível ampliado extremo', icon: 'fas fa-search-plus' },
+                    { id: 'aerial', title: 'Aéreo', description: 'Perspectiva de pássaro superior', icon: 'fas fa-helicopter' },
+                    { id: 'satellite', title: 'Satélite', description: 'Visão orbital da Terra', icon: 'fas fa-satellite' },
+                    { id: 'underwater', title: 'Subaquatico', description: 'Técnica submarina especializada', icon: 'fas fa-fish' },
+                    { id: 'night_vision', title: 'Visão Noturna', description: 'Tecnologia militar verde', icon: 'fas fa-moon' },
+                    { id: 'thermal', title: 'Térmico', description: 'Mapeamento calor cores falsas', icon: 'fas fa-thermometer-full' },
+                    { id: 'xray', title: 'Raio-X', description: 'Visão através estruturas internas', icon: 'fas fa-x-ray' },
+                    { id: 'holographic', title: 'Holográfico', description: 'Projeção tridimensional futurista', icon: 'fas fa-cube' }
                 ]
             },
             6: {
@@ -538,7 +748,55 @@
                     { id: 'movimento', title: 'Movimento', description: 'Sensação de movimento dinâmico', icon: 'fas fa-running' },
                     { id: 'textura', title: 'Texturas', description: 'Texturas detalhadas e táteis', icon: 'fas fa-th' },
                     { id: 'profundidade', title: 'Profundidade', description: 'Efeito de profundidade de campo', icon: 'fas fa-layer-group' },
-                    { id: 'atmosfera', title: 'Atmosfera', description: 'Elementos atmosféricos como névoa', icon: 'fas fa-cloud-meatball' }
+                    { id: 'atmosfera', title: 'Atmosfera', description: 'Elementos atmosféricos como névoa', icon: 'fas fa-cloud-meatball' },
+                    { id: 'brilho', title: 'Brilho', description: 'Efeitos luminosos e halos', icon: 'fas fa-star' },
+                    { id: 'sombras', title: 'Sombras', description: 'Sombras dramáticas projetadas', icon: 'fas fa-user-secret' },
+                    { id: 'fumaca', title: 'Fumaça', description: 'Vapor etéreo e misterioso', icon: 'fas fa-smog' },
+                    { id: 'fogo', title: 'Fogo', description: 'Chamas dançantes e incandescentes', icon: 'fas fa-fire' },
+                    { id: 'gelo', title: 'Gelo', description: 'Cristais gelados e geada', icon: 'fas fa-snowflake' },
+                    { id: 'agua', title: 'Água', description: 'Gotas, respingos e ondas', icon: 'fas fa-tint' },
+                    { id: 'vento', title: 'Vento', description: 'Movimento aéreo visível', icon: 'fas fa-wind' },
+                    { id: 'poeira', title: 'Poeira', description: 'Partículas suspensas no ar', icon: 'fas fa-smog' },
+                    { id: 'areia', title: 'Areia', description: 'Grãos voando pelo vento', icon: 'fas fa-circle' },
+                    { id: 'neve', title: 'Neve', description: 'Flocos caindo suavemente', icon: 'fas fa-snowflake' },
+                    { id: 'chuva', title: 'Chuva', description: 'Gotas descendo intensas', icon: 'fas fa-cloud-rain' },
+                    { id: 'raios', title: 'Raios', description: 'Descargas elétricas dramáticas', icon: 'fas fa-bolt' },
+                    { id: 'aurora', title: 'Aurora', description: 'Luzes polares dançantes', icon: 'fas fa-rainbow' },
+                    { id: 'laser', title: 'Laser', description: 'Feixes luminosos coloridos', icon: 'fas fa-burn' },
+                    { id: 'hologram', title: 'Holograma', description: 'Projeção futurista transparente', icon: 'fas fa-cube' },
+                    { id: 'plasma', title: 'Plasma', description: 'Energia elétrica flutuante', icon: 'fas fa-bolt' },
+                    { id: 'magic_aura', title: 'Aura Mágica', description: 'Energia mística brilhante', icon: 'fas fa-magic' },
+                    { id: 'force_field', title: 'Campo de Força', description: 'Barreira energética visível', icon: 'fas fa-shield-alt' },
+                    { id: 'portal', title: 'Portal', description: 'Abertura dimensional luminosa', icon: 'fas fa-door-open' },
+                    { id: 'lens_flare', title: 'Lens Flare', description: 'Reflexo ótico da lente', icon: 'fas fa-sun' },
+                    { id: 'chromatic', title: 'Aberration Cromática', description: 'Dispersão de cores prisma', icon: 'fas fa-prism' },
+                    { id: 'distortion', title: 'Distorção', description: 'Deformação ótica artística', icon: 'fas fa-wave-square' },
+                    { id: 'refraction', title: 'Refração', description: 'Dobra da luz através material', icon: 'fas fa-prism' },
+                    { id: 'caustics', title: 'Cáusticas', description: 'Padrões luz através água', icon: 'fas fa-water' },
+                    { id: 'subsurface', title: 'Subsurfácie', description: 'Luz penetrando materiais', icon: 'fas fa-lightbulb' },
+                    { id: 'volumetric', title: 'Volumétrico', description: 'Luz através meio denso', icon: 'fas fa-cloud-sun' },
+                    { id: 'god_rays', title: 'Raios Divinos', description: 'Feixes luz através nuvens', icon: 'fas fa-sun' },
+                    { id: 'mist', title: 'Bruma', description: 'Névoa sutil e etérea', icon: 'fas fa-cloud' },
+                    { id: 'fog', title: 'Neblina', description: 'Névoa densa e misteriosa', icon: 'fas fa-smog' },
+                    { id: 'steam', title: 'Vapor', description: 'Calor visível elevando', icon: 'fas fa-thermometer-three-quarters' },
+                    { id: 'sparkles', title: 'Faiscas', description: 'Brilhos pequenos cintilantes', icon: 'fas fa-sparkles' },
+                    { id: 'glitter', title: 'Purpurina', description: 'Brilho fino e reflexivo', icon: 'fas fa-star' },
+                    { id: 'dust_motes', title: 'Partículas Poeira', description: 'Pequenos pontos flutuantes', icon: 'fas fa-circle' },
+                    { id: 'pollen', title: 'Pólen', description: 'Partículas orgânicas voadoras', icon: 'fas fa-seedling' },
+                    { id: 'ash', title: 'Cinzas', description: 'Resíduos flutuando levemente', icon: 'fas fa-fire-alt' },
+                    { id: 'embers', title: 'Brasas', description: 'Partículas incandescentes voando', icon: 'fas fa-fire' },
+                    { id: 'butterflies', title: 'Borboletas', description: 'Criaturas coloridas esvoaçantes', icon: 'fas fa-feather' },
+                    { id: 'birds', title: 'Pássaros', description: 'Aves em movimento gracioso', icon: 'fas fa-dove' },
+                    { id: 'leaves', title: 'Folhas', description: 'Folhagem caindo ou voando', icon: 'fas fa-leaf' },
+                    { id: 'petals', title: 'Pétalas', description: 'Flores se espalhando romanticamente', icon: 'fas fa-heart' },
+                    { id: 'bubbles', title: 'Bolhas', description: 'Esferas transparentes flutuantes', icon: 'fas fa-circle' },
+                    { id: 'soap_bubbles', title: 'Bolhas Sabão', description: 'Esferas iridescentes delicadas', icon: 'fas fa-rainbow' },
+                    { id: 'energy_waves', title: 'Ondas Energia', description: 'Pulsações energéticas visíveis', icon: 'fas fa-wave-square' },
+                    { id: 'sound_waves', title: 'Ondas Sonoras', description: 'Vibrações acústicas visíveis', icon: 'fas fa-volume-up' },
+                    { id: 'shock_waves', title: 'Ondas Choque', description: 'Distorções de impacto expansivas', icon: 'fas fa-expand' },
+                    { id: 'trails', title: 'Rastros', description: 'Caudas de movimento persistentes', icon: 'fas fa-meteor' },
+                    { id: 'streaks', title: 'Riscos', description: 'Linhas de velocidade dinâmicas', icon: 'fas fa-minus' },
+                    { id: 'afterimages', title: 'Pós-imagens', description: 'Ecos visuais de movimento', icon: 'fas fa-clone' }
                 ]
             },
             7: {
@@ -662,10 +920,16 @@
             if (substep === 0) {
                 // Mostrar categorias principais
                 stepContent.innerHTML = `
-                    <h2 class="step-title">
-                        <i class="${stepData.icon}"></i>
-                        ${stepData.title}
-                    </h2>
+                    <div class="step-header">
+                        <h2 class="step-title">
+                            <i class="${stepData.icon}"></i>
+                            ${stepData.title}
+                        </h2>
+                        <button class="btn-skip-inline" id="skipBtnInline" title="Pular esta etapa">
+                            <i class="fas fa-forward"></i>
+                            Pular
+                        </button>
+                    </div>
                     <p class="step-description">${stepData.description}</p>
                     <div class="options-grid">
                         ${stepData.options.map(option => `
@@ -679,6 +943,14 @@
                             </div>
                         `).join('')}
                     </div>
+                    <div class="custom-description-section-bottom">
+                        <textarea 
+                            id="customDesc${step}" 
+                            class="custom-description-input-small" 
+                            placeholder="Descrição personalizada (opcional)..."
+                            rows="1"
+                        ></textarea>
+                    </div>
                 `;
 
                 // Restaurar seleção da categoria principal
@@ -687,6 +959,45 @@
                     if (selectedCard) {
                         selectedCard.classList.add('selected');
                     }
+                }
+                
+                // Restaurar descrição personalizada e adicionar event listener
+                const customDescInput = document.getElementById(`customDesc${step}`);
+                if (customDescInput) {
+                    if (customDescriptions[step]) {
+                        customDescInput.value = customDescriptions[step];
+                    }
+                    customDescInput.addEventListener('input', (e) => {
+                        customDescriptions[step] = e.target.value;
+                        updatePrompt();
+                    });
+                }
+                
+                // Adicionar event listener para botão pular inline
+                const skipBtnInline = document.getElementById('skipBtnInline');
+                if (skipBtnInline) {
+                    skipBtnInline.addEventListener('click', () => {
+                        if (currentStep < 7) {
+                            // Limpar seleções da etapa atual
+                            delete selectedChoices[currentStep];
+                            delete selectedSubcategories[currentStep];
+                            delete customDescriptions[currentStep];
+                            
+                            // Limpar também descrições de subcategorias
+                            Object.keys(customDescriptions).forEach(key => {
+                                if (key.startsWith(`${currentStep}_`)) {
+                                    delete customDescriptions[key];
+                                }
+                            });
+                            
+                            // Avançar para próxima etapa
+                            currentStep++;
+                            loadStep(currentStep, 0);
+                            
+                            // Atualizar prompt
+                            updatePrompt();
+                        }
+                    });
                 }
             } else {
                 // Mostrar subcategorias
@@ -703,10 +1014,16 @@
                             <span class="breadcrumb-separator">/</span>
                             <span class="breadcrumb-current">${categoryData.title}</span>
                         </div>
-                        <h2 class="step-title">
-                            <i class="${categoryData.icon}"></i>
-                            ${categoryData.title}
-                        </h2>
+                        <div class="step-header">
+                            <h2 class="step-title">
+                                <i class="${categoryData.icon}"></i>
+                                ${categoryData.title}
+                            </h2>
+                            <button class="btn-skip-inline" id="skipBtnInline" title="Pular esta etapa">
+                                <i class="fas fa-forward"></i>
+                                Pular
+                            </button>
+                        </div>
                         <p class="step-description">Escolha um tipo específico de ${categoryData.title.toLowerCase()}</p>
                         <div class="options-grid">
                             ${categoryData.subcategories.map(subcat => `
@@ -719,6 +1036,14 @@
                                 </div>
                             `).join('')}
                         </div>
+                        <div class="custom-description-section-bottom">
+                            <textarea 
+                                id="customDesc${step}_${selectedCategory}" 
+                                class="custom-description-input-small" 
+                                placeholder="Descrição personalizada (opcional)..."
+                                rows="1"
+                            ></textarea>
+                        </div>
                     `;
 
                     // Restaurar seleção da subcategoria
@@ -727,6 +1052,46 @@
                         if (selectedCard) {
                             selectedCard.classList.add('selected');
                         }
+                    }
+                    
+                    // Restaurar descrição personalizada e adicionar event listener para subcategoria
+                    const customDescSubInput = document.getElementById(`customDesc${step}_${selectedCategory}`);
+                    if (customDescSubInput) {
+                        const subKey = `${step}_${selectedCategory}`;
+                        if (customDescriptions[subKey]) {
+                            customDescSubInput.value = customDescriptions[subKey];
+                        }
+                        customDescSubInput.addEventListener('input', (e) => {
+                            customDescriptions[subKey] = e.target.value;
+                            updatePrompt();
+                        });
+                    }
+                    
+                    // Adicionar event listener para botão pular inline (subcategoria)
+                    const skipBtnInlineSub = document.getElementById('skipBtnInline');
+                    if (skipBtnInlineSub) {
+                        skipBtnInlineSub.addEventListener('click', () => {
+                            if (currentStep < 7) {
+                                // Limpar seleções da etapa atual
+                                delete selectedChoices[currentStep];
+                                delete selectedSubcategories[currentStep];
+                                delete customDescriptions[currentStep];
+                                
+                                // Limpar também descrições de subcategorias
+                                Object.keys(customDescriptions).forEach(key => {
+                                    if (key.startsWith(`${currentStep}_`)) {
+                                        delete customDescriptions[key];
+                                    }
+                                });
+                                
+                                // Avançar para próxima etapa
+                                currentStep++;
+                                loadStep(currentStep, 0);
+                                
+                                // Atualizar prompt
+                                updatePrompt();
+                            }
+                        });
                     }
                 }
             }
@@ -790,8 +1155,14 @@
                     loadStep(currentStep, 1);
                 }, 300);
             } else {
-                // Não tem subcategorias, atualizar prompt
+                // Não tem subcategorias, atualizar prompt e avançar automaticamente
                 updatePrompt();
+                setTimeout(() => {
+                    // Avançar para próxima etapa automaticamente
+                    if (currentStep < 7) {
+                        loadStep(currentStep + 1, 0);
+                    }
+                }, 500);
             }
 
             console.log('Selected category:', categoryId, 'for step:', currentStep);
@@ -812,10 +1183,15 @@
             // Salvar escolha
             selectedSubcategories[currentStep] = subcategoryId;
 
-            // Etapa de seres agora abre modal direto na seleção da categoria principal
-
             // Atualizar prompt
             updatePrompt();
+
+            // Avançar automaticamente para próxima etapa após seleção de subcategoria
+            setTimeout(() => {
+                if (currentStep < 7) {
+                    loadStep(currentStep + 1, 0);
+                }
+            }, 500);
 
             console.log('Selected subcategory:', subcategoryId, 'for step:', currentStep);
         }
@@ -1666,6 +2042,12 @@
                             ambienteText = `em ${subcategory.title.toLowerCase()} - ${subcategory.description.toLowerCase()}`;
                         }
                     }
+                    
+                    // Adicionar descrição personalizada da subcategoria se existir
+                    const subCustomDesc = customDescriptions[`2_${selectedChoices[2]}`];
+                    if (subCustomDesc && subCustomDesc.trim()) {
+                        ambienteText += `, ${subCustomDesc.trim()}`;
+                    }
                 } else if (selectedChoices[2]) {
                     // Usar categoria geral
                     const mainCategory = steps[2].options.find(opt => opt.id === selectedChoices[2]);
@@ -1674,9 +2056,22 @@
                     }
                 }
                 
+                // Adicionar descrição personalizada da categoria principal se existir
+                const customDesc = customDescriptions[2];
+                if (customDesc && customDesc.trim()) {
+                    if (ambienteText) {
+                        ambienteText += `, ${customDesc.trim()}`;
+                    } else {
+                        ambienteText = customDesc.trim();
+                    }
+                }
+                
                 if (ambienteText) {
                     parts.push(ambienteText);
                 }
+            } else if (customDescriptions[2] && customDescriptions[2].trim()) {
+                // Se não há seleção mas há descrição personalizada
+                parts.push(customDescriptions[2].trim());
             }
 
             // Etapas 3-6: Processar outras categorias se existirem
@@ -1693,6 +2088,12 @@
                                 stepText = `${subcategory.title.toLowerCase()}`;
                             }
                         }
+                        
+                        // Adicionar descrição personalizada da subcategoria se existir
+                        const subCustomDesc = customDescriptions[`${step}_${selectedChoices[step]}`];
+                        if (subCustomDesc && subCustomDesc.trim()) {
+                            stepText += `, ${subCustomDesc.trim()}`;
+                        }
                     } else {
                         // Usar categoria geral
                         const mainCategory = steps[step].options.find(opt => opt.id === selectedChoices[step]);
@@ -1701,9 +2102,22 @@
                         }
                     }
                     
+                    // Adicionar descrição personalizada da categoria principal se existir
+                    const customDesc = customDescriptions[step];
+                    if (customDesc && customDesc.trim()) {
+                        if (stepText) {
+                            stepText += `, ${customDesc.trim()}`;
+                        } else {
+                            stepText = customDesc.trim();
+                        }
+                    }
+                    
                     if (stepText) {
                         parts.push(stepText);
                     }
+                } else if (customDescriptions[step] && customDescriptions[step].trim()) {
+                    // Se não há seleção mas há descrição personalizada
+                    parts.push(customDescriptions[step].trim());
                 }
             }
 
@@ -1736,7 +2150,6 @@
                     parts.push(stepText);
                 }
             }
-
 
             // Construir prompt final
             if (parts.length > 0) {
@@ -1852,6 +2265,8 @@
             currentSubstep = 0;
             loadStep(7, 0);
         });
+
+        // Event listener para botão pular foi movido para os botões inline nas seções
 
         // Event listeners para ações
         document.getElementById('copyBtn').addEventListener('click', () => {
