@@ -1,9 +1,22 @@
+<?php
+session_start();
+
+// Verificar se o usuário está logado
+if (!isset($_SESSION['usuario_id'])) {
+    header('Location: auth/login.php');
+    exit;
+}
+
+// Carregar configurações
+require_once 'includes/Environment.php';
+require_once 'includes/SupabaseClient.php';
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prompt Builder IA - CentroService</title>
+    <title><?= Environment::get('APP_NAME', 'Prompt Builder IA') ?> - CentroService</title>
     <meta name="description" content="Gerador inteligente de prompts para IA - Stable Diffusion, Midjourney, Flux, VEO/Opal e mais">
     
     <!-- CSS -->
@@ -25,9 +38,18 @@
             </a>
             <h1 class="app-title">
                 <i class="fas fa-magic"></i>
-                Prompt Builder IA
+                <?= Environment::get('APP_NAME', 'Prompt Builder IA') ?>
             </h1>
             <div class="header-actions">
+                <div class="user-info">
+                    <span class="user-name">
+                        <i class="fas fa-user"></i>
+                        <?= htmlspecialchars($_SESSION['usuario_nome'] ?? 'Usuário') ?>
+                    </span>
+                    <a href="auth/logout.php" class="btn-logout" title="Sair">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                </div>
                 <button class="btn-help" id="helpBtn">
                     <i class="fas fa-question-circle"></i>
                 </button>
@@ -1177,6 +1199,15 @@
             
             // Atualizar prompt sempre que carregar uma etapa
             updatePrompt();
+            
+            console.log(`Etapa ${step} carregada com sucesso`);
+        }
+
+        // Garantir que updatePrompt seja chamado após loadStep
+        function loadStepAndUpdate(step, substep = 0) {
+            console.log(`loadStepAndUpdate chamado para etapa ${step}, subetapa ${substep}`);
+            loadStep(step, substep);
+            updatePrompt();
         }
 
         function selectCategory(categoryId) {
@@ -1193,6 +1224,7 @@
 
             // Salvar escolha
             selectedChoices[currentStep] = categoryId;
+            console.log('Categoria selecionada:', categoryId, 'para etapa:', currentStep);
 
             // Verificar se é etapa de seres
             if (currentStep === 7) {
@@ -1240,6 +1272,7 @@
 
             // Salvar escolha
             selectedSubcategories[currentStep] = subcategoryId;
+            console.log('Subcategoria selecionada:', subcategoryId, 'para etapa:', currentStep);
 
             // Atualizar prompt
             updatePrompt();
@@ -1269,20 +1302,19 @@
             }
             
             console.log('Modal encontrado, exibindo...');
-            // Aplicar estilos inline com !important via cssText para sobrescrever qualquer CSS
-            modal.style.cssText = `
-                display: flex !important;
-                position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
-                width: 100% !important;
-                height: 100% !important;
-                z-index: 9999 !important;
-                background-color: rgba(0, 0, 0, 0.8) !important;
-                align-items: center !important;
-                justify-content: center !important;
-                padding: 2rem !important;
-            `;
+            
+            // Forçar exibição do modal com estilos inline
+            modal.style.display = 'flex';
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.zIndex = '9999';
+            modal.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            modal.style.alignItems = 'center';
+            modal.style.justifyContent = 'center';
+            modal.style.padding = '2rem';
             
             // Verificar se ficou visível
             const computedStyle = window.getComputedStyle(modal);
@@ -1297,17 +1329,45 @@
                 console.warn('modalTitle não encontrado');
             }
             
+            // Mostrar formulário para o tipo selecionado
             showSerFormForType(serType);
+            
+            // Atualizar preview dos seres
             updateSeresPreview();
             
             console.log('Modal deveria estar visível agora');
+            
+            // Adicionar event listener para fechar modal ao clicar fora
+            modal.onclick = (e) => {
+                if (e.target === modal) {
+                    closeSeresConfigModal();
+                }
+            };
         }
 
         function closeSeresConfigModal() {
-            document.getElementById('seresConfigModal').style.display = 'none';
+            const modal = document.getElementById('seresConfigModal');
+            if (modal) {
+                modal.style.display = 'none';
+                console.log('Modal fechado');
+                
+                // Limpar formulário ao fechar
+                const serForm = document.getElementById('serForm');
+                if (serForm) {
+                    serForm.style.display = 'none';
+                }
+                
+                // Resetar índice de edição
+                editingSerIndex = -1;
+                
+                // Limpar formulário
+                clearSerForm();
+            }
         }
 
         function showSerFormForType(serType) {
+            console.log('showSerFormForType chamado para tipo:', serType);
+            
             const formContainer = document.getElementById('serForm');
             if (!formContainer) {
                 console.error('Elemento serForm não encontrado');
@@ -1316,6 +1376,7 @@
             
             // Garantir que o formulário seja exibido
             formContainer.style.display = 'block';
+            console.log('Formulário de ser exibido para tipo:', serType);
             
             if (serType === 'humanos') {
                 formContainer.innerHTML = `
@@ -1687,11 +1748,41 @@
                 `;
             }
             
+            // Garantir que o formulário seja exibido
             formContainer.style.display = 'block';
+            console.log('Formulário de ser exibido para tipo:', serType);
+            
+            // Adicionar event listeners para os botões do formulário
+            setTimeout(() => {
+                const cancelarBtn = document.getElementById('cancelarSer');
+                const salvarBtn = document.getElementById('salvarSer');
+                
+                if (cancelarBtn) {
+                    cancelarBtn.onclick = () => {
+                        console.log('Botão cancelar clicado');
+                        hideSerForm();
+                    };
+                }
+                
+                if (salvarBtn) {
+                    salvarBtn.onclick = () => {
+                        console.log('Botão salvar clicado');
+                        saveCurrentSer();
+                    };
+                }
+                
+                console.log('Event listeners adicionados aos botões do formulário');
+            }, 100);
         }
 
         function renderSeresList() {
+            console.log('renderSeresList chamado. Total de seres:', configuredSeres.length);
+            
             const seresList = document.getElementById('seresList');
+            if (!seresList) {
+                console.error('Elemento seresList não encontrado');
+                return;
+            }
             
             if (configuredSeres.length === 0) {
                 seresList.innerHTML = `
@@ -1701,6 +1792,7 @@
                         <p>Clique em "Adicionar Novo Ser" para começar.</p>
                     </div>
                 `;
+                console.log('Lista renderizada: nenhum ser configurado');
                 return;
             }
 
@@ -1720,65 +1812,105 @@
                     </div>
                 </div>
             `).join('');
+            
+            console.log('Lista renderizada com', configuredSeres.length, 'seres');
         }
 
         function generateSerDescription(ser) {
             let desc = [];
             
             if (ser.genero) desc.push(ser.genero);
-            if (ser.idade) desc.push(ser.idade.replace('_', ' '));
-            if (ser.altura) desc.push(ser.altura.replace('_', ' '));
+            if (ser.idade) desc.push(ser.idade ? ser.idade.replace('_', ' ') : '');
+            if (ser.altura) desc.push(ser.altura ? ser.altura.replace('_', ' ') : '');
             if (ser.peso) desc.push(ser.peso);
-            if (ser.corCabelo) desc.push(`cabelo ${ser.corCabelo.replace('_', ' ')}`);
+            if (ser.corCabelo) desc.push(`cabelo ${ser.corCabelo ? ser.corCabelo.replace('_', ' ') : ''}`);
             if (ser.estiloRoupa) desc.push(`roupa ${ser.estiloRoupa}`);
             
-            return desc.length > 0 ? desc.join(', ') : 'Sem configurações específicas';
+            const result = desc.length > 0 ? desc.join(', ') : 'Sem configurações específicas';
+            console.log('Descrição gerada para ser:', ser.nome, '=', result);
+            return result;
         }
 
         function showSerForm(ser = null) {
+            console.log('showSerForm chamado para ser:', ser);
+            
             const form = document.getElementById('serForm');
+            if (!form) {
+                console.error('Elemento serForm não encontrado');
+                return;
+            }
+            
             form.style.display = 'block';
             
             if (ser) {
                 // Preencher formulário para edição
-                document.getElementById('serNome').value = ser.nome || '';
-                document.getElementById('serGenero').value = ser.genero || '';
-                document.getElementById('serIdade').value = ser.idade || '';
-                document.getElementById('serAltura').value = ser.altura || '';
-                document.getElementById('serPeso').value = ser.peso || '';
-                document.getElementById('serTomPele').value = ser.tomPele || '';
-                document.getElementById('serCorCabelo').value = ser.corCabelo || '';
-                document.getElementById('serComprimentoCabelo').value = ser.comprimentoCabelo || '';
-                document.getElementById('serEstiloCabelo').value = ser.estiloCabelo || '';
-                document.getElementById('serEstiloRoupa').value = ser.estiloRoupa || '';
-                document.getElementById('serCorRoupaTexto').value = ser.corRoupaTexto || '';
-                document.getElementById('serDescricaoExtra').value = ser.descricaoExtra || '';
+                const fields = [
+                    'serNome', 'serGenero', 'serIdade', 'serAltura', 'serPeso',
+                    'serTomPele', 'serCorCabelo', 'serComprimentoCabelo',
+                    'serEstiloCabelo', 'serEstiloRoupa', 'serCorRoupaTexto',
+                    'serDescricaoExtra'
+                ];
+                
+                fields.forEach(fieldId => {
+                    const field = document.getElementById(fieldId);
+                    if (field && ser[fieldId.replace('ser', '').toLowerCase()]) {
+                        field.value = ser[fieldId.replace('ser', '').toLowerCase()];
+                    }
+                });
+                
+                console.log('Formulário preenchido para edição');
             } else {
                 // Limpar formulário para novo ser
                 clearSerForm();
+                console.log('Formulário limpo para novo ser');
             }
             
             form.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function hideSerForm() {
-            document.getElementById('serForm').style.display = 'none';
-            editingSerIndex = -1;
+            const serForm = document.getElementById('serForm');
+            if (serForm) {
+                serForm.style.display = 'none';
+                editingSerIndex = -1;
+                console.log('Formulário de ser ocultado');
+            }
         }
 
         function clearSerForm() {
-            document.getElementById('serNome').value = '';
-            document.getElementById('serGenero').value = '';
-            document.getElementById('serIdade').value = '';
-            document.getElementById('serAltura').value = '';
-            document.getElementById('serPeso').value = '';
-            document.getElementById('serTomPele').value = '';
-            document.getElementById('serCorCabelo').value = '';
-            document.getElementById('serComprimentoCabelo').value = '';
-            document.getElementById('serEstiloCabelo').value = '';
-            document.getElementById('serEstiloRoupa').value = '';
-            document.getElementById('serCorRoupaTexto').value = '';
-            document.getElementById('serDescricaoExtra').value = '';
+            console.log('clearSerForm chamado');
+            
+            const fields = [
+                'serNome', 'serGenero', 'serIdade', 'serAltura', 'serPeso',
+                'serTomPele', 'serCorCabelo', 'serComprimentoCabelo',
+                'serEstiloCabelo', 'serEstiloRoupa', 'serCorRoupaTexto',
+                'serDescricaoExtra', 'serTipoAnimal', 'serPorte', 'serCorPrincipal',
+                'serTexturaPelo', 'serComprimentoPelo', 'serTipoFantastico',
+                'serTipoRobo', 'serTipoAlien'
+            ];
+            
+            fields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    if (field.type === 'range') {
+                        field.value = field.defaultValue || field.min || 0;
+                    } else {
+                        field.value = '';
+                    }
+                }
+            });
+            
+            // Atualizar valores de exibição para campos de range
+            const idadeValue = document.getElementById('idadeValue');
+            if (idadeValue) idadeValue.textContent = '25';
+            
+            const alturaValue = document.getElementById('alturaValue');
+            if (alturaValue) alturaValue.textContent = '1.70';
+            
+            const pesoValue = document.getElementById('pesoValue');
+            if (pesoValue) pesoValue.textContent = '70';
+            
+            console.log('Formulário de ser limpo');
         }
 
         function saveCurrentSer() {
@@ -1848,7 +1980,10 @@
             }
 
             // Resetar formulário
-            document.getElementById('serForm').style.display = 'none';
+            const serForm = document.getElementById('serForm');
+            if (serForm) {
+                serForm.style.display = 'none';
+            }
             editingSerIndex = -1;
             updateSeresPreview();
             
@@ -1860,7 +1995,13 @@
         }
 
         function updateSeresPreview() {
+            console.log('updateSeresPreview chamado. Total de seres:', configuredSeres.length);
+            
             const seresList = document.getElementById('seresList');
+            if (!seresList) {
+                console.error('Elemento seresList não encontrado');
+                return;
+            }
             
             if (configuredSeres.length === 0) {
                 seresList.innerHTML = `
@@ -1873,6 +2014,7 @@
                         </button>
                     </div>
                 `;
+                console.log('Preview atualizado: nenhum ser configurado');
                 return;
             }
 
@@ -1936,6 +2078,7 @@
             listHTML += '</div>';
             
             seresList.innerHTML = listHTML;
+            console.log('Preview atualizado com', configuredSeres.length, 'seres');
         }
 
         function showSerForm(ser = null) {
@@ -1944,62 +2087,124 @@
             
             if (ser) {
                 // Preencher campos baseado no tipo
-                document.getElementById('serNome').value = ser.nome || '';
+                const nomeField = document.getElementById('serNome');
+                if (nomeField) nomeField.value = ser.nome || '';
                 
                 if (ser.tipo === 'humanos') {
-                    document.getElementById('serGenero').value = ser.genero || '';
+                    const generoField = document.getElementById('serGenero');
+                    if (generoField) generoField.value = ser.genero || '';
                     
                     // Idade (extrair apenas o número)
                     const idadeNumero = ser.idade ? ser.idade.replace(' anos', '') : '25';
-                    document.getElementById('serIdade').value = idadeNumero;
-                    document.getElementById('idadeValue').textContent = idadeNumero;
+                    const idadeField = document.getElementById('serIdade');
+                    const idadeValue = document.getElementById('idadeValue');
+                    if (idadeField) idadeField.value = idadeNumero;
+                    if (idadeValue) idadeValue.textContent = idadeNumero;
                     
                     // Altura (extrair número e converter para cm)
                     const alturaMetros = ser.altura ? parseFloat(ser.altura.replace('m', '')) : 1.70;
                     const alturaCm = Math.round(alturaMetros * 100);
-                    document.getElementById('serAltura').value = alturaCm;
-                    document.getElementById('alturaValue').textContent = alturaMetros.toFixed(2);
+                    const alturaField = document.getElementById('serAltura');
+                    const alturaValue = document.getElementById('alturaValue');
+                    if (alturaField) alturaField.value = alturaCm;
+                    if (alturaValue) alturaValue.textContent = alturaMetros.toFixed(2);
                     
                     // Peso (extrair apenas o número)
                     const pesoNumero = ser.peso ? ser.peso.replace('kg', '') : '70';
-                    document.getElementById('serPeso').value = pesoNumero;
-                    document.getElementById('pesoValue').textContent = pesoNumero;
-                    document.getElementById('serTomPele').value = ser.tomPele || '';
-                    document.getElementById('serCorOlhos').value = ser.corOlhos || '';
-                    document.getElementById('serCorCabelo').value = ser.corCabelo || '';
-                    document.getElementById('serTipoCabelo').value = ser.tipoCabelo || '';
-                    document.getElementById('serComprimentoCabelo').value = ser.comprimentoCabelo || '';
-                    document.getElementById('serTraje').value = ser.traje || '';
-                    document.getElementById('serDescricaoRoupa').value = ser.descricaoRoupa || '';
+                    const pesoField = document.getElementById('serPeso');
+                    const pesoValue = document.getElementById('pesoValue');
+                    if (pesoField) pesoField.value = pesoNumero;
+                    if (pesoValue) pesoValue.textContent = pesoNumero;
+                    
+                    const tomPeleField = document.getElementById('serTomPele');
+                    if (tomPeleField) tomPeleField.value = ser.tomPele || '';
+                    
+                    const corOlhosField = document.getElementById('serCorOlhos');
+                    if (corOlhosField) corOlhosField.value = ser.corOlhos || '';
+                    
+                    const corCabeloField = document.getElementById('serCorCabelo');
+                    if (corCabeloField) corCabeloField.value = ser.corCabelo || '';
+                    
+                    const tipoCabeloField = document.getElementById('serTipoCabelo');
+                    if (tipoCabeloField) tipoCabeloField.value = ser.tipoCabelo || '';
+                    
+                    const comprimentoCabeloField = document.getElementById('serComprimentoCabelo');
+                    if (comprimentoCabeloField) comprimentoCabeloField.value = ser.comprimentoCabelo || '';
+                    
+                    const trajeField = document.getElementById('serTraje');
+                    if (trajeField) trajeField.value = ser.traje || '';
+                    
+                    const descricaoRoupaField = document.getElementById('serDescricaoRoupa');
+                    if (descricaoRoupaField) descricaoRoupaField.value = ser.descricaoRoupa || '';
                 } else if (ser.tipo === 'animais') {
-                    document.getElementById('serTipoAnimal').value = ser.tipoAnimal || '';
-                    document.getElementById('serPorte').value = ser.porte || '';
-                    document.getElementById('serCorPrincipal').value = ser.corPrincipal || '';
-                    document.getElementById('serTexturaPelo').value = ser.texturaPelo || '';
-                    document.getElementById('serComprimentoPelo').value = ser.comprimentoPelo || '';
-                    document.getElementById('serDescricaoExtra').value = ser.descricaoExtra || '';
+                    const tipoAnimalField = document.getElementById('serTipoAnimal');
+                    if (tipoAnimalField) tipoAnimalField.value = ser.tipoAnimal || '';
+                    
+                    const porteField = document.getElementById('serPorte');
+                    if (porteField) porteField.value = ser.porte || '';
+                    
+                    const corPrincipalField = document.getElementById('serCorPrincipal');
+                    if (corPrincipalField) corPrincipalField.value = ser.corPrincipal || '';
+                    
+                    const texturaPeloField = document.getElementById('serTexturaPelo');
+                    if (texturaPeloField) texturaPeloField.value = ser.texturaPelo || '';
+                    
+                    const comprimentoPeloField = document.getElementById('serComprimentoPelo');
+                    if (comprimentoPeloField) comprimentoPeloField.value = ser.comprimentoPelo || '';
+                    
+                    const descricaoExtraField = document.getElementById('serDescricaoExtra');
+                    if (descricaoExtraField) descricaoExtraField.value = ser.descricaoExtra || '';
                 } else if (ser.tipo === 'fantasticos') {
-                    document.getElementById('serTipoFantastico').value = ser.tipoFantastico || '';
-                    document.getElementById('serDescricaoExtra').value = ser.descricaoExtra || '';
+                    const tipoFantasticoField = document.getElementById('serTipoFantastico');
+                    if (tipoFantasticoField) tipoFantasticoField.value = ser.tipoFantastico || '';
+                    
+                    const descricaoExtraField = document.getElementById('serDescricaoExtra');
+                    if (descricaoExtraField) descricaoExtraField.value = ser.descricaoExtra || '';
                 } else if (ser.tipo === 'robots') {
-                    document.getElementById('serTipoRobo').value = ser.tipoRobo || '';
-                    document.getElementById('serDescricaoExtra').value = ser.descricaoExtra || '';
+                    const tipoRoboField = document.getElementById('serTipoRobo');
+                    if (tipoRoboField) tipoRoboField.value = ser.tipoRobo || '';
+                    
+                    const descricaoExtraField = document.getElementById('serDescricaoExtra');
+                    if (descricaoExtraField) descricaoExtraField.value = ser.descricaoExtra || '';
                 } else if (ser.tipo === 'aliens') {
-                    document.getElementById('serTipoAlien').value = ser.tipoAlien || '';
-                    document.getElementById('serDescricaoExtra').value = ser.descricaoExtra || '';
+                    const tipoAlienField = document.getElementById('serTipoAlien');
+                    if (tipoAlienField) tipoAlienField.value = ser.tipoAlien || '';
+                    
+                    const descricaoExtraField = document.getElementById('serDescricaoExtra');
+                    if (descricaoExtraField) descricaoExtraField.value = ser.descricaoExtra || '';
                 }
             }
         }
 
         function editSer(index) {
-            const ser = configuredSeres[index];
-            showSerForm(configuredSeres[index]);
+            if (index >= 0 && index < configuredSeres.length) {
+                const ser = configuredSeres[index];
+                console.log('Editando ser:', ser);
+                editingSerIndex = index;
+                showSerForm(ser);
+            } else {
+                console.error('Índice inválido para edição:', index);
+            }
         }
 
         function deleteSer(index) {
-            if (confirm('Tem certeza que deseja excluir este ser?')) {
-                configuredSeres.splice(index, 1);
-                updateSeresPreview();
+            if (index >= 0 && index < configuredSeres.length) {
+                if (confirm('Tem certeza que deseja excluir este ser?')) {
+                    const serRemovido = configuredSeres.splice(index, 1)[0];
+                    console.log('Ser removido:', serRemovido);
+                    
+                    // Resetar índice de edição se necessário
+                    if (editingSerIndex === index) {
+                        editingSerIndex = -1;
+                    } else if (editingSerIndex > index) {
+                        editingSerIndex--;
+                    }
+                    
+                    updateSeresPreview();
+                    updatePrompt(); // Atualizar prompt após remoção
+                }
+            } else {
+                console.error('Índice inválido para exclusão:', index);
             }
         }
 
@@ -2009,12 +2214,21 @@
                 return;
             }
             
+            console.log('Finalizando configuração de seres. Total configurado:', configuredSeres.length);
             closeSeresConfigModal();
             updatePrompt();
+            
+            // Mostrar mensagem de sucesso
+            alert(`Configuração finalizada com sucesso! ${configuredSeres.length} ser(es) configurado(s).`);
         }
 
         function generateSeresPromptText() {
-            if (configuredSeres.length === 0) return '';
+            if (configuredSeres.length === 0) {
+                console.log('Nenhum ser configurado para gerar texto');
+                return '';
+            }
+            
+            console.log('Gerando texto para seres:', configuredSeres);
             
             const seresDescriptions = configuredSeres.map((ser, index) => {
                 let desc = [];
@@ -2114,13 +2328,19 @@
                     }
                 }
                 
-                return desc.join(', ');
+                const result = desc.join(', ');
+                console.log(`Descrição do ser ${index + 1}:`, result);
+                return result;
             });
             
             if (configuredSeres.length === 1) {
-                return `com ${seresDescriptions[0]}`;
+                const result = `com ${seresDescriptions[0]}`;
+                console.log('Texto final para um ser:', result);
+                return result;
             } else {
-                return `com ${seresDescriptions.join(' e ')}`;
+                const result = `com ${seresDescriptions.join(' e ')}`;
+                console.log('Texto final para múltiplos seres:', result);
+                return result;
             }
         }
 
@@ -2137,6 +2357,8 @@
             
             // Gerar também o prompt em inglês
             updateEnglishPrompt();
+            
+            console.log('updatePrompt chamado - selectedChoices:', selectedChoices);
 
             // Etapa 2: Ambiente
             if (selectedChoices[2]) {
@@ -2279,19 +2501,30 @@
             
             if (promptTextElement) {
                 promptTextElement.value = prompt;
+                console.log('Campo promptText atualizado:', prompt);
+            } else {
+                console.warn('Campo promptText não encontrado');
             }
+            
             if (promptTextPTElement) {
                 promptTextPTElement.value = prompt;
+                console.log('Campo promptTextPT atualizado:', prompt);
+            } else {
+                console.warn('Campo promptTextPT não encontrado');
             }
             
             // Atualizar estatísticas
             updateStats(prompt);
+            
+            console.log('updatePrompt concluído. Prompt final:', prompt);
         }
         
         function updateStats(prompt) {
             const chars = prompt.length;
             const words = prompt.trim() ? prompt.trim().split(/\s+/).length : 0;
             const tokens = Math.ceil(words * 1.3); // Estimativa aproximada
+
+            console.log('Atualizando estatísticas PT - chars:', chars, 'words:', words, 'tokens:', tokens);
 
             // Atualizar estatísticas PT
             const charCountPT = document.getElementById('charCountPT');
@@ -2324,6 +2557,8 @@
         function updateEnglishPrompt() {
             let promptEN = '';
             let partsEN = [];
+            
+            console.log('updateEnglishPrompt chamado');
             
             // Etapa 1: Tipo de Conteúdo
             if (selectedChoices[1] === 'image') {
@@ -2458,13 +2693,25 @@
             const promptTextENElement = document.getElementById('promptTextEN');
             if (promptTextENElement) {
                 promptTextENElement.value = promptEN;
+                console.log('Campo promptTextEN atualizado:', promptEN);
+            } else {
+                console.warn('Campo promptTextEN não encontrado');
             }
             
             // Atualizar estatísticas EN
             updateStatsEN(promptEN);
+            
+            console.log('updateEnglishPrompt concluído. Prompt EN final:', promptEN);
         }
         
         function translateToEnglish(text) {
+            if (!text || typeof text !== 'string') {
+                console.log('Texto inválido para tradução:', text);
+                return text || '';
+            }
+            
+            console.log('Traduzindo para inglês:', text);
+            
             // Dicionário simples de traduções PT -> EN
             const translations = {
                 // Tipos de conteúdo
@@ -2543,10 +2790,18 @@
                 translated = translated.replace(new RegExp(pt, 'gi'), en);
             }
             
+            console.log('Tradução resultante:', translated);
             return translated;
         }
         
         function buildSeresDescriptionEN() {
+            if (configuredSeres.length === 0) {
+                console.log('Nenhum ser configurado para gerar descrição em inglês');
+                return '';
+            }
+            
+            console.log('Gerando descrição em inglês para seres:', configuredSeres);
+            
             const seresDescriptions = configuredSeres.map(ser => {
                 let desc = [];
                 
@@ -2570,13 +2825,19 @@
                     desc.push(translateToEnglish(ser.descricaoExtra));
                 }
                 
-                return desc.join(', ');
+                const result = desc.join(', ');
+                console.log(`Descrição em inglês do ser ${ser.nome || 'sem nome'}:`, result);
+                return result;
             });
             
             if (configuredSeres.length === 1) {
-                return `with ${seresDescriptions[0]}`;
+                const result = `with ${seresDescriptions[0]}`;
+                console.log('Descrição final em inglês para um ser:', result);
+                return result;
             } else {
-                return `with ${seresDescriptions.join(' and ')}`;
+                const result = `with ${seresDescriptions.join(' and ')}`;
+                console.log('Descrição final em inglês para múltiplos seres:', result);
+                return result;
             }
         }
         
@@ -2584,6 +2845,8 @@
             const chars = promptEN.length;
             const words = promptEN.trim() ? promptEN.trim().split(/\s+/).length : 0;
             const tokens = Math.ceil(words * 1.3);
+
+            console.log('Atualizando estatísticas EN - chars:', chars, 'words:', words, 'tokens:', tokens);
 
             const charCountEN = document.getElementById('charCountEN');
             const wordCountEN = document.getElementById('wordCountEN');
@@ -2796,58 +3059,58 @@
                 updatePrompt(); // Atualizar prompt na inicialização
                 console.log('Etapa 1 carregada, prompt atualizado');
                 
-            // Adicionar event listener para o botão "Cadastrar Ser"
-            const addBeingBtn = document.getElementById('addBeingBtn');
-            if (addBeingBtn) {
-                addBeingBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('Botão Cadastrar Ser clicado');
-                    
-                    // Verificar se o modal existe antes de tentar abrir
-                    const modal = document.getElementById('seresConfigModal');
-                    if (!modal) {
-                        console.error('Modal não existe no DOM!');
-                        alert('Erro: Modal de configuração de seres não encontrado. Recarregue a página.');
-                        return;
-                    }
-                    
-                    // Navegar para a etapa 7 se não estiver nela
-                    if (currentStep !== 7) {
-                        console.log('Navegando para etapa 7...');
-                        currentStep = 7;
-                        currentSubstep = 0;
-                        loadStep(7, 0);
-                    }
-                    
-                    // Selecionar "humanos" por padrão se nada estiver selecionado
-                    if (!selectedChoices[7]) {
-                        selectedChoices[7] = 'humanos';
-                        console.log('Selecionando humanos por padrão');
-                    }
-                    
-                    console.log('Tentando abrir modal...');
-                    // Abrir modal de configuração
-                    openSeresConfigModal(selectedChoices[7] || 'humanos');
-                });
-                console.log('Event listener do botão Cadastrar Ser adicionado com sucesso');
-            } else {
-                console.error('ERRO CRÍTICO: Botão Cadastrar Ser (#addBeingBtn) não encontrado no DOM!');
-                // Vamos tentar encontrar o botão de outra forma
-                setTimeout(() => {
-                    const btnTentativa = document.querySelector('.btn-add-being');
-                    if (btnTentativa) {
-                        console.log('Botão encontrado via classe, adicionando event listener...');
-                        btnTentativa.addEventListener('click', function(e) {
-                            e.preventDefault();
-                            console.log('Event listener alternativo acionado');
-                            openSeresConfigModal('humanos');
-                        });
-                    } else {
-                        console.error('Botão não encontrado nem por ID nem por classe');
-                    }
-                }, 500);
-            }
+                // Adicionar event listener para o botão "Cadastrar Ser"
+                const addBeingBtn = document.getElementById('addBeingBtn');
+                if (addBeingBtn) {
+                    addBeingBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('Botão Cadastrar Ser clicado');
+                        
+                        // Verificar se o modal existe antes de tentar abrir
+                        const modal = document.getElementById('seresConfigModal');
+                        if (!modal) {
+                            console.error('Modal não existe no DOM!');
+                            alert('Erro: Modal de configuração de seres não encontrado. Recarregue a página.');
+                            return;
+                        }
+                        
+                        // Navegar para a etapa 7 se não estiver nela
+                        if (currentStep !== 7) {
+                            console.log('Navegando para etapa 7...');
+                            currentStep = 7;
+                            currentSubstep = 0;
+                            loadStep(7, 0);
+                        }
+                        
+                        // Selecionar "humanos" por padrão se nada estiver selecionado
+                        if (!selectedChoices[7]) {
+                            selectedChoices[7] = 'humanos';
+                            console.log('Selecionando humanos por padrão');
+                        }
+                        
+                        console.log('Tentando abrir modal...');
+                        // Abrir modal de configuração
+                        openSeresConfigModal(selectedChoices[7] || 'humanos');
+                    });
+                    console.log('Event listener do botão Cadastrar Ser adicionado com sucesso');
+                } else {
+                    console.error('ERRO CRÍTICO: Botão Cadastrar Ser (#addBeingBtn) não encontrado no DOM!');
+                    // Vamos tentar encontrar o botão de outra forma
+                    setTimeout(() => {
+                        const btnTentativa = document.querySelector('.btn-add-being');
+                        if (btnTentativa) {
+                            console.log('Botão encontrado via classe, adicionando event listener...');
+                            btnTentativa.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                console.log('Event listener alternativo acionado');
+                                openSeresConfigModal('humanos');
+                            });
+                        } else {
+                            console.error('Botão não encontrado nem por ID nem por classe');
+                        }
+                    }, 500);
+                }
                 
                 // Debug: Verificar se todos os elementos necessários existem
                 console.log('=== DEBUG: Verificando elementos ===');

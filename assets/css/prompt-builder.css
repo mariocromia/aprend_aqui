@@ -89,7 +89,51 @@ body {
 
 .header-actions {
     display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* User Info */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    background: var(--light-bg);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--gray-200);
+}
+
+.user-name {
+    display: flex;
+    align-items: center;
     gap: 0.5rem;
+    color: var(--gray-700);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.user-name i {
+    color: var(--primary);
+}
+
+.btn-logout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: var(--error);
+    color: white;
+    text-decoration: none;
+    transition: var(--transition);
+    font-size: 0.875rem;
+}
+
+.btn-logout:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
 }
 
 .btn-help {
@@ -1961,65 +2005,4 @@ body {
     line-height: 1.4;
 }
 
-/* Ajustes no modal de seres existente */
-.seres-config-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-}
-
-.seres-config-content {
-    background: var(--white);
-    border-radius: var(--border-radius-lg);
-    width: 90%;
-    max-width: 800px;
-    max-height: 90vh;
-    overflow-y: auto;
-}
-
-.seres-config-header {
-    padding: 1.5rem;
-    border-bottom: 1px solid var(--gray-200);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.seres-config-header h3 {
-    color: var(--dark);
-    font-size: 1.3rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.seres-config-close {
-    width: 32px;
-    height: 32px;
-    border: none;
-    background: var(--gray-200);
-    border-radius: 50%;
-    cursor: pointer;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.seres-config-close:hover {
-    background: var(--error);
-    color: var(--white);
-}
-
-.seres-config-body {
-    padding: 1.5rem;
-}
-}
+/* Removendo regras duplicadas do modal de seres */
