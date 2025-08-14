@@ -243,7 +243,7 @@ body {
     gap: 0.75rem;
     flex: 1;
     height: 100%;
-    max-height: 450px;
+    max-height: 580px;
     overflow-y: auto;
     padding: 0.5rem 8px 0.5rem 0;
 }
@@ -510,9 +510,8 @@ body {
 
 /* Campo de Descrição Personalizada na Base */
 .custom-description-section-bottom {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--gray-200);
+    margin-top: 1.5rem;
+    padding-top: 0;
 }
 
 .custom-description-input-small {
@@ -1610,6 +1609,7 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 .prompt-textarea-container-half textarea {
@@ -1617,6 +1617,7 @@ body {
     height: 100%;
     max-height: 150px;
     padding: 0.75rem;
+    padding-right: 4.5rem;
     border: 2px solid var(--gray-200);
     border-radius: var(--border-radius);
     font-family: 'Monaco', 'Consolas', monospace;
@@ -1641,5 +1642,384 @@ body {
     justify-content: center;
     padding-top: 0.5rem;
     border-top: 1px solid var(--gray-200);
+}
+
+/* Ações inline dentro da caixa de prompt */
+.prompt-inline-actions {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    gap: 4px;
+    z-index: 10;
+}
+
+.btn-copy-inline,
+.btn-export-inline {
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    backdrop-filter: blur(10px);
+}
+
+.btn-copy-inline {
+    background: rgba(108, 43, 217, 0.1);
+    color: var(--primary);
+}
+
+.btn-copy-inline:hover {
+    background: var(--primary);
+    color: var(--white);
+    transform: scale(1.1);
+}
+
+.btn-export-inline {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--warning);
+}
+
+.btn-export-inline:hover {
+    background: var(--warning);
+    color: var(--white);
+    transform: scale(1.1);
+}
+
+/* Gerenciador de Seres */
+.beings-manager {
+    background: var(--white);
+    border-radius: var(--border-radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 1rem;
+}
+
+.beings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.beings-header h3 {
+    color: var(--dark);
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-add-being {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--success);
+    color: var(--white);
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-add-being:hover {
+    background: #059669;
+    transform: translateY(-1px);
+}
+
+.beings-list {
+    min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.beings-empty {
+    color: var(--gray-500);
+    font-style: italic;
+    text-align: center;
+    padding: 1rem;
+    background: var(--gray-100);
+    border-radius: var(--border-radius);
+}
+
+/* Cards de seres */
+.being-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1rem;
+    background: var(--gray-100);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--gray-200);
+    transition: var(--transition);
+}
+
+.being-card:hover {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-sm);
+}
+
+.being-info {
+    flex: 1;
+    margin-right: 1rem;
+}
+
+.being-name {
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+}
+
+.being-description {
+    color: var(--gray-600);
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+}
+
+.being-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+.being-tag {
+    background: var(--primary);
+    color: var(--white);
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.being-actions {
+    display: flex;
+    gap: 0.25rem;
+    flex-shrink: 0;
+}
+
+.btn-being-use,
+.btn-being-edit,
+.btn-being-delete {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+}
+
+.btn-being-use {
+    background: var(--success);
+    color: var(--white);
+}
+
+.btn-being-use:hover {
+    background: #059669;
+    transform: scale(1.1);
+}
+
+.btn-being-edit {
+    background: var(--warning);
+    color: var(--white);
+}
+
+.btn-being-edit:hover {
+    background: #d97706;
+    transform: scale(1.1);
+}
+
+.btn-being-delete {
+    background: var(--error);
+    color: var(--white);
+}
+
+.btn-being-delete:hover {
+    background: #dc2626;
+    transform: scale(1.1);
+}
+
+/* Modal de seres */
+.being-modal-content {
+    width: 90%;
+    max-width: 600px;
+}
+
+.being-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group textarea {
+    padding: 0.75rem;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--border-radius);
+    font-family: inherit;
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(108, 43, 217, 0.1);
+}
+
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Grid de tipos de seres no modal */
+.seres-types-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.ser-type-card {
+    background: var(--gray-100);
+    border: 2px solid transparent;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: var(--transition);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.ser-type-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.ser-type-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(108, 43, 217, 0.1), transparent);
+    transition: left 0.6s ease;
+}
+
+.ser-type-card:hover::before {
+    left: 100%;
+}
+
+.ser-type-icon {
+    font-size: 2rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+
+.ser-type-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+}
+
+.ser-type-description {
+    font-size: 0.9rem;
+    color: var(--gray-500);
+    line-height: 1.4;
+}
+
+/* Ajustes no modal de seres existente */
+.seres-config-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.seres-config-content {
+    background: var(--white);
+    border-radius: var(--border-radius-lg);
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.seres-config-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.seres-config-header h3 {
+    color: var(--dark);
+    font-size: 1.3rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.seres-config-close {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: var(--gray-200);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.seres-config-close:hover {
+    background: var(--error);
+    color: var(--white);
+}
+
+.seres-config-body {
+    padding: 1.5rem;
 }
 }

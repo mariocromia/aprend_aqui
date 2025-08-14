@@ -41,8 +41,8 @@ class PromptBuilder {
         // Ações do prompt
         const copyBtnPT = document.getElementById('copyBtnPT');
         const copyBtnEN = document.getElementById('copyBtnEN');
-        const clearBtn = document.getElementById('clearBtn');
-        const exportBtn = document.getElementById('exportBtn');
+        const exportBtnPT = document.getElementById('exportBtnPT');
+        const exportBtnEN = document.getElementById('exportBtnEN');
         
         if (copyBtnPT) {
             copyBtnPT.addEventListener('click', () => this.copyPrompt('PT'));
@@ -52,12 +52,27 @@ class PromptBuilder {
             copyBtnEN.addEventListener('click', () => this.copyPrompt('EN'));
         }
         
-        if (clearBtn) {
-            clearBtn.addEventListener('click', () => this.clearAll());
+        if (exportBtnPT) {
+            exportBtnPT.addEventListener('click', () => this.exportJSON('PT'));
         }
         
-        if (exportBtn) {
-            exportBtn.addEventListener('click', () => this.exportJSON());
+        if (exportBtnEN) {
+            exportBtnEN.addEventListener('click', () => this.exportJSON('EN'));
+        }
+
+        // Gerenciador de seres
+        const addBeingBtn = document.getElementById('addBeingBtn');
+        if (addBeingBtn) {
+            addBeingBtn.addEventListener('click', () => this.openSeresConfigModal());
+        }
+
+        // Event listeners do modal de seres
+        const closeSeresConfig = document.getElementById('closeSeresConfig');
+        if (closeSeresConfig) {
+            closeSeresConfig.addEventListener('click', () => {
+                const modal = document.getElementById('seresConfigModal');
+                if (modal) modal.style.display = 'none';
+            });
         }
 
         // Modal de ajuda
@@ -1046,25 +1061,34 @@ class PromptBuilder {
         }
     }
 
-    exportJSON() {
+    exportJSON(language) {
+        const promptText = language === 'EN' ? 
+            document.getElementById('promptTextEN')?.value || '' :
+            document.getElementById('promptTextPT')?.value || '';
+
         const data = {
-            choices: this.userChoices,
-            categories: this.selectedCategories,
-            prompt: document.getElementById('promptText').value,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
+            language: language || 'PT',
+            currentStep: this.currentStep,
+            userChoices: this.userChoices,
+            selectedCategories: this.selectedCategories,
+            prompt: promptText
         };
 
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const jsonString = JSON.stringify(data, null, 2);
+        const blob = new Blob([jsonString], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
+        
         const a = document.createElement('a');
         a.href = url;
-        a.download = `prompt-builder-${Date.now()}.json`;
+        a.download = `prompt-builder-${language || 'PT'}-${Date.now()}.json`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
 
-        this.showToast('Arquivo JSON exportado!', 'success');
+        const message = language === 'EN' ? 'JSON file exported successfully!' : 'Arquivo JSON exportado com sucesso!';
+        this.showToast(message, 'success');
     }
 
     showToast(message, type = 'success') {
@@ -1122,6 +1146,275 @@ class PromptBuilder {
             this.updateStepper();
             this.loadStep(this.currentStep);
             this.updateNavigation();
+        }
+
+        // Inicializar gerenciador de seres
+        this.initBeingsManager();
+    }
+
+    // === GERENCIADOR DE SERES ===
+    
+    initBeingsManager() {
+        this.loadBeings();
+    }
+
+    loadBeings() {
+        const beings = this.getStoredBeings();
+        const beingsList = document.getElementById('beingsList');
+        
+        if (!beingsList) return;
+
+        if (beings.length === 0) {
+            beingsList.innerHTML = '<p class="beings-empty">Nenhum ser cadastrado ainda. Clique em "Cadastrar Ser" para começar.</p>';
+        } else {
+            beingsList.innerHTML = beings.map(being => this.createBeingCard(being)).join('');
+        }
+    }
+
+    getStoredBeings() {
+        return JSON.parse(localStorage.getItem('promptBuilder_beings') || '[]');
+    }
+
+    saveBeings(beings) {
+        localStorage.setItem('promptBuilder_beings', JSON.stringify(beings));
+    }
+
+    createBeingCard(being) {
+        return `
+            <div class="being-card" data-id="${being.id}">
+                <div class="being-info">
+                    <div class="being-name">${being.name}</div>
+                    <div class="being-description">${being.description}</div>
+                    <div class="being-tags">
+                        ${being.tags.map(tag => `<span class="being-tag">${tag}</span>`).join('')}
+                    </div>
+                </div>
+                <div class="being-actions">
+                    <button class="btn-being-use" onclick="promptBuilder.useBeing('${being.id}')" title="Usar este ser">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="btn-being-edit" onclick="promptBuilder.editBeing('${being.id}')" title="Editar">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn-being-delete" onclick="promptBuilder.deleteBeing('${being.id}')" title="Excluir">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    openSeresConfigModal() {
+        // Usar o modal existente do sistema
+        const modal = document.getElementById('seresConfigModal');
+        if (modal) {
+            modal.style.display = 'flex';
+            this.loadSeresModalContent();
+        }
+    }
+
+    loadSeresModalContent() {
+        // Simular a estrutura que já existe, carregando tipos de seres
+        const seresList = document.getElementById('seresList');
+        if (seresList) {
+            seresList.innerHTML = this.createSeresTypeSelection();
+        }
+    }
+
+    createSeresTypeSelection() {
+        const seresTypes = [
+            { 
+                id: 'humanos', 
+                title: 'Humanos', 
+                description: 'Personagens humanos em diferentes estilos', 
+                icon: 'fas fa-user' 
+            },
+            { 
+                id: 'animais', 
+                title: 'Animais', 
+                description: 'Criaturas do reino animal', 
+                icon: 'fas fa-paw' 
+            },
+            { 
+                id: 'fantasticos', 
+                title: 'Seres Fantásticos', 
+                description: 'Criaturas mágicas e mitológicas', 
+                icon: 'fas fa-dragon' 
+            }
+        ];
+
+        return `
+            <h4>Escolha o tipo de ser para cadastrar:</h4>
+            <div class="seres-types-grid">
+                ${seresTypes.map(type => `
+                    <div class="ser-type-card" onclick="promptBuilder.selectSerType('${type.id}')">
+                        <div class="ser-type-icon">
+                            <i class="${type.icon}"></i>
+                        </div>
+                        <div class="ser-type-title">${type.title}</div>
+                        <div class="ser-type-description">${type.description}</div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    selectSerType(typeId) {
+        // Mostrar formulário específico para o tipo selecionado
+        const serForm = document.getElementById('serForm');
+        if (serForm) {
+            serForm.style.display = 'block';
+            serForm.innerHTML = this.createSerForm(typeId);
+        }
+    }
+
+    createSerForm(typeId) {
+        const typeNames = {
+            'humanos': 'Humano',
+            'animais': 'Animal', 
+            'fantasticos': 'Ser Fantástico'
+        };
+
+        const formHtml = `
+            <h4>Cadastrar ${typeNames[typeId]}</h4>
+            <form id="newSerForm">
+                <input type="hidden" id="serType" value="${typeId}">
+                
+                <div class="form-group">
+                    <label for="serName">Nome *</label>
+                    <input type="text" id="serName" placeholder="Ex: Guerreiro Élfico" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="serDescription">Descrição *</label>
+                    <textarea id="serDescription" placeholder="Descreva características físicas, vestimentas, poses, etc." required rows="4"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="serTags">Tags (separadas por vírgula)</label>
+                    <input type="text" id="serTags" placeholder="fantasia, guerreiro, élfico, medieval">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="promptBuilder.cancelSerForm()">Voltar</button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i>
+                        Salvar Ser
+                    </button>
+                </div>
+            </form>
+        `;
+
+        // Adicionar event listener após inserir o HTML
+        setTimeout(() => {
+            const form = document.getElementById('newSerForm');
+            if (form) {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.saveNewSer();
+                });
+            }
+        }, 100);
+
+        return formHtml;
+    }
+
+    cancelSerForm() {
+        const serForm = document.getElementById('serForm');
+        if (serForm) {
+            serForm.style.display = 'none';
+        }
+    }
+
+    saveNewSer() {
+        const form = document.getElementById('newSerForm');
+        const editId = form?.dataset?.editId;
+        
+        const name = document.getElementById('serName').value.trim();
+        const description = document.getElementById('serDescription').value.trim();
+        const tagsInput = document.getElementById('serTags').value.trim();
+        const type = document.getElementById('serType').value;
+        
+        if (!name || !description) {
+            this.showToast('Nome e descrição são obrigatórios!', 'error');
+            return;
+        }
+
+        const tags = tagsInput ? tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag) : [];
+        
+        const beings = this.getStoredBeings();
+        
+        if (editId) {
+            // Editar ser existente
+            const index = beings.findIndex(b => b.id === editId);
+            if (index !== -1) {
+                beings[index] = { ...beings[index], name, description, tags, type };
+            }
+        } else {
+            // Novo ser
+            const newBeing = {
+                id: Date.now().toString(),
+                name,
+                description,
+                tags,
+                type,
+                createdAt: new Date().toISOString()
+            };
+            beings.push(newBeing);
+        }
+
+        this.saveBeings(beings);
+        this.loadBeings();
+        
+        // Fechar modal
+        const modal = document.getElementById('seresConfigModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+        
+        const message = editId ? 'Ser atualizado com sucesso!' : 'Ser cadastrado com sucesso!';
+        this.showToast(message, 'success');
+    }
+
+    useBeing(id) {
+        const beings = this.getStoredBeings();
+        const being = beings.find(b => b.id === id);
+        
+        if (being) {
+            // Adicionar à etapa 7 (Seres) como entrada customizada  
+            this.userChoices['7_custom'] = being.description;
+            this.updatePrompt();
+            this.showToast(`"${being.name}" adicionado ao prompt!`, 'success');
+        }
+    }
+
+    editBeing(id) {
+        const beings = this.getStoredBeings();
+        const being = beings.find(b => b.id === id);
+        
+        if (being) {
+            // Abrir modal de edição usando o sistema existente
+            this.openSeresConfigModal();
+            setTimeout(() => {
+                this.selectSerType(being.type || 'humanos');
+                // Preencher dados para edição
+                document.getElementById('serName').value = being.name;
+                document.getElementById('serDescription').value = being.description;
+                document.getElementById('serTags').value = being.tags.join(', ');
+                document.getElementById('newSerForm').dataset.editId = id;
+            }, 100);
+        }
+    }
+
+    deleteBeing(id) {
+        const beings = this.getStoredBeings();
+        const being = beings.find(b => b.id === id);
+        
+        if (being && confirm(`Tem certeza que deseja excluir "${being.name}"?`)) {
+            const updatedBeings = beings.filter(b => b.id !== id);
+            this.saveBeings(updatedBeings);
+            this.loadBeings();
+            this.showToast('Ser excluído com sucesso!', 'success');
         }
     }
 }

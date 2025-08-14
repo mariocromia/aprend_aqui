@@ -94,17 +94,19 @@
                     </div>
                     
                     <div class="prompt-textarea-container-half">
+                        <div class="prompt-inline-actions">
+                            <button class="btn-copy-inline" id="copyBtnPT" title="Copiar Prompt PT">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                            <button class="btn-export-inline" id="exportBtnPT" title="Exportar JSON PT">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
                         <textarea 
                             id="promptTextPT" 
                             placeholder="Seu prompt será construído em português conforme você faz suas escolhas..."
                             readonly
                         ></textarea>
-                    </div>
-                    
-                    <div class="prompt-actions-compact">
-                        <button class="btn-action btn-copy" id="copyBtnPT" title="Copiar Prompt PT">
-                            <i class="fas fa-copy"></i>
-                        </button>
                     </div>
                 </div>
 
@@ -123,28 +125,37 @@
                     </div>
                     
                     <div class="prompt-textarea-container-half">
+                        <div class="prompt-inline-actions">
+                            <button class="btn-copy-inline" id="copyBtnEN" title="Copy Prompt EN">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                            <button class="btn-export-inline" id="exportBtnEN" title="Export JSON EN">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
                         <textarea 
                             id="promptTextEN" 
                             placeholder="Your prompt will be built in English as you make your choices..."
                             readonly
                         ></textarea>
                     </div>
-                    
-                    <div class="prompt-actions-compact">
-                        <button class="btn-action btn-copy" id="copyBtnEN" title="Copy Prompt EN">
-                            <i class="fas fa-copy"></i>
-                        </button>
-                    </div>
                 </div>
 
-                <!-- Ações Gerais -->
-                <div class="prompt-general-actions">
-                    <button class="btn-action btn-clear" id="clearBtn" title="Limpar Tudo">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                    <button class="btn-action btn-export" id="exportBtn" title="Exportar JSON">
-                        <i class="fas fa-download"></i>
-                    </button>
+                <!-- Gerenciador de Seres -->
+                <div class="beings-manager">
+                    <div class="beings-header">
+                        <h3>
+                            <i class="fas fa-users"></i>
+                            Gerenciador de Seres
+                        </h3>
+                        <button class="btn-add-being" id="addBeingBtn" title="Cadastrar Novo Ser">
+                            <i class="fas fa-plus"></i>
+                            Cadastrar Ser
+                        </button>
+                    </div>
+                    <div class="beings-list" id="beingsList">
+                        <p class="beings-empty">Nenhum ser cadastrado ainda. Clique em "Cadastrar Ser" para começar.</p>
+                    </div>
                 </div>
             </section>
 
@@ -945,13 +956,21 @@
         };
 
         function loadStep(step, substep = 0) {
+            console.log(`Carregando etapa ${step}, subetapa ${substep}`);
             const stepData = steps[step];
-            if (!stepData) return;
+            if (!stepData) {
+                console.error(`Dados da etapa ${step} não encontrados`);
+                return;
+            }
 
             currentStep = step;
             currentSubstep = substep;
 
             const stepContent = document.getElementById('stepContent');
+            if (!stepContent) {
+                console.error('Elemento stepContent não encontrado');
+                return;
+            }
 
             if (substep === 0) {
                 // Mostrar categorias principais
@@ -1155,6 +1174,9 @@
             // Botões início/final
             document.getElementById('firstBtn').disabled = step === 1 && substep === 0;
             document.getElementById('lastBtn').disabled = step === 7 && substep === 0;
+            
+            // Atualizar prompt sempre que carregar uma etapa
+            updatePrompt();
         }
 
         function selectCategory(categoryId) {
@@ -1236,11 +1258,49 @@
         let currentSerType = '';
         
         function openSeresConfigModal(serType) {
+            console.log('Tentando abrir modal para tipo:', serType);
             currentSerType = serType;
-            document.getElementById('seresConfigModal').style.display = 'flex';
-            document.getElementById('modalTitle').textContent = `Configurar ${serType.charAt(0).toUpperCase() + serType.slice(1)}`;
+            
+            const modal = document.getElementById('seresConfigModal');
+            if (!modal) {
+                console.error('Modal seresConfigModal não encontrado no DOM');
+                alert('Erro: Modal não encontrado. Verifique se a página carregou completamente.');
+                return;
+            }
+            
+            console.log('Modal encontrado, exibindo...');
+            // Aplicar estilos inline com !important via cssText para sobrescrever qualquer CSS
+            modal.style.cssText = `
+                display: flex !important;
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                z-index: 9999 !important;
+                background-color: rgba(0, 0, 0, 0.8) !important;
+                align-items: center !important;
+                justify-content: center !important;
+                padding: 2rem !important;
+            `;
+            
+            // Verificar se ficou visível
+            const computedStyle = window.getComputedStyle(modal);
+            console.log('Estilo computado display:', computedStyle.display);
+            console.log('Estilo computado position:', computedStyle.position);
+            console.log('Estilo computado zIndex:', computedStyle.zIndex);
+            
+            const modalTitle = document.getElementById('modalTitle');
+            if (modalTitle) {
+                modalTitle.textContent = `Configurar ${serType.charAt(0).toUpperCase() + serType.slice(1)}`;
+            } else {
+                console.warn('modalTitle não encontrado');
+            }
+            
             showSerFormForType(serType);
             updateSeresPreview();
+            
+            console.log('Modal deveria estar visível agora');
         }
 
         function closeSeresConfigModal() {
@@ -1249,6 +1309,13 @@
 
         function showSerFormForType(serType) {
             const formContainer = document.getElementById('serForm');
+            if (!formContainer) {
+                console.error('Elemento serForm não encontrado');
+                return;
+            }
+            
+            // Garantir que o formulário seja exibido
+            formContainer.style.display = 'block';
             
             if (serType === 'humanos') {
                 formContainer.innerHTML = `
@@ -1784,6 +1851,12 @@
             document.getElementById('serForm').style.display = 'none';
             editingSerIndex = -1;
             updateSeresPreview();
+            
+            // Atualizar prompt com o novo ser
+            updatePrompt();
+            
+            console.log('Ser salvo:', ser);
+            console.log('Total de seres configurados:', configuredSeres.length);
         }
 
         function updateSeresPreview() {
@@ -2061,6 +2134,9 @@
             } else if (selectedChoices[1] === 'video') {
                 prompt = 'Crie um vídeo';
             }
+            
+            // Gerar também o prompt em inglês
+            updateEnglishPrompt();
 
             // Etapa 2: Ambiente
             if (selectedChoices[2]) {
@@ -2197,7 +2273,16 @@
                 prompt += '. Altamente detalhado, qualidade profissional, composição harmoniosa.';
             }
 
-            document.getElementById('promptText').value = prompt;
+            // Atualizar ambos os campos de prompt (EN e PT)
+            const promptTextElement = document.getElementById('promptText');
+            const promptTextPTElement = document.getElementById('promptTextPT');
+            
+            if (promptTextElement) {
+                promptTextElement.value = prompt;
+            }
+            if (promptTextPTElement) {
+                promptTextPTElement.value = prompt;
+            }
             
             // Atualizar estatísticas
             updateStats(prompt);
@@ -2208,13 +2293,332 @@
             const words = prompt.trim() ? prompt.trim().split(/\s+/).length : 0;
             const tokens = Math.ceil(words * 1.3); // Estimativa aproximada
 
-            document.getElementById('charCount').textContent = `${chars} caracteres`;
-            document.getElementById('wordCount').textContent = `${words} palavras`;
-            document.getElementById('tokenEstimate').textContent = `~${tokens} tokens`;
+            // Atualizar estatísticas PT
+            const charCountPT = document.getElementById('charCountPT');
+            const wordCountPT = document.getElementById('wordCountPT');
+            const tokenEstimatePT = document.getElementById('tokenEstimatePT');
+            
+            if (charCountPT) charCountPT.textContent = `${chars} caracteres`;
+            if (wordCountPT) wordCountPT.textContent = `${words} palavras`;
+            if (tokenEstimatePT) tokenEstimatePT.textContent = `~${tokens} tokens`;
+            
+            // Atualizar estatísticas EN (mesmo conteúdo por enquanto)
+            const charCountEN = document.getElementById('charCountEN');
+            const wordCountEN = document.getElementById('wordCountEN');
+            const tokenEstimateEN = document.getElementById('tokenEstimateEN');
+            
+            if (charCountEN) charCountEN.textContent = `${chars} caracteres`;
+            if (wordCountEN) wordCountEN.textContent = `${words} palavras`;
+            if (tokenEstimateEN) tokenEstimateEN.textContent = `~${tokens} tokens`;
+            
+            // Manter compatibilidade com IDs antigos se existirem
+            const charCount = document.getElementById('charCount');
+            const wordCount = document.getElementById('wordCount');
+            const tokenEstimate = document.getElementById('tokenEstimate');
+            
+            if (charCount) charCount.textContent = `${chars} caracteres`;
+            if (wordCount) wordCount.textContent = `${words} palavras`;
+            if (tokenEstimate) tokenEstimate.textContent = `~${tokens} tokens`;
+        }
+        
+        function updateEnglishPrompt() {
+            let promptEN = '';
+            let partsEN = [];
+            
+            // Etapa 1: Tipo de Conteúdo
+            if (selectedChoices[1] === 'image') {
+                promptEN = 'Create an image';
+            } else if (selectedChoices[1] === 'video') {
+                promptEN = 'Create a video';
+            }
+
+            // Etapa 2: Ambiente
+            if (selectedChoices[2]) {
+                let ambienteText = '';
+                
+                if (selectedSubcategories[2]) {
+                    const subcatId = selectedSubcategories[2];
+                    const mainCategory = steps[2].options.find(opt => opt.id === selectedChoices[2]);
+                    if (mainCategory && mainCategory.subcategories) {
+                        const subcategory = mainCategory.subcategories.find(sub => sub.id === subcatId);
+                        if (subcategory) {
+                            ambienteText = `in ${translateToEnglish(subcategory.title.toLowerCase())} - ${translateToEnglish(subcategory.description.toLowerCase())}`;
+                        }
+                    }
+                    
+                    const subCustomDesc = customDescriptions[`2_${selectedChoices[2]}`];
+                    if (subCustomDesc && subCustomDesc.trim()) {
+                        ambienteText += `, ${translateToEnglish(subCustomDesc.trim())}`;
+                    }
+                } else if (selectedChoices[2]) {
+                    const mainCategory = steps[2].options.find(opt => opt.id === selectedChoices[2]);
+                    if (mainCategory) {
+                        ambienteText = `in a ${translateToEnglish(mainCategory.title.toLowerCase())} environment - ${translateToEnglish(mainCategory.description.toLowerCase())}`;
+                    }
+                }
+                
+                const customDesc = customDescriptions[2];
+                if (customDesc && customDesc.trim()) {
+                    if (ambienteText) {
+                        ambienteText += `, ${translateToEnglish(customDesc.trim())}`;
+                    } else {
+                        ambienteText = translateToEnglish(customDesc.trim());
+                    }
+                }
+                
+                if (ambienteText) {
+                    partsEN.push(ambienteText);
+                }
+            } else if (customDescriptions[2] && customDescriptions[2].trim()) {
+                partsEN.push(translateToEnglish(customDescriptions[2].trim()));
+            }
+
+            // Etapas 3-6: Processar outras categorias
+            for (let step = 3; step <= 6; step++) {
+                if (selectedChoices[step]) {
+                    let stepText = '';
+                    
+                    if (selectedSubcategories[step]) {
+                        const mainCategory = steps[step].options.find(opt => opt.id === selectedChoices[step]);
+                        if (mainCategory && mainCategory.subcategories) {
+                            const subcategory = mainCategory.subcategories.find(sub => sub.id === selectedSubcategories[step]);
+                            if (subcategory) {
+                                stepText = translateToEnglish(subcategory.title.toLowerCase());
+                            }
+                        }
+                        
+                        const subCustomDesc = customDescriptions[`${step}_${selectedChoices[step]}`];
+                        if (subCustomDesc && subCustomDesc.trim()) {
+                            stepText += `, ${translateToEnglish(subCustomDesc.trim())}`;
+                        }
+                    } else {
+                        const mainCategory = steps[step].options.find(opt => opt.id === selectedChoices[step]);
+                        if (mainCategory) {
+                            stepText = translateToEnglish(mainCategory.title.toLowerCase());
+                        }
+                    }
+                    
+                    const customDesc = customDescriptions[step];
+                    if (customDesc && customDesc.trim()) {
+                        if (stepText) {
+                            stepText += `, ${translateToEnglish(customDesc.trim())}`;
+                        } else {
+                            stepText = translateToEnglish(customDesc.trim());
+                        }
+                    }
+                    
+                    if (stepText) {
+                        partsEN.push(stepText);
+                    }
+                } else if (customDescriptions[step] && customDescriptions[step].trim()) {
+                    partsEN.push(translateToEnglish(customDescriptions[step].trim()));
+                }
+            }
+
+            // Etapa 7: Seres
+            if (configuredSeres.length > 0) {
+                const seresEN = buildSeresDescriptionEN();
+                if (seresEN) {
+                    partsEN.push(seresEN);
+                }
+            } else if (selectedChoices[7]) {
+                let stepText = '';
+                
+                if (selectedSubcategories[7]) {
+                    const mainCategory = steps[7].options.find(opt => opt.id === selectedChoices[7]);
+                    if (mainCategory && mainCategory.subcategories) {
+                        const subcategory = mainCategory.subcategories.find(sub => sub.id === selectedSubcategories[7]);
+                        if (subcategory) {
+                            stepText = `with ${translateToEnglish(subcategory.title.toLowerCase())}`;
+                        }
+                    }
+                } else {
+                    const mainCategory = steps[7].options.find(opt => opt.id === selectedChoices[7]);
+                    if (mainCategory) {
+                        stepText = `with ${translateToEnglish(mainCategory.title.toLowerCase())}`;
+                    }
+                }
+                
+                if (stepText) {
+                    partsEN.push(stepText);
+                }
+            }
+
+            // Construir prompt final em inglês
+            if (partsEN.length > 0) {
+                promptEN += ' ' + partsEN.join(', ');
+            }
+
+            // Finalizar com orientações técnicas em inglês
+            if (promptEN) {
+                promptEN += '. Highly detailed, professional quality, harmonious composition.';
+            }
+
+            // Atualizar campo EN
+            const promptTextENElement = document.getElementById('promptTextEN');
+            if (promptTextENElement) {
+                promptTextENElement.value = promptEN;
+            }
+            
+            // Atualizar estatísticas EN
+            updateStatsEN(promptEN);
+        }
+        
+        function translateToEnglish(text) {
+            // Dicionário simples de traduções PT -> EN
+            const translations = {
+                // Tipos de conteúdo
+                'imagem': 'image',
+                'vídeo': 'video',
+                
+                // Ambientes
+                'natureza': 'nature',
+                'urbano': 'urban',
+                'fantasia': 'fantasy',
+                'ficção científica': 'science fiction',
+                'histórico': 'historical',
+                'abstrato': 'abstract',
+                
+                // Termos comuns
+                'praia tropical': 'tropical beach',
+                'floresta amazônica': 'amazon rainforest',
+                'cidade moderna': 'modern city',
+                'castelo medieval': 'medieval castle',
+                'espaço sideral': 'outer space',
+                'laboratório': 'laboratory',
+                'montanha nevada': 'snowy mountain',
+                'deserto': 'desert',
+                'oceano': 'ocean',
+                'lago': 'lake',
+                'rio': 'river',
+                'cachoeira': 'waterfall',
+                'vulcão': 'volcano',
+                'geleira': 'glacier',
+                'caverna': 'cave',
+                'jardim': 'garden',
+                'parque': 'park',
+                'rua': 'street',
+                'avenida': 'avenue',
+                'praça': 'square',
+                'ponte': 'bridge',
+                'torre': 'tower',
+                'edifício': 'building',
+                'casa': 'house',
+                'apartamento': 'apartment',
+                
+                // Seres
+                'humanos': 'humans',
+                'animais': 'animals',
+                'seres fantásticos': 'fantasy beings',
+                'robôs': 'robots',
+                'aliens': 'aliens',
+                'homem jovem': 'young man',
+                'mulher jovem': 'young woman',
+                'criança': 'child',
+                'idoso': 'elderly',
+                'dragão': 'dragon',
+                'unicórnio': 'unicorn',
+                'elfo': 'elf',
+                'anjo': 'angel',
+                
+                // Cores
+                'azul': 'blue',
+                'vermelho': 'red',
+                'verde': 'green',
+                'amarelo': 'yellow',
+                'roxo': 'purple',
+                'laranja': 'orange',
+                'rosa': 'pink',
+                'preto': 'black',
+                'branco': 'white',
+                'cinza': 'gray',
+                'dourado': 'golden',
+                'prateado': 'silver'
+            };
+            
+            let translated = text.toLowerCase();
+            
+            // Aplicar traduções do dicionário
+            for (const [pt, en] of Object.entries(translations)) {
+                translated = translated.replace(new RegExp(pt, 'gi'), en);
+            }
+            
+            return translated;
+        }
+        
+        function buildSeresDescriptionEN() {
+            const seresDescriptions = configuredSeres.map(ser => {
+                let desc = [];
+                
+                if (ser.nome) {
+                    desc.push(translateToEnglish(ser.nome));
+                }
+                
+                if (ser.tipo) {
+                    desc.push(translateToEnglish(ser.tipo));
+                }
+                
+                if (ser.genero) {
+                    desc.push(translateToEnglish(ser.genero));
+                }
+                
+                if (ser.idade) {
+                    desc.push(`${ser.idade} years old`);
+                }
+                
+                if (ser.descricaoExtra) {
+                    desc.push(translateToEnglish(ser.descricaoExtra));
+                }
+                
+                return desc.join(', ');
+            });
+            
+            if (configuredSeres.length === 1) {
+                return `with ${seresDescriptions[0]}`;
+            } else {
+                return `with ${seresDescriptions.join(' and ')}`;
+            }
+        }
+        
+        function updateStatsEN(promptEN) {
+            const chars = promptEN.length;
+            const words = promptEN.trim() ? promptEN.trim().split(/\s+/).length : 0;
+            const tokens = Math.ceil(words * 1.3);
+
+            const charCountEN = document.getElementById('charCountEN');
+            const wordCountEN = document.getElementById('wordCountEN');
+            const tokenEstimateEN = document.getElementById('tokenEstimateEN');
+            
+            if (charCountEN) charCountEN.textContent = `${chars} characters`;
+            if (wordCountEN) wordCountEN.textContent = `${words} words`;
+            if (tokenEstimateEN) tokenEstimateEN.textContent = `~${tokens} tokens`;
         }
 
         // Event listeners para modal de seres usando delegação
         document.addEventListener('click', (e) => {
+            // Botão Cadastrar Ser (event listener adicional via delegação)
+            if (e.target.id === 'addBeingBtn' || e.target.closest('#addBeingBtn')) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Event listener de delegação: Botão Cadastrar Ser clicado');
+                
+                // Verificar se o modal existe
+                const modal = document.getElementById('seresConfigModal');
+                if (!modal) {
+                    console.error('Modal não encontrado via delegação');
+                    alert('Modal não encontrado. Recarregue a página.');
+                    return;
+                }
+                
+                // Navegar para etapa 7 e abrir modal
+                currentStep = 7;
+                currentSubstep = 0;
+                loadStep(7, 0);
+                selectedChoices[7] = 'humanos';
+                openSeresConfigModal('humanos');
+                return;
+            }
+            
             // Fechar modal
             if (e.target.id === 'closeSeresConfig' || e.target.id === 'cancelarSer') {
                 document.getElementById('seresConfigModal').style.display = 'none';
@@ -2222,9 +2626,19 @@
             
             // Adicionar novo ser
             if (e.target.id === 'adicionarNovoSer') {
+                console.log('Adicionando novo ser do tipo:', currentSerType);
                 editingSerIndex = -1;
                 showSerFormForType(currentSerType);
                 document.getElementById('modalTitle').textContent = 'Configurar Novo Ser';
+                
+                // Garantir que o formulário está visível
+                const serForm = document.getElementById('serForm');
+                if (serForm) {
+                    serForm.style.display = 'block';
+                    console.log('Formulário de ser exibido');
+                } else {
+                    console.error('Elemento serForm não encontrado');
+                }
             }
             
             // Salvar ser
@@ -2311,23 +2725,192 @@
                 alert('Prompt copiado!');
             });
         });
+        
+        // Event listeners para botões EN
+        const copyBtnEN = document.getElementById('copyBtnEN');
+        if (copyBtnEN) {
+            copyBtnEN.addEventListener('click', () => {
+                const promptTextEN = document.getElementById('promptTextEN').value;
+                navigator.clipboard.writeText(promptTextEN).then(() => {
+                    alert('English prompt copied!');
+                });
+            });
+        }
+        
+        const exportBtnEN = document.getElementById('exportBtnEN');
+        if (exportBtnEN) {
+            exportBtnEN.addEventListener('click', () => {
+                const promptTextEN = document.getElementById('promptTextEN').value;
+                const data = {
+                    prompt_en: promptTextEN,
+                    prompt_pt: document.getElementById('promptTextPT').value,
+                    choices: selectedChoices,
+                    subcategories: selectedSubcategories,
+                    descriptions: customDescriptions,
+                    seres: configuredSeres,
+                    timestamp: new Date().toISOString()
+                };
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'prompt-export.json';
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+        }
 
         document.getElementById('clearBtn').addEventListener('click', () => {
             if (confirm('Limpar todas as seleções?')) {
                 selectedChoices = {};
                 selectedSubcategories = {};
+                customDescriptions = {};
+                configuredSeres = [];
                 currentStep = 1;
                 currentSubstep = 0;
                 loadStep(1, 0);
-                document.getElementById('promptText').value = '';
+                
+                // Limpar todos os campos de prompt
+                const promptTextElement = document.getElementById('promptText');
+                const promptTextPTElement = document.getElementById('promptTextPT');
+                const promptTextENElement = document.getElementById('promptTextEN');
+                
+                if (promptTextElement) promptTextElement.value = '';
+                if (promptTextPTElement) promptTextPTElement.value = '';
+                if (promptTextENElement) promptTextENElement.value = '';
+                
+                // Atualizar estatísticas com prompt vazio
+                updateStats('');
+                updateStatsEN('');
             }
         });
 
         // Inicializar quando o DOM carregar
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Inicializando Prompt Builder...');
-            loadStep(1);
-            console.log('Prompt Builder carregado!');
+            
+            // Aguardar um momento para garantir que todos os elementos estejam carregados
+            setTimeout(() => {
+                console.log('Carregando etapa 1...');
+                loadStep(1);
+                updatePrompt(); // Atualizar prompt na inicialização
+                console.log('Etapa 1 carregada, prompt atualizado');
+                
+            // Adicionar event listener para o botão "Cadastrar Ser"
+            const addBeingBtn = document.getElementById('addBeingBtn');
+            if (addBeingBtn) {
+                addBeingBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Botão Cadastrar Ser clicado');
+                    
+                    // Verificar se o modal existe antes de tentar abrir
+                    const modal = document.getElementById('seresConfigModal');
+                    if (!modal) {
+                        console.error('Modal não existe no DOM!');
+                        alert('Erro: Modal de configuração de seres não encontrado. Recarregue a página.');
+                        return;
+                    }
+                    
+                    // Navegar para a etapa 7 se não estiver nela
+                    if (currentStep !== 7) {
+                        console.log('Navegando para etapa 7...');
+                        currentStep = 7;
+                        currentSubstep = 0;
+                        loadStep(7, 0);
+                    }
+                    
+                    // Selecionar "humanos" por padrão se nada estiver selecionado
+                    if (!selectedChoices[7]) {
+                        selectedChoices[7] = 'humanos';
+                        console.log('Selecionando humanos por padrão');
+                    }
+                    
+                    console.log('Tentando abrir modal...');
+                    // Abrir modal de configuração
+                    openSeresConfigModal(selectedChoices[7] || 'humanos');
+                });
+                console.log('Event listener do botão Cadastrar Ser adicionado com sucesso');
+            } else {
+                console.error('ERRO CRÍTICO: Botão Cadastrar Ser (#addBeingBtn) não encontrado no DOM!');
+                // Vamos tentar encontrar o botão de outra forma
+                setTimeout(() => {
+                    const btnTentativa = document.querySelector('.btn-add-being');
+                    if (btnTentativa) {
+                        console.log('Botão encontrado via classe, adicionando event listener...');
+                        btnTentativa.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            console.log('Event listener alternativo acionado');
+                            openSeresConfigModal('humanos');
+                        });
+                    } else {
+                        console.error('Botão não encontrado nem por ID nem por classe');
+                    }
+                }, 500);
+            }
+                
+                // Debug: Verificar se todos os elementos necessários existem
+                console.log('=== DEBUG: Verificando elementos ===');
+                const elementos = {
+                    'addBeingBtn': document.getElementById('addBeingBtn'),
+                    'seresConfigModal': document.getElementById('seresConfigModal'),
+                    'modalTitle': document.getElementById('modalTitle'),
+                    'serForm': document.getElementById('serForm'),
+                    'seresList': document.getElementById('seresList')
+                };
+                
+                for (const [nome, elemento] of Object.entries(elementos)) {
+                    if (elemento) {
+                        console.log(`✅ ${nome}: encontrado`);
+                        if (nome === 'addBeingBtn') {
+                            console.log('   - Texto do botão:', elemento.textContent);
+                            console.log('   - Classes:', elemento.className);
+                        }
+                    } else {
+                        console.error(`❌ ${nome}: NÃO encontrado`);
+                    }
+                }
+                
+                // Verificar se existe via seletor de classe também
+                const btnViaClasse = document.querySelector('.btn-add-being');
+                console.log('Botão via classe .btn-add-being:', btnViaClasse ? '✅ encontrado' : '❌ não encontrado');
+                
+                console.log('=== FIM DEBUG ===');
+                
+                // Criar função global para teste do modal
+                window.testarModal = function() {
+                    console.log('🧪 TESTE: Tentando abrir modal...');
+                    const modal = document.getElementById('seresConfigModal');
+                    if (modal) {
+                        modal.style.display = 'flex';
+                        modal.style.position = 'fixed';
+                        modal.style.top = '0';
+                        modal.style.left = '0';
+                        modal.style.width = '100%';
+                        modal.style.height = '100%';
+                        modal.style.zIndex = '9999';
+                        modal.style.backgroundColor = 'rgba(255, 0, 0, 0.8)'; // Fundo vermelho para teste
+                        console.log('✅ Modal deveria estar visível com fundo vermelho');
+                    } else {
+                        console.error('❌ Modal não encontrado para teste');
+                    }
+                };
+                
+                // Criar função global para testar botão
+                window.testarBotao = function() {
+                    console.log('🧪 TESTE: Simulando clique no botão...');
+                    const btn = document.getElementById('addBeingBtn');
+                    if (btn) {
+                        btn.click();
+                        console.log('✅ Clique simulado');
+                    } else {
+                        console.error('❌ Botão não encontrado para teste');
+                    }
+                };
+                
+                console.log('🔧 Funções de teste criadas: window.testarModal() e window.testarBotao()');
+                console.log('Prompt Builder totalmente carregado!');
+            }, 100);
         });
     </script>
 </body>
