@@ -79,30 +79,66 @@
 
             <!-- Coluna Direita: Prompt -->
             <section class="prompt-column">
-                <div class="prompt-header-compact">
-                    <h3>
-                        <i class="fas fa-code"></i>
-                        Prompt Gerado
-                    </h3>
-                    <div class="prompt-stats-compact">
-                        <span id="charCount">0</span>
-                        <span id="wordCount">0</span>
-                        <span id="tokenEstimate">0</span>
+                <!-- Prompt em Português BR -->
+                <div class="prompt-section">
+                    <div class="prompt-header-compact">
+                        <h3>
+                            <i class="fas fa-flag"></i>
+                            Prompt em Português
+                        </h3>
+                        <div class="prompt-stats-compact">
+                            <span id="charCountPT">0</span>
+                            <span id="wordCountPT">0</span>
+                            <span id="tokenEstimatePT">0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="prompt-textarea-container-half">
+                        <textarea 
+                            id="promptTextPT" 
+                            placeholder="Seu prompt será construído em português conforme você faz suas escolhas..."
+                            readonly
+                        ></textarea>
+                    </div>
+                    
+                    <div class="prompt-actions-compact">
+                        <button class="btn-action btn-copy" id="copyBtnPT" title="Copiar Prompt PT">
+                            <i class="fas fa-copy"></i>
+                        </button>
                     </div>
                 </div>
-                
-                <div class="prompt-textarea-container">
-                    <textarea 
-                        id="promptText" 
-                        placeholder="Seu prompt será construído conforme você faz suas escolhas..."
-                        readonly
-                    ></textarea>
+
+                <!-- Prompt em Inglês -->
+                <div class="prompt-section">
+                    <div class="prompt-header-compact">
+                        <h3>
+                            <i class="fas fa-flag-usa"></i>
+                            Prompt in English
+                        </h3>
+                        <div class="prompt-stats-compact">
+                            <span id="charCountEN">0</span>
+                            <span id="wordCountEN">0</span>
+                            <span id="tokenEstimateEN">0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="prompt-textarea-container-half">
+                        <textarea 
+                            id="promptTextEN" 
+                            placeholder="Your prompt will be built in English as you make your choices..."
+                            readonly
+                        ></textarea>
+                    </div>
+                    
+                    <div class="prompt-actions-compact">
+                        <button class="btn-action btn-copy" id="copyBtnEN" title="Copy Prompt EN">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
                 </div>
-                
-                <div class="prompt-actions-compact">
-                    <button class="btn-action btn-copy" id="copyBtn" title="Copiar Prompt">
-                        <i class="fas fa-copy"></i>
-                    </button>
+
+                <!-- Ações Gerais -->
+                <div class="prompt-general-actions">
                     <button class="btn-action btn-clear" id="clearBtn" title="Limpar Tudo">
                         <i class="fas fa-trash"></i>
                     </button>

@@ -39,12 +39,17 @@ class PromptBuilder {
         }
 
         // Ações do prompt
-        const copyBtn = document.getElementById('copyBtn');
+        const copyBtnPT = document.getElementById('copyBtnPT');
+        const copyBtnEN = document.getElementById('copyBtnEN');
         const clearBtn = document.getElementById('clearBtn');
         const exportBtn = document.getElementById('exportBtn');
         
-        if (copyBtn) {
-            copyBtn.addEventListener('click', () => this.copyPrompt());
+        if (copyBtnPT) {
+            copyBtnPT.addEventListener('click', () => this.copyPrompt('PT'));
+        }
+        
+        if (copyBtnEN) {
+            copyBtnEN.addEventListener('click', () => this.copyPrompt('EN'));
         }
         
         if (clearBtn) {
@@ -778,14 +783,32 @@ class PromptBuilder {
     }
 
     updatePrompt() {
+        // Gerar prompt em português
+        const promptPT = this.generatePrompt('PT');
+        // Gerar prompt em inglês
+        const promptEN = this.generatePrompt('EN');
+
+        // Atualizar textareas
+        const promptTextPT = document.getElementById('promptTextPT');
+        const promptTextEN = document.getElementById('promptTextEN');
+        
+        if (promptTextPT) promptTextPT.value = promptPT;
+        if (promptTextEN) promptTextEN.value = promptEN;
+
+        // Atualizar estatísticas
+        this.updateStats(promptPT, 'PT');
+        this.updateStats(promptEN, 'EN');
+    }
+
+    generatePrompt(language) {
         const contentType = this.userChoices[1]?.[0] || 'image';
         let prompt = '';
 
         // Início do prompt
-        if (contentType === 'image') {
-            prompt = 'Crie uma imagem';
+        if (language === 'PT') {
+            prompt = contentType === 'image' ? 'Crie uma imagem' : 'Crie um vídeo';
         } else {
-            prompt = 'Crie um vídeo';
+            prompt = contentType === 'image' ? 'Create an image' : 'Create a video';
         }
 
         const parts = [];
@@ -795,44 +818,51 @@ class PromptBuilder {
         if (ambienteData.finalOption) {
             const mainCat = this.getStepData(2).options.find(opt => opt.id === ambienteData.mainCategory);
             if (mainCat) {
-                if (ambienteData.mainCategory === 'natureza') {
-                    parts.push(`de um ambiente natural`);
-                } else if (ambienteData.mainCategory === 'urbano') {
-                    parts.push(`de um ambiente urbano`);
-                } else if (ambienteData.mainCategory === 'interior') {
-                    parts.push(`de um ambiente interno`);
-                } else if (ambienteData.mainCategory === 'fantasia') {
-                    parts.push(`de um ambiente fantástico`);
+                if (language === 'PT') {
+                    if (ambienteData.mainCategory === 'natureza') {
+                        parts.push(`de um ambiente natural`);
+                    } else if (ambienteData.mainCategory === 'urbano') {
+                        parts.push(`de um ambiente urbano`);
+                    } else if (ambienteData.mainCategory === 'interior') {
+                        parts.push(`de um ambiente interno`);
+                    } else if (ambienteData.mainCategory === 'fantasia') {
+                        parts.push(`de um ambiente fantástico`);
+                    }
+                    parts.push(`de ${this.translateToLanguage(ambienteData.finalOption, language)}`);
+                } else {
+                    if (ambienteData.mainCategory === 'natureza') {
+                        parts.push(`in a natural environment`);
+                    } else if (ambienteData.mainCategory === 'urbano') {
+                        parts.push(`in an urban environment`);
+                    } else if (ambienteData.mainCategory === 'interior') {
+                        parts.push(`in an indoor environment`);
+                    } else if (ambienteData.mainCategory === 'fantasia') {
+                        parts.push(`in a fantasy environment`);
+                    }
+                    parts.push(`of ${this.translateToLanguage(ambienteData.finalOption, language)}`);
                 }
-                parts.push(`de ${ambienteData.finalOption}`);
             }
         }
         if (this.userChoices['2_custom']) {
-            parts.push(`de ${this.userChoices['2_custom']}`);
+            const prefix = language === 'PT' ? 'de' : 'of';
+            parts.push(`${prefix} ${this.userChoices['2_custom']}`);
         }
 
         // Seres (etapa 3)
         const seresData = this.selectedCategories.seres;
         if (seresData.finalOption) {
-            const mainCat = this.getStepData(3).options.find(opt => opt.id === seresData.mainCategory);
-            if (mainCat) {
-                if (seresData.mainCategory === 'humanos') {
-                    parts.push(`com ${seresData.finalOption}`);
-                } else if (seresData.mainCategory === 'animais') {
-                    parts.push(`com ${seresData.finalOption}`);
-                } else if (seresData.mainCategory === 'fantasticos') {
-                    parts.push(`com ${seresData.finalOption}`);
-                }
-            }
+            const prefix = language === 'PT' ? 'com' : 'with';
+            parts.push(`${prefix} ${this.translateToLanguage(seresData.finalOption, language)}`);
         }
         if (this.userChoices['3_custom']) {
-            parts.push(`com ${this.userChoices['3_custom']}`);
+            const prefix = language === 'PT' ? 'com' : 'with';
+            parts.push(`${prefix} ${this.userChoices['3_custom']}`);
         }
 
         // Ação (etapa 4)
         const acaoData = this.selectedCategories.acao;
         if (acaoData.finalOption) {
-            parts.push(`${acaoData.finalOption}`);
+            parts.push(this.translateToLanguage(acaoData.finalOption, language));
         }
         if (this.userChoices['4_custom']) {
             parts.push(this.userChoices['4_custom']);
@@ -841,7 +871,7 @@ class PromptBuilder {
         // Câmera (etapa 5)
         const cameraData = this.selectedCategories.camera;
         if (cameraData.finalOption) {
-            parts.push(`${cameraData.finalOption}`);
+            parts.push(this.translateToLanguage(cameraData.finalOption, language));
         }
         if (this.userChoices['5_custom']) {
             parts.push(this.userChoices['5_custom']);
@@ -850,7 +880,7 @@ class PromptBuilder {
         // Fala (etapa 6)
         const falaData = this.selectedCategories.fala;
         if (falaData.finalOption) {
-            parts.push(`${falaData.finalOption}`);
+            parts.push(this.translateToLanguage(falaData.finalOption, language));
         }
         if (this.userChoices['6_custom']) {
             parts.push(this.userChoices['6_custom']);
@@ -861,11 +891,13 @@ class PromptBuilder {
             prompt += ' ' + parts.join(', ');
         }
 
-        // Atualizar textarea
-        document.getElementById('promptText').value = prompt;
+        return prompt;
+    }
 
-        // Atualizar estatísticas
-        this.updateStats(prompt);
+    translateToLanguage(text, language) {
+        // Por simplicidade, retornar o texto original
+        // Em uma implementação mais robusta, aqui haveria um dicionário de traduções
+        return text;
     }
 
     getOptionLabel(step, optionId) {
@@ -874,14 +906,22 @@ class PromptBuilder {
         return option ? option.title : optionId;
     }
 
-    updateStats(prompt) {
+    updateStats(prompt, language) {
         const chars = prompt.length;
         const words = prompt.trim() ? prompt.trim().split(/\s+/).length : 0;
         const tokens = Math.ceil(words * 1.3); // Estimativa aproximada
 
-        document.getElementById('charCount').textContent = `${chars} caracteres`;
-        document.getElementById('wordCount').textContent = `${words} palavras`;
-        document.getElementById('tokenEstimate').textContent = `~${tokens} tokens`;
+        const suffix = language || '';
+        const charLabel = language === 'EN' ? 'characters' : 'caracteres';
+        const wordLabel = language === 'EN' ? 'words' : 'palavras';
+        
+        const charCountEl = document.getElementById(`charCount${suffix}`);
+        const wordCountEl = document.getElementById(`wordCount${suffix}`);
+        const tokenEstimateEl = document.getElementById(`tokenEstimate${suffix}`);
+        
+        if (charCountEl) charCountEl.textContent = `${chars} ${charLabel}`;
+        if (wordCountEl) wordCountEl.textContent = `${words} ${wordLabel}`;
+        if (tokenEstimateEl) tokenEstimateEl.textContent = `~${tokens} tokens`;
     }
 
     // Função restoreSelections removida - não é mais necessária com o novo sistema hierárquico
@@ -952,21 +992,28 @@ class PromptBuilder {
         }
     }
 
-    copyPrompt() {
-        const promptText = document.getElementById('promptText').value;
+    copyPrompt(language) {
+        const textareaId = language === 'EN' ? 'promptTextEN' : 'promptTextPT';
+        const promptText = document.getElementById(textareaId)?.value || '';
+        
         if (!promptText.trim()) {
-            this.showToast('Nenhum prompt para copiar', 'warning');
+            const message = language === 'EN' ? 'No prompt to copy' : 'Nenhum prompt para copiar';
+            this.showToast(message, 'warning');
             return;
         }
 
         navigator.clipboard.writeText(promptText).then(() => {
-            this.showToast('Prompt copiado com sucesso!', 'success');
+            const message = language === 'EN' ? 'Prompt copied successfully!' : 'Prompt copiado com sucesso!';
+            this.showToast(message, 'success');
         }).catch(() => {
             // Fallback para navegadores mais antigos
-            const textarea = document.getElementById('promptText');
-            textarea.select();
-            document.execCommand('copy');
-            this.showToast('Prompt copiado!', 'success');
+            const textarea = document.getElementById(textareaId);
+            if (textarea) {
+                textarea.select();
+                document.execCommand('copy');
+                const message = language === 'EN' ? 'Prompt copied!' : 'Prompt copiado!';
+                this.showToast(message, 'success');
+            }
         });
     }
 
@@ -984,8 +1031,15 @@ class PromptBuilder {
             this.updateStepper();
             this.loadStep(1);
             this.updateNavigation();
-            document.getElementById('promptText').value = '';
-            this.updateStats('');
+            
+            // Limpar ambas as textareas
+            const promptTextPT = document.getElementById('promptTextPT');
+            const promptTextEN = document.getElementById('promptTextEN');
+            if (promptTextPT) promptTextPT.value = '';
+            if (promptTextEN) promptTextEN.value = '';
+            
+            this.updateStats('', 'PT');
+            this.updateStats('', 'EN');
             localStorage.removeItem('promptBuilder_choices');
             localStorage.removeItem('promptBuilder_categories');
             this.showToast('Todas as seleções foram limpas', 'success');
