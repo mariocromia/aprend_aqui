@@ -6,7 +6,8 @@
       "Bash(curl:*)",
       "Bash(php:*)",
       "Bash(find:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(composer show:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"
