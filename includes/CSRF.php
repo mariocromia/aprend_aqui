@@ -37,8 +37,11 @@ class CSRF {
             return false;
         }
         
-        // Remover token usado (one-time use)
-        unset($_SESSION['csrf_tokens'][$token]);
+        // Permitir reutilização do token por 5 minutos após criação
+        $tokenAge = time() - $_SESSION['csrf_tokens'][$token];
+        if ($tokenAge > 300) { // 5 minutos
+            unset($_SESSION['csrf_tokens'][$token]);
+        }
         
         return true;
     }

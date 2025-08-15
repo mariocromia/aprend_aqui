@@ -34,9 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $mensagem = 'E-mail inválido. Verifique o formato.';
         }
-        // Validação do WhatsApp
-        elseif ($_POST['whatsapp'] && !$whatsapp) {
-            $mensagem = 'Se informado, o WhatsApp deve ter um formato válido com DDD.';
+        // Validação do WhatsApp (OBRIGATÓRIO)
+        elseif (!$_POST['whatsapp'] || !$whatsapp) {
+            $mensagem = 'WhatsApp é obrigatório e deve ter um formato válido com DDD.';
         }
         // Validação da senha forte
         elseif (strlen($senha) < 8) {
@@ -99,40 +99,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $userId = $usuarioCriado['id'] ?? 'criado-com-sucesso';
                             error_log("Usuário criado com sucesso no banco: ID=$userId, Nome=$nome, Email=$email");
                             
+                            // Enviar código APENAS via WhatsApp (WAHA)
+                            error_log("🚀 INICIANDO ENVIO: Tentando enviar código via WAHA para $whatsapp");
+                            error_log("📱 DADOS: Nome=$nome, Email=$email, Código=$codigoAtivacao");
+                            
                             try {
-                                // Enviar emails de boas-vindas e ativação
-                                EmailManager::sendWelcomeEmail($email, $nome);
-                                EmailManager::sendActivationCode($email, $codigoAtivacao, $nome);
+                                $whatsappEnviado = WhatsAppManager::sendActivationCode($whatsapp, $codigoAtivacao, $nome);
+                                error_log("📤 RESULTADO WAHA: " . ($whatsappEnviado ? 'SUCESSO' : 'FALHA'));
                                 
-                                // Enviar código via WhatsApp se o número foi fornecido
-                                if ($whatsapp && WhatsAppManager::isValidWhatsApp($whatsapp)) {
-                                    $whatsappEnviado = WhatsAppManager::sendActivationCode($whatsapp, $codigoAtivacao, $nome);
-                                    error_log("WhatsApp enviado para $whatsapp: " . ($whatsappEnviado ? 'Sucesso' : 'Falhou'));
+                                if ($whatsappEnviado) {
+                                    error_log("✅ CADASTRO COMPLETO: Usuário criado e código enviado para $whatsapp");
+                                    
+                                    // Redirecionar para confirmação
+                                    $redirectUrl = 'confirmar-whatsapp.php?email=' . urlencode($email);
+                                    error_log("🔄 REDIRECIONANDO: $redirectUrl");
+                                    
+                                    header('Location: ' . $redirectUrl);
+                                    header('Cache-Control: no-cache, no-store, must-revalidate');
+                                    header('Pragma: no-cache');
+                                    header('Expires: 0');
+                                    exit();
+                                } else {
+                                    error_log("❌ ERRO WAHA: Código não foi enviado para $whatsapp");
+                                    throw new Exception('Não foi possível enviar código de ativação via WhatsApp. Verifique o número informado ou tente novamente.');
                                 }
-                                
-                                // Redirecionar para confirmação
-                                $redirectUrl = 'confirmar-whatsapp.php?email=' . urlencode($email);
-                                error_log("Redirecionando para: $redirectUrl");
-                                
-                                // Forçar redirecionamento
-                                header('Location: ' . $redirectUrl);
-                                header('Cache-Control: no-cache, no-store, must-revalidate');
-                                header('Pragma: no-cache');
-                                header('Expires: 0');
-                                exit();
-                                
-                            } catch (Exception $emailError) {
-                                error_log("Erro ao enviar emails, mas usuário foi criado: " . $emailError->getMessage());
-                                
-                                // Mesmo com erro de email, redirecionar para confirmação
-                                $redirectUrl = 'confirmar-whatsapp.php?email=' . urlencode($email);
-                                error_log("Redirecionando para (após erro de email): $redirectUrl");
-                                
-                                header('Location: ' . $redirectUrl);
-                                header('Cache-Control: no-cache, no-store, must-revalidate');
-                                header('Pragma: no-cache');
-                                header('Expires: 0');
-                                exit();
+                            } catch (Exception $wahaException) {
+                                error_log("🚨 EXCEÇÃO WAHA: " . $wahaException->getMessage());
+                                throw $wahaException;
                             }
                         } else {
                             throw new Exception('Falha ao criar usuário no banco de dados');
@@ -143,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         error_log("Stack trace: " . $e->getTraceAsString());
                         
                         // Fornecer mensagem de erro mais específica em ambiente de desenvolvimento
-                        if (Environment::get('APP_ENV') === 'development') {
+                        if (Environment::get('DEBUG_MODE', false) || Environment::get('APP_ENV') === 'development') {
                             $mensagem = 'Erro ao criar conta: ' . $e->getMessage();
                         } else {
                             $mensagem = 'Erro ao criar conta. Tente novamente mais tarde.';
@@ -239,13 +232,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
                 
-                <div class="form-group">
-                    <label for="whatsapp">WhatsApp (opcional)</label>
+                <div class="form-group required">
+                    <label for="whatsapp">WhatsApp</label>
                     <div class="input-wrapper">
                         <i class="fab fa-whatsapp input-icon"></i>
-                        <input type="tel" name="whatsapp" id="whatsapp" class="form-input has-icon" placeholder="(11) 99999-9999" maxlength="15" value="<?= htmlspecialchars($_POST['whatsapp'] ?? '') ?>">
+                        <input type="tel" name="whatsapp" id="whatsapp" class="form-input has-icon" placeholder="(11) 99999-9999" maxlength="15" required value="<?= htmlspecialchars($_POST['whatsapp'] ?? '') ?>">
                     </div>
-                    <div class="form-help">Formato: (11) 99999-9999 (opcional)</div>
+                    <div class="form-help">Formato: (11) 99999-9999 (obrigatório para receber código de ativação)</div>
                 </div>
                 
                 <div class="form-group required">

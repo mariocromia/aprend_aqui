@@ -215,10 +215,14 @@ class WahaManager {
         try {
             // Tentar primeiro usar sessão existente dev_aprend_aqui_cadastro
             $sessionName = 'dev_aprend_aqui_cadastro';
-            $wahaServer = Environment::get('WAHA_SERVER', 'http://147.93.33.127:2142');
+            $wahaServer = Environment::get('WAHA_SERVER', 'https://waha.zapfunil.app');
             
-            error_log("WahaManager: Tentando usar sessão existente: $sessionName");
-            error_log("WahaManager: Para número $whatsapp com código $codigo");
+            error_log("🔥 WahaManager: Iniciando envio");
+            error_log("🔥 WahaManager: Sessão: $sessionName");
+            error_log("🔥 WahaManager: Servidor: $wahaServer");
+            error_log("🔥 WahaManager: WhatsApp original: $whatsapp");
+            error_log("🔥 WahaManager: Código: $codigo");
+            error_log("🔥 WahaManager: Nome: $nome");
             
             // Verificar status da sessão existente via API direta
             $statusUrl = "$wahaServer/api/sessions/$sessionName";
@@ -260,15 +264,25 @@ class WahaManager {
                       "Este código expira em 10 minutos.\n\n" .
                       "Se você não solicitou este código, ignore esta mensagem.";
             
+            // Formatar número corretamente
+            $formattedNumber = preg_replace('/[^0-9]/', '', $whatsapp);
+            if (!preg_match('/^55/', $formattedNumber)) {
+                $formattedNumber = '55' . $formattedNumber;
+            }
+            $chatId = $formattedNumber . '@c.us';
+            
             // Usar formato correto da API WAHA
             $sendUrl = "$wahaServer/api/sendText";
             $sendData = [
                 'session' => $sessionName,
-                'chatId' => $whatsapp . '@c.us',
+                'chatId' => $chatId,
                 'text' => $message
             ];
             
-            error_log("WahaManager: Enviando para $sendUrl com dados: " . json_encode($sendData));
+            error_log("🔥 WahaManager: Número formatado: $formattedNumber");
+            error_log("🔥 WahaManager: ChatId: $chatId");
+            error_log("🔥 WahaManager: URL: $sendUrl");
+            error_log("🔥 WahaManager: Dados: " . json_encode($sendData));
             
             // Usar cURL para melhor controle da requisição POST
             $ch = curl_init();
@@ -295,8 +309,12 @@ class WahaManager {
                 return false;
             }
             
+            error_log("🔥 WahaManager: HTTP Code: $httpCode");
+            error_log("🔥 WahaManager: cURL Error: " . ($curlError ?: 'Nenhum'));
+            error_log("🔥 WahaManager: Resposta bruta: " . substr($sendResponse ?: 'null', 0, 500));
+            
             $sendResult = json_decode($sendResponse, true);
-            error_log("WahaManager: Resposta do envio: " . json_encode($sendResult));
+            error_log("🔥 WahaManager: Resposta parseada: " . json_encode($sendResult));
             
             // Verificar diferentes formatos de resposta de sucesso
             $success = false;
