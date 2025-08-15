@@ -114,9 +114,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $usuario = $supabase->getUserByEmail($loginInput);
                 
                 if ($usuario) {
-                    // TODO: Implementar verificação de senha com Supabase Auth
-                    // Por enquanto, usar verificação mockada para admin@teste.com
-                    if ($loginInput === 'admin@teste.com' && $senha === 'Admin123!') {
+                    // Verificar se a conta está bloqueada
+                    if (!empty($usuario['conta_bloqueada_ate'])) {
+                        $bloqueadaAte = strtotime($usuario['conta_bloqueada_ate']);
+                        $agora = time();
+                        
+                        if ($agora < $bloqueadaAte) {
+                            // Ainda está bloqueada
+                            $minutosRestantes = ceil(($bloqueadaAte - $agora) / 60);
+                            $mensagem = "Conta bloqueada. Tente novamente em $minutosRestantes minuto(s).";
+                        } else {
+                            // Período de bloqueio expirou - RESETAR contador de tentativas
+                            error_log("Login.php: Conta desbloqueada para {$usuario['email']} - Resetando contador de tentativas");
+                            $supabase->updateUser($usuario['id'], [
+                                'conta_bloqueada_ate' => null,
+                                'tentativas_login_falhadas' => 0
+                            ]);
+                            // Recarregar dados do usuário após reset
+                            $usuario = $supabase->getUserByEmail($loginInput);
+                        }
+                    }
+                    
+                    // Só continuar se não estiver bloqueada
+                    if (empty($mensagem)) {
+                        // TODO: Implementar verificação de senha com Supabase Auth
+                        // Por enquanto, usar verificação mockada para admin@teste.com
+                        if ($loginInput === 'admin@teste.com' && $senha === 'Admin123!') {
                         // Login bem-sucedido
                         $_SESSION['usuario_id'] = $usuario['id'];
                         $_SESSION['usuario_nome'] = $usuario['nome'];
@@ -158,6 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $mensagem = 'Email ou senha incorretos.';
                         }
                     }
+                    } // Fecha o bloco if (empty($mensagem))
                 } else {
                     // Usuário não encontrado
                     $supabase->logLoginAttempt($loginInput, false, 'email_nao_encontrado');
