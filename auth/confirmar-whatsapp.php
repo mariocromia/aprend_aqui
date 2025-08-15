@@ -62,91 +62,64 @@ if (!$email) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirmar WhatsApp - <?= Environment::get('APP_NAME', 'Prompt Builder IA') ?></title>
-    <link rel="stylesheet" href="../assets/css/auth/auth.css">
+    <link rel="stylesheet" href="../assets/css/auth/auth-split.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        .demo-info {
-            background: #eff6ff;
-            border: 1px solid #bfdbfe;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            color: #1e40af;
-        }
-        
-        .demo-info strong {
-            color: #1d4ed8;
-        }
-        
-        .verification-code {
-            text-align: center;
-            font-size: 18px;
-            letter-spacing: 4px;
-            font-weight: bold;
-        }
-    </style>
 </head>
 <body>
-    <div class="login-container">
-        <!-- Logo -->
-        <div class="logo">
-            <div class="logo-icon">
-                <i class="fas fa-magic"></i>
-            </div>
-            <span class="logo-text"><?= Environment::get('APP_NAME', 'Prompt Builder IA') ?></span>
+    <div class="main-container">
+        <!-- Seção da Imagem (63%) -->
+        <div class="image-section">
         </div>
-        
-        <!-- Card de Confirmação -->
-        <div class="login-card">
-            <div class="login-header">
-                <h1>Confirmação do WhatsApp</h1>
-                <p>Digite o código que você recebeu</p>
-            </div>
-            
-            <!-- Informações demo (apenas em modo demo) -->
-            <?php if (Environment::get('WHATSAPP_PROVIDER', 'waha') === 'demo'): ?>
-            <div class="demo-info">
-                <strong>Demo:</strong> Use qualquer código de <strong>6 dígitos</strong> para continuar (ex: 123456)
-            </div>
-            <?php elseif (Environment::get('WHATSAPP_PROVIDER', 'waha') === 'waha'): ?>
-            <div class="demo-info" style="background: #ecfdf5; border-color: #10b981; color: #065f46;">
-                <strong>WAHA Ativo:</strong> O código foi enviado via WhatsApp pela API WAHA
-            </div>
-            <?php endif; ?>
-            
-            <?php if (!empty($mensagem)): ?>
-                <div class="<?= strpos($mensagem, 'sucesso') !== false ? 'success-message' : 'error-message' ?>">
-                    <?= $mensagem ?>
-                </div>
-            <?php endif; ?>
-            
-            <form method="post" action="" class="login-form">
-                <?= CSRF::getHiddenField() ?>
-                <input type="hidden" name="email" value="<?= htmlspecialchars($email) ?>">
-                
-                <div class="form-group">
-                    <label>E-mail cadastrado:</label>
-                    <div style="padding: 8px; background: #f9fafb; border-radius: 6px; color: #374151; font-weight: 500;">
-                        <?= htmlspecialchars($email) ?>
+
+        <!-- Seção do Formulário (37%) -->
+        <div class="login-section">
+            <div class="login-container">
+                <!-- Logo -->
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-magic"></i>
                     </div>
+                    <span class="logo-text"><?= Environment::get('APP_NAME', 'Prompt Builder IA') ?></span>
                 </div>
                 
-                <div class="form-group required">
-                    <label for="codigo">Código de Ativação</label>
-                    <div class="input-wrapper">
-                        <i class="fas fa-key input-icon"></i>
-                        <input type="text" name="codigo" id="codigo" class="form-input has-icon verification-code" maxlength="6" pattern="[0-9]{6}" required placeholder="123456" autocomplete="one-time-code">
+                <div class="login-header">
+                    <h1>Confirmação do WhatsApp</h1>
+                    <p>Digite o código que você recebeu</p>
+                </div>
+                
+                <?php if (!empty($mensagem)): ?>
+                    <div class="<?= strpos($mensagem, 'sucesso') !== false ? 'success-message' : 'error-message' ?>">
+                        <?= $mensagem ?>
                     </div>
-                    <div class="form-help">Digite o código de 6 dígitos enviado por WhatsApp</div>
-                </div>
+                <?php endif; ?>
                 
-                <button type="submit" class="login-button">Confirmar</button>
-            </form>
-            
-            <div class="signup-link">
-                <a href="cadastro.php">Voltar ao cadastro</a> |
-                <a href="login.php">Fazer login</a>
+                <form method="post" action="" class="login-form">
+                    <?= CSRF::getHiddenField() ?>
+                    <input type="hidden" name="email" value="<?= htmlspecialchars($email) ?>">
+                    
+                    <div class="form-group">
+                        <label>E-mail cadastrado:</label>
+                        <div style="padding: 12px; background: #f8fafc; border-radius: 8px; color: #374151; font-weight: 500; border: 1px solid #e2e8f0;">
+                            <?= htmlspecialchars($email) ?>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group required">
+                        <label for="codigo">Código de Ativação</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-key input-icon"></i>
+                            <input type="text" name="codigo" id="codigo" class="form-input has-icon verification-code" maxlength="6" pattern="[0-9]{6}" required placeholder="123456" autocomplete="one-time-code">
+                        </div>
+                        <div class="form-help">Digite o código de 6 dígitos enviado por WhatsApp</div>
+                    </div>
+                    
+                    <button type="submit" class="login-button">Confirmar</button>
+                </form>
+                
+                <div class="signup-link">
+                    <a href="cadastro.php">Voltar ao cadastro</a> |
+                    <a href="login.php">Fazer login</a>
+                </div>
             </div>
         </div>
     </div>

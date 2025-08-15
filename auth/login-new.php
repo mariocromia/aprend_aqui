@@ -1,28 +1,35 @@
 <?php
 session_start();
 
-// Carregar classes de segurança
+// Incluir dependências
 require_once '../includes/Environment.php';
-require_once '../includes/CSRF.php';
-require_once '../includes/Sanitizer.php';
-require_once '../includes/EmailManager.php';
 require_once '../includes/SupabaseClient.php';
+require_once '../includes/EmailManager.php';
+require_once '../includes/Sanitizer.php';
+require_once '../includes/CSRF.php';
+
+Environment::load();
+
+// Inicializar CSRF
+$csrf = new CSRF();
 
 $mensagem = '';
+$tipo_mensagem = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Verificar CSRF
-    if (!CSRF::verifyPostToken()) {
-        $mensagem = 'Erro de segurança detectado. Tente novamente.';
-    } else {
-        // Verificar se é recuperação de senha
-        if (isset($_POST['forgot_email']) || isset($_POST['recovery_method'])) {
+    if (isset($_POST['forgot_password'])) {
+        // Verificar token CSRF
+        if (!$csrf->validateToken($_POST['csrf_token'])) {
+            $mensagem = 'Token de segurança inválido. Recarregue a página e tente novamente.';
+            $tipo_mensagem = 'error';
+        } else {
             // Processar recuperação de senha
             $email = Sanitizer::sanitizeEmail($_POST['forgot_email']);
             $method = $_POST['recovery_method'] ?? 'email';
             
             if (!$email) {
                 $mensagem = 'E-mail inválido. Verifique o formato.';
+                $tipo_mensagem = 'error';
             } else {
                 try {
                     $supabase = new SupabaseClient();
@@ -34,6 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             // Verificar se usuário tem WhatsApp cadastrado
                             if (empty($user['whatsapp'])) {
                                 $mensagem = 'Este usuário não possui WhatsApp cadastrado. Use a recuperação por email.';
+                                $tipo_mensagem = 'error';
                             } else {
                                 // Gerar código e enviar via WhatsApp
                                 $code = EmailManager::generateResetCode($email, 'whatsapp');
@@ -45,9 +53,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         exit();
                                     } else {
                                         $mensagem = 'Erro ao enviar código via WhatsApp. Tente a recuperação por email.';
+                                        $tipo_mensagem = 'error';
                                     }
                                 } else {
                                     $mensagem = 'Erro interno. Tente novamente mais tarde.';
+                                    $tipo_mensagem = 'error';
                                 }
                             }
                         } else {
@@ -69,10 +79,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     } else {
                                         error_log("Login.php: ERRO - Falha no envio de email para: $email");
                                         $mensagem = 'Erro ao enviar código por email. Tente novamente mais tarde.';
+                                        $tipo_mensagem = 'error';
                                     }
                                 } else {
                                     error_log("Login.php: ERRO - Falha ao gerar código para: $email");
                                     $mensagem = 'Erro interno. Tente novamente mais tarde.';
+                                    $tipo_mensagem = 'error';
                                 }
                             } else {
                                 // Método tradicional com token e link
@@ -81,17 +93,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     $emailSent = EmailManager::sendPasswordReset($email, $token);
                                     if ($emailSent) {
                                         $mensagem = 'Se o e-mail estiver cadastrado, você receberá instruções para redefinir sua senha.';
+                                        $tipo_mensagem = 'success';
                                     } else {
                                         $mensagem = 'Erro ao enviar email. Tente novamente mais tarde.';
+                                        $tipo_mensagem = 'error';
                                     }
                                 } else {
                                     $mensagem = 'Erro interno. Tente novamente mais tarde.';
+                                    $tipo_mensagem = 'error';
                                 }
                             }
                         }
                     } else {
                         // Não revelar se o email existe ou não
                         $mensagem = 'Se o e-mail estiver cadastrado, você receberá instruções para redefinir sua senha.';
+                        $tipo_mensagem = 'success';
                     }
                     
                     // Registrar tentativa de recuperação
@@ -100,46 +116,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } catch (Exception $e) {
                     error_log("Erro na recuperação de senha: " . $e->getMessage());
                     $mensagem = 'Erro interno. Tente novamente mais tarde.';
+                    $tipo_mensagem = 'error';
                 }
             }
-        } else {
-            // Processar login normal
-            $loginInput = trim($_POST['login']);
-            $senha = $_POST['senha'];
+        }
+    } else {
+        // Processar login normal
+        $loginInput = trim($_POST['login']);
+        $senha = $_POST['senha'];
 
-            try {
-                $supabase = new SupabaseClient();
-                
-                // Buscar usuário por email
-                $usuario = $supabase->getUserByEmail($loginInput);
-                
-                if ($usuario) {
-                    // Verificar se a conta está bloqueada
-                    if (!empty($usuario['conta_bloqueada_ate'])) {
-                        $bloqueadaAte = strtotime($usuario['conta_bloqueada_ate']);
-                        $agora = time();
-                        
-                        if ($agora < $bloqueadaAte) {
-                            // Ainda está bloqueada
-                            $minutosRestantes = ceil(($bloqueadaAte - $agora) / 60);
-                            $mensagem = "Conta bloqueada. Tente novamente em $minutosRestantes minuto(s).";
-                        } else {
-                            // Período de bloqueio expirou - RESETAR contador de tentativas
-                            error_log("Login.php: Conta desbloqueada para {$usuario['email']} - Resetando contador de tentativas");
-                            $supabase->updateUser($usuario['id'], [
-                                'conta_bloqueada_ate' => null,
-                                'tentativas_login_falhadas' => 0
-                            ]);
-                            // Recarregar dados do usuário após reset
-                            $usuario = $supabase->getUserByEmail($loginInput);
-                        }
-                    }
+        try {
+            $supabase = new SupabaseClient();
+            
+            // Buscar usuário por email
+            $usuario = $supabase->getUserByEmail($loginInput);
+            
+            if ($usuario) {
+                // Verificar se a conta está bloqueada
+                if (!empty($usuario['conta_bloqueada_ate'])) {
+                    $bloqueadaAte = strtotime($usuario['conta_bloqueada_ate']);
+                    $agora = time();
                     
-                    // Só continuar se não estiver bloqueada
-                    if (empty($mensagem)) {
-                        // TODO: Implementar verificação de senha com Supabase Auth
-                        // Por enquanto, usar verificação mockada para admin@teste.com
-                        if ($loginInput === 'admin@teste.com' && $senha === 'Admin123!') {
+                    if ($agora < $bloqueadaAte) {
+                        // Ainda está bloqueada
+                        $minutosRestantes = ceil(($bloqueadaAte - $agora) / 60);
+                        $mensagem = "Conta bloqueada. Tente novamente em $minutosRestantes minuto(s).";
+                        $tipo_mensagem = 'error';
+                    } else {
+                        // Período de bloqueio expirou - RESETAR contador de tentativas
+                        error_log("Login.php: Conta desbloqueada para {$usuario['email']} - Resetando contador de tentativas");
+                        $supabase->updateUser($usuario['id'], [
+                            'conta_bloqueada_ate' => null,
+                            'tentativas_login_falhadas' => 0
+                        ]);
+                        // Recarregar dados do usuário após reset
+                        $usuario = $supabase->getUserByEmail($loginInput);
+                    }
+                }
+                
+                // Só continuar se não estiver bloqueada
+                if (empty($mensagem)) {
+                    // TODO: Implementar verificação de senha com Supabase Auth
+                    // Por enquanto, usar verificação mockada para admin@teste.com
+                    if ($loginInput === 'admin@teste.com' && $senha === 'Admin123!') {
                         // Login bem-sucedido
                         $_SESSION['usuario_id'] = $usuario['id'];
                         $_SESSION['usuario_nome'] = $usuario['nome'];
@@ -177,25 +196,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 'conta_bloqueada_ate' => date('c', time() + 900) // 15 minutos
                             ]);
                             $mensagem = 'Conta bloqueada por 15 minutos devido a múltiplas tentativas falhadas.';
+                            $tipo_mensagem = 'error';
                         } else {
                             $mensagem = 'Email ou senha incorretos.';
+                            $tipo_mensagem = 'error';
                         }
                     }
-                    } // Fecha o bloco if (empty($mensagem))
-                } else {
-                    // Usuário não encontrado
-                    $supabase->logLoginAttempt($loginInput, false, 'email_nao_encontrado');
-                    $mensagem = 'Email ou senha incorretos.';
-                }
-                
-            } catch (Exception $e) {
-                error_log("Erro no login: " . $e->getMessage());
-                $mensagem = 'Erro interno. Tente novamente mais tarde.';
+                } // Fecha o bloco if (empty($mensagem))
+            } else {
+                // Usuário não encontrado
+                $supabase->logLoginAttempt($loginInput, false, 'email_nao_encontrado');
+                $mensagem = 'Email ou senha incorretos.';
+                $tipo_mensagem = 'error';
             }
+            
+        } catch (Exception $e) {
+            error_log("Erro no login: " . $e->getMessage());
+            $mensagem = 'Erro interno. Tente novamente mais tarde.';
+            $tipo_mensagem = 'error';
         }
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -207,60 +230,110 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <div class="main-container">
-        <!-- Seção da Imagem (63%) -->
+        <!-- Seção da Imagem (60%) -->
         <div class="image-section">
+            <div class="hero-content">
+                <div class="hero-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h1>Prompt Builder IA</h1>
+                <p>Crie prompts inteligentes com o poder da Inteligência Artificial. Transforme suas ideias em comandos precisos e eficazes.</p>
+                
+                <div class="hero-features">
+                    <div class="hero-feature">
+                        <i class="fas fa-magic"></i>
+                        <span>IA Avançada</span>
+                    </div>
+                    <div class="hero-feature">
+                        <i class="fas fa-rocket"></i>
+                        <span>Resultados Rápidos</span>
+                    </div>
+                    <div class="hero-feature">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Seguro & Confiável</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Seção do Login (37%) -->
+        <!-- Seção de Login (40%) -->
         <div class="login-section">
             <div class="login-container">
-                <!-- Logo -->
                 <div class="logo">
-                    <div class="logo-icon">
-                        <i class="fas fa-magic"></i>
-                    </div>
-                    <span class="logo-text"><?= Environment::get('APP_NAME', 'Prompt Builder IA') ?></span>
+                    <div class="logo-icon">PB</div>
+                    <div class="logo-text">Prompt Builder</div>
                 </div>
-                
+
                 <div class="login-header">
-                    <h1>Bem-vindo de volta</h1>
-                    <p>Entre na sua conta</p>
+                    <h1>Bem-vindo</h1>
+                    <p>Faça login para acessar sua conta</p>
                 </div>
-                
+
                 <?php if (!empty($mensagem)): ?>
-                    <div class="<?= strpos($mensagem, 'sucesso') !== false || strpos($mensagem, 'receberá') !== false ? 'success-message' : 'error-message' ?>">
-                        <?= $mensagem ?>
+                    <div class="<?= $tipo_mensagem === 'success' ? 'success-message' : 'error-message' ?>">
+                        <?= htmlspecialchars($mensagem) ?>
                     </div>
                 <?php endif; ?>
-                
-                <form method="post" action="" class="login-form">
-                    <?= CSRF::getHiddenField() ?>
+
+                <!-- Informações de demonstração -->
+                <div class="demo-info">
+                    <strong>📋 Login de Demonstração:</strong><br>
+                    Email: admin@teste.com<br>
+                    Senha: Admin123!
+                </div>
+
+                <form method="POST" class="login-form" id="loginForm">
+                    <input type="hidden" name="csrf_token" value="<?= $csrf->getToken() ?>">
+                    
                     <div class="form-group required">
-                        <label for="login">E-mail ou Telefone</label>
+                        <label for="login">E-mail</label>
                         <div class="input-wrapper">
-                            <i class="fas fa-user input-icon"></i>
-                            <input type="text" name="login" id="login" class="form-input has-icon" placeholder="Insira seu E-mail ou telefone" required value="<?= htmlspecialchars($_POST['login'] ?? '') ?>" autocomplete="username">
+                            <input 
+                                type="email" 
+                                id="login" 
+                                name="login" 
+                                class="form-input has-icon" 
+                                placeholder="Digite seu e-mail"
+                                required 
+                                autocomplete="email"
+                                value="<?= isset($_POST['login']) ? htmlspecialchars($_POST['login']) : '' ?>"
+                            >
+                            <i class="fas fa-envelope input-icon"></i>
                         </div>
                     </div>
-                    
+
                     <div class="form-group required">
                         <label for="senha">Senha</label>
                         <div class="input-wrapper">
+                            <input 
+                                type="password" 
+                                id="senha" 
+                                name="senha" 
+                                class="form-input has-icon has-toggle" 
+                                placeholder="Digite sua senha"
+                                required 
+                                autocomplete="current-password"
+                            >
                             <i class="fas fa-lock input-icon"></i>
-                            <input type="password" name="senha" id="senha" class="form-input has-icon has-toggle" placeholder="••••••••" required>
-                            <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+                            <i class="fas fa-eye password-toggle" onclick="togglePassword()"></i>
                         </div>
                     </div>
-                    
-                    <button type="submit" class="login-button">Entrar</button>
+
+                    <button type="submit" class="login-button">
+                        <i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i>
+                        Entrar
+                    </button>
                 </form>
-                
+
                 <div class="forgot-password-link">
-                    <a href="#" onclick="openForgotPasswordModal()">Esqueceu a senha?</a>
+                    <a href="#" onclick="openForgotPasswordModal()" id="forgotPasswordLink">
+                        <i class="fas fa-key" style="margin-right: 5px;"></i>
+                        Esqueci minha senha
+                    </a>
                 </div>
-                
+
                 <div class="signup-link">
-                    Não tem uma conta? <a href="cadastro.php">Cadastre-se</a>
+                    Não tem uma conta? <a href="cadastro.php">Cadastre-se aqui</a>
                 </div>
             </div>
         </div>
@@ -270,70 +343,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div id="forgotPasswordModal" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close" onclick="closeForgotPasswordModal()">&times;</span>
-            <h2>Recuperar Senha</h2>
-            <p>Digite seu email e escolha como deseja receber o código de recuperação:</p>
+            <h2><i class="fas fa-key" style="margin-right: 10px; color: #667eea;"></i>Recuperar Senha</h2>
+            <p>Escolha como você gostaria de recuperar sua senha:</p>
             
-            <form id="forgotPasswordForm" method="post">
-                <?= CSRF::getHiddenField() ?>
-                <div class="form-group required">
-                    <label for="forgot_email">E-mail</label>
-                    <div class="input-wrapper">
-                        <i class="fas fa-envelope input-icon"></i>
-                        <input type="email" id="forgot_email" name="forgot_email" class="form-input has-icon" placeholder="seu@email.com" required>
-                    </div>
-                </div>
+            <form method="POST" id="forgotPasswordForm">
+                <input type="hidden" name="csrf_token" value="<?= $csrf->getToken() ?>">
+                <input type="hidden" name="forgot_password" value="1">
                 
                 <div class="form-group">
-                    <label>Método de Recuperação</label>
-                    <div class="recovery-methods">
-                        <label class="method-option">
-                            <input type="radio" name="recovery_method" value="email" checked>
-                            <div class="method-content">
-                                <i class="fas fa-envelope"></i>
-                                <span>Email</span>
-                                <small>Código por email</small>
-                            </div>
-                        </label>
-                        
-                        <label class="method-option">
-                            <input type="radio" name="recovery_method" value="whatsapp">
-                            <div class="method-content">
-                                <i class="fab fa-whatsapp"></i>
-                                <span>WhatsApp</span>
-                                <small>Código via WhatsApp</small>
-                            </div>
-                        </label>
-                        
-                        <label class="method-option">
-                            <input type="radio" name="recovery_method" value="email" onclick="document.getElementById('use_code').value='0'">
-                            <div class="method-content">
-                                <i class="fas fa-link"></i>
-                                <span>Link por Email</span>
-                                <small>Link tradicional</small>
-                            </div>
-                        </label>
+                    <label for="forgot_email">E-mail</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="forgot_email" name="forgot_email" class="form-input has-icon" 
+                               placeholder="Digite seu e-mail" required>
+                        <i class="fas fa-envelope input-icon"></i>
                     </div>
-                    <input type="hidden" id="use_code" name="use_code" value="1">
                 </div>
                 
-                <button type="submit" class="login-button">Enviar Código</button>
+                <div class="recovery-methods">
+                    <label class="method-option">
+                        <input type="radio" name="recovery_method" value="email" checked>
+                        <input type="hidden" name="use_code" value="1">
+                        <div class="method-content">
+                            <i class="fas fa-envelope"></i>
+                            <span>Código por E-mail</span>
+                            <small>Receba um código de 6 dígitos no seu e-mail (válido por 10 minutos)</small>
+                        </div>
+                    </label>
+                    
+                    <label class="method-option">
+                        <input type="radio" name="recovery_method" value="whatsapp">
+                        <div class="method-content">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>Código por WhatsApp</span>
+                            <small>Receba um código de 6 dígitos no WhatsApp (válido por 10 minutos)</small>
+                        </div>
+                    </label>
+                    
+                    <label class="method-option">
+                        <input type="radio" name="recovery_method" value="email" onchange="document.querySelector('input[name=use_code]').value='0'">
+                        <div class="method-content">
+                            <i class="fas fa-link"></i>
+                            <span>Link Tradicional</span>
+                            <small>Receba um link seguro no e-mail (válido por 1 hora)</small>
+                        </div>
+                    </label>
+                </div>
+                
+                <button type="submit" class="login-button" style="margin-top: 25px;">
+                    <i class="fas fa-paper-plane" style="margin-right: 8px;"></i>
+                    Enviar
+                </button>
             </form>
         </div>
     </div>
 
     <script>
-        const togglePassword = document.getElementById('togglePassword');
-        const passwordField = document.getElementById('senha');
-
-        togglePassword.addEventListener('click', function() {
-            // Alterna o tipo do campo entre password e text
-            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordField.setAttribute('type', type);
+        // Função para alternar visibilidade da senha
+        function togglePassword() {
+            const passwordInput = document.getElementById('senha');
+            const toggleIcon = document.querySelector('.password-toggle');
             
-            // Alterna o ícone entre olho aberto e fechado
-            this.classList.toggle('fa-eye');
-            this.classList.toggle('fa-eye-slash');
-        });
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
 
         // Validações em tempo real
         document.addEventListener('DOMContentLoaded', function() {
@@ -341,10 +420,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             loginInput.addEventListener('input', function() {
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                const phoneRegex = /^\d{10,11}$/;
-                const cleanValue = this.value.replace(/\D/g, '');
                 
-                if (emailRegex.test(this.value) || phoneRegex.test(cleanValue)) {
+                if (emailRegex.test(this.value)) {
                     this.classList.add('valid');
                     this.classList.remove('invalid');
                 } else if (this.value.length > 0) {
@@ -373,6 +450,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 closeForgotPasswordModal();
             }
         }
+
+        // Atualizar campo use_code quando método email tradicional é selecionado
+        document.querySelectorAll('input[name="recovery_method"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'email') {
+                    // Se for o último radio (link tradicional), setar use_code como 0
+                    const isTraditionalLink = this.parentElement.querySelector('.fa-link');
+                    document.querySelector('input[name="use_code"]').value = isTraditionalLink ? '0' : '1';
+                }
+            });
+        });
     </script>
 </body>
 </html>

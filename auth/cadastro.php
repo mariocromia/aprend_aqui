@@ -38,21 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         elseif (!$_POST['whatsapp'] || !$whatsapp) {
             $mensagem = 'WhatsApp é obrigatório e deve ter um formato válido com DDD.';
         }
-        // Validação da senha forte
-        elseif (strlen($senha) < 8) {
-            $mensagem = 'Senha deve ter pelo menos 8 caracteres.';
-        }
-        elseif (!preg_match('/[A-Z]/', $senha)) {
-            $mensagem = 'Senha deve conter pelo menos uma letra maiúscula.';
-        }
-        elseif (!preg_match('/[a-z]/', $senha)) {
-            $mensagem = 'Senha deve conter pelo menos uma letra minúscula.';
-        }
-        elseif (!preg_match('/[0-9]/', $senha)) {
-            $mensagem = 'Senha deve conter pelo menos um número.';
-        }
-        elseif (!preg_match('/[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?]/', $senha)) {
-            $mensagem = 'Senha deve conter pelo menos um caractere especial (!@#$%^&*).';
+        // Validação básica da senha
+        elseif (strlen($senha) < 6) {
+            $mensagem = 'Senha deve ter pelo menos 6 caracteres.';
         }
         // Verifica se as senhas coincidem
         elseif ($senha !== $confirmar_senha) {
@@ -176,113 +164,92 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro - <?= Environment::get('APP_NAME', 'Prompt Builder IA') ?></title>
-    <link rel="stylesheet" href="../assets/css/auth/auth.css">
+    <link rel="stylesheet" href="../assets/css/auth/auth-split.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        .form-help {
-            margin-top: 5px;
-            margin-bottom: 0;
-        }
-        
-        .login-card {
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .login-header {
-            margin-bottom: 20px;
-        }
-        
-        .login-button {
-            margin-top: 20px;
-        }
-        
-        .signup-link {
-            margin-top: 15px;
-        }
-    </style>
 </head>
 <body>
-    <div class="login-container">
-        <!-- Logo -->
-        <div class="logo">
-            <div class="logo-icon">
-                <i class="fas fa-magic"></i>
-            </div>
-            <span class="logo-text"><?= Environment::get('APP_NAME', 'Prompt Builder IA') ?></span>
+    <div class="main-container">
+        <!-- Seção da Imagem (63%) -->
+        <div class="image-section">
         </div>
-        
-        <!-- Card de Cadastro -->
-        <div class="login-card">
-            <div class="login-header">
-                <h1>Criar uma conta</h1>
-                <p>Cadastre-se para começar</p>
-            </div>
-            
-            <?php if (!empty($mensagem)): ?>
-                <?php if (strpos($mensagem, 'sucesso') !== false): ?>
-                    <div class="success-message"><?= $mensagem ?></div>
-                <?php else: ?>
-                    <div class="error-message"><?= $mensagem ?></div>
+
+        <!-- Seção do Formulário (37%) -->
+        <div class="login-section">
+            <div class="login-container">
+                <!-- Logo -->
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <span class="logo-text"><?= Environment::get('APP_NAME', 'Prompt Builder IA') ?></span>
+                </div>
+                
+                <div class="login-header">
+                    <h1>Criar uma conta</h1>
+                    <p>Cadastre-se para começar</p>
+                </div>
+                
+                <?php if (!empty($mensagem)): ?>
+                    <?php if (strpos($mensagem, 'sucesso') !== false): ?>
+                        <div class="success-message"><?= $mensagem ?></div>
+                    <?php else: ?>
+                        <div class="error-message"><?= $mensagem ?></div>
+                    <?php endif; ?>
                 <?php endif; ?>
-            <?php endif; ?>
-            
-            <form method="post" action="" class="login-form">
-                <?= CSRF::getHiddenField() ?>
                 
-                <div class="form-group required">
-                    <label for="nome">Nome</label>
-                    <div class="input-wrapper">
-                        <i class="fas fa-user input-icon"></i>
-                        <input type="text" name="nome" id="nome" class="form-input has-icon" placeholder="Insira seu nome" required value="<?= htmlspecialchars($_POST['nome'] ?? '') ?>">
+                <form method="post" action="" class="login-form">
+                    <?= CSRF::getHiddenField() ?>
+                    
+                    <div class="form-group required">
+                        <label for="nome">Nome</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user input-icon"></i>
+                            <input type="text" name="nome" id="nome" class="form-input has-icon" placeholder="Insira seu nome" required value="<?= htmlspecialchars($_POST['nome'] ?? '') ?>">
+                        </div>
                     </div>
-                </div>
-                
-                <div class="form-group required">
-                    <label for="email">E-mail</label>
-                    <div class="input-wrapper">
-                        <i class="fas fa-envelope input-icon"></i>
-                        <input type="email" name="email" id="email" class="form-input has-icon" placeholder="Insira seu email" required value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
+                    
+                    <div class="form-group required">
+                        <label for="email">E-mail</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope input-icon"></i>
+                            <input type="email" name="email" id="email" class="form-input has-icon" placeholder="Insira seu email" required value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
+                        </div>
                     </div>
-                </div>
-                
-                <div class="form-group required">
-                    <label for="whatsapp">WhatsApp</label>
-                    <div class="input-wrapper">
-                        <i class="fab fa-whatsapp input-icon"></i>
-                        <input type="tel" name="whatsapp" id="whatsapp" class="form-input has-icon" placeholder="(11) 99999-9999" maxlength="15" required value="<?= htmlspecialchars($_POST['whatsapp'] ?? '') ?>">
+                    
+                    <div class="form-group required">
+                        <label for="whatsapp">WhatsApp</label>
+                        <div class="input-wrapper">
+                            <i class="fab fa-whatsapp input-icon"></i>
+                            <input type="tel" name="whatsapp" id="whatsapp" class="form-input has-icon" placeholder="(11) 99999-9999" maxlength="15" required value="<?= htmlspecialchars($_POST['whatsapp'] ?? '') ?>">
+                        </div>
+                        <div class="form-help">Formato: (11) 99999-9999 (obrigatório para receber código de ativação)</div>
                     </div>
-                    <div class="form-help">Formato: (11) 99999-9999 (obrigatório para receber código de ativação)</div>
-                </div>
-                
-                <div class="form-group required">
-                    <label for="senha">Senha</label>
-                    <div class="input-wrapper">
-                        <i class="fas fa-lock input-icon"></i>
-                        <input type="password" name="senha" id="senha" class="form-input has-icon has-toggle" placeholder="••••••••" required>
-                        <i class="fas fa-eye password-toggle" onclick="togglePassword('senha', this)"></i>
+                    
+                    <div class="form-group required">
+                        <label for="senha">Senha</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" name="senha" id="senha" class="form-input has-icon has-toggle" placeholder="••••••••" required>
+                            <i class="fas fa-eye password-toggle" onclick="togglePassword('senha', this)"></i>
+                        </div>
+                        <div class="form-help">Mínimo 6 caracteres</div>
                     </div>
-                    <div class="form-help">A senha deve conter: 8+ caracteres, maiúscula, minúscula, número e símbolo</div>
-                </div>
-                
-                <div class="form-group required">
-                    <label for="confirmar_senha">Confirmar senha</label>
-                    <div class="input-wrapper">
-                        <i class="fas fa-lock input-icon"></i>
-                        <input type="password" name="confirmar_senha" id="confirmar_senha" class="form-input has-icon has-toggle" placeholder="Confirme sua senha" required>
-                        <i class="fas fa-eye password-toggle" onclick="togglePassword('confirmar_senha', this)"></i>
+                    
+                    <div class="form-group required">
+                        <label for="confirmar_senha">Confirmar senha</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" name="confirmar_senha" id="confirmar_senha" class="form-input has-icon has-toggle" placeholder="Confirme sua senha" required>
+                            <i class="fas fa-eye password-toggle" onclick="togglePassword('confirmar_senha', this)"></i>
+                        </div>
                     </div>
-                </div>
+                    
+                    <button type="submit" class="login-button">Cadastrar</button>
+                </form>
                 
-                <button type="submit" class="login-button">Cadastrar</button>
-            </form>
-            
-            <div class="signup-link">
-                Já tem uma conta? <a href="login.php">Entrar</a>
+                <div class="signup-link">
+                    Já tem uma conta? <a href="login.php">Entrar</a>
+                </div>
             </div>
         </div>
     </div>
@@ -337,30 +304,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Validação da senha
             senhaInput.addEventListener('input', function() {
                 const senha = this.value;
-                const criterios = {
-                    tamanho: senha.length >= 8,
-                    maiuscula: /[A-Z]/.test(senha),
-                    minuscula: /[a-z]/.test(senha),
-                    numero: /[0-9]/.test(senha),
-                    especial: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(senha)
-                };
-
-                const validos = Object.values(criterios).filter(v => v).length;
                 
-                if (validos >= 5) {
+                if (senha.length >= 6) {
                     this.classList.add('valid');
                     this.classList.remove('invalid');
-                    mostrarForcaSenha('forte');
-                } else if (validos >= 3) {
-                    this.classList.remove('valid', 'invalid');
-                    mostrarForcaSenha('media');
                 } else if (senha.length > 0) {
                     this.classList.add('invalid');
                     this.classList.remove('valid');
-                    mostrarForcaSenha('fraca');
                 } else {
                     this.classList.remove('valid', 'invalid');
-                    removerForcaSenha();
                 }
                 
                 // Revalida confirmação de senha se já foi preenchida
@@ -382,41 +334,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             });
 
-            function mostrarForcaSenha(forca) {
-                // Remove indicador anterior se existir
-                removerForcaSenha();
-
-                // Cria novo indicador
-                const indicador = document.createElement('div');
-                indicador.className = 'password-strength';
-                indicador.style.fontSize = '12px';
-                indicador.style.marginTop = '4px';
-                indicador.style.fontWeight = '500';
-
-                switch(forca) {
-                    case 'fraca':
-                        indicador.textContent = '🔴 Senha fraca';
-                        indicador.classList.add('weak');
-                        break;
-                    case 'media':
-                        indicador.textContent = '🟡 Senha média';
-                        indicador.classList.add('medium');
-                        break;
-                    case 'forte':
-                        indicador.textContent = '🟢 Senha forte';
-                        indicador.classList.add('strong');
-                        break;
-                }
-
-                senhaInput.parentNode.parentNode.appendChild(indicador);
-            }
-
-            function removerForcaSenha() {
-                const indicadorExistente = senhaInput.parentNode.parentNode.querySelector('.password-strength');
-                if (indicadorExistente) {
-                    indicadorExistente.remove();
-                }
-            }
 
             // Máscara para WhatsApp
             whatsappInput.addEventListener('input', function(e) {

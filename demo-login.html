@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Prompt Builder IA</title>
+    <link rel="stylesheet" href="assets/css/auth/auth-split.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="main-container">
+        <!-- Seção da Imagem (60%) -->
+        <div class="image-section">
+            <div class="hero-content">
+                <div class="hero-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h1>Prompt Builder IA</h1>
+                <p>Crie prompts inteligentes com o poder da Inteligência Artificial. Transforme suas ideias em comandos precisos e eficazes.</p>
+                
+                <div class="hero-features">
+                    <div class="hero-feature">
+                        <i class="fas fa-magic"></i>
+                        <span>IA Avançada</span>
+                    </div>
+                    <div class="hero-feature">
+                        <i class="fas fa-rocket"></i>
+                        <span>Resultados Rápidos</span>
+                    </div>
+                    <div class="hero-feature">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Seguro & Confiável</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção de Login (40%) -->
+        <div class="login-section">
+            <div class="login-container">
+                <div class="logo">
+                    <div class="logo-icon">PB</div>
+                    <div class="logo-text">Prompt Builder</div>
+                </div>
+
+                <div class="login-header">
+                    <h1>Bem-vindo</h1>
+                    <p>Faça login para acessar sua conta</p>
+                </div>
+
+                <!-- Informações de demonstração -->
+                <div class="demo-info">
+                    <strong>📋 Login de Demonstração:</strong><br>
+                    Email: admin@teste.com<br>
+                    Senha: Admin123!
+                </div>
+
+                <form class="login-form" id="loginForm">
+                    <div class="form-group required">
+                        <label for="login">E-mail</label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="email" 
+                                id="login" 
+                                name="login" 
+                                class="form-input has-icon" 
+                                placeholder="Digite seu e-mail"
+                                required 
+                                autocomplete="email"
+                            >
+                            <i class="fas fa-envelope input-icon"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group required">
+                        <label for="senha">Senha</label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="password" 
+                                id="senha" 
+                                name="senha" 
+                                class="form-input has-icon has-toggle" 
+                                placeholder="Digite sua senha"
+                                required 
+                                autocomplete="current-password"
+                            >
+                            <i class="fas fa-lock input-icon"></i>
+                            <i class="fas fa-eye password-toggle" onclick="togglePassword()"></i>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="login-button">
+                        <i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i>
+                        Entrar
+                    </button>
+                </form>
+
+                <div class="forgot-password-link">
+                    <a href="#" onclick="openForgotPasswordModal()" id="forgotPasswordLink">
+                        <i class="fas fa-key" style="margin-right: 5px;"></i>
+                        Esqueci minha senha
+                    </a>
+                </div>
+
+                <div class="signup-link">
+                    Não tem uma conta? <a href="auth/cadastro.php">Cadastre-se aqui</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Recuperação de Senha -->
+    <div id="forgotPasswordModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeForgotPasswordModal()">&times;</span>
+            <h2><i class="fas fa-key" style="margin-right: 10px; color: #667eea;"></i>Recuperar Senha</h2>
+            <p>Escolha como você gostaria de recuperar sua senha:</p>
+            
+            <form id="forgotPasswordForm">
+                <div class="form-group">
+                    <label for="forgot_email">E-mail</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="forgot_email" name="forgot_email" class="form-input has-icon" 
+                               placeholder="Digite seu e-mail" required>
+                        <i class="fas fa-envelope input-icon"></i>
+                    </div>
+                </div>
+                
+                <div class="recovery-methods">
+                    <label class="method-option">
+                        <input type="radio" name="recovery_method" value="email" checked>
+                        <div class="method-content">
+                            <i class="fas fa-envelope"></i>
+                            <span>Código por E-mail</span>
+                            <small>Receba um código de 6 dígitos no seu e-mail (válido por 10 minutos)</small>
+                        </div>
+                    </label>
+                    
+                    <label class="method-option">
+                        <input type="radio" name="recovery_method" value="whatsapp">
+                        <div class="method-content">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>Código por WhatsApp</span>
+                            <small>Receba um código de 6 dígitos no WhatsApp (válido por 10 minutos)</small>
+                        </div>
+                    </label>
+                    
+                    <label class="method-option">
+                        <input type="radio" name="recovery_method" value="link">
+                        <div class="method-content">
+                            <i class="fas fa-link"></i>
+                            <span>Link Tradicional</span>
+                            <small>Receba um link seguro no e-mail (válido por 1 hora)</small>
+                        </div>
+                    </label>
+                </div>
+                
+                <button type="submit" class="login-button" style="margin-top: 25px;">
+                    <i class="fas fa-paper-plane" style="margin-right: 8px;"></i>
+                    Enviar
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Função para alternar visibilidade da senha
+        function togglePassword() {
+            const passwordInput = document.getElementById('senha');
+            const toggleIcon = document.querySelector('.password-toggle');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        // Validações em tempo real
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginInput = document.getElementById('login');
+
+            loginInput.addEventListener('input', function() {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                
+                if (emailRegex.test(this.value)) {
+                    this.classList.add('valid');
+                    this.classList.remove('invalid');
+                } else if (this.value.length > 0) {
+                    this.classList.add('invalid');
+                    this.classList.remove('valid');
+                } else {
+                    this.classList.remove('valid', 'invalid');
+                }
+            });
+
+            // Demonstração de envio do formulário
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Demo: Login não funcional. Use auth/login-new.php para versão completa.');
+            });
+
+            document.getElementById('forgotPasswordForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Demo: Recuperação não funcional. Use auth/login-new.php para versão completa.');
+            });
+        });
+
+        // Funções para controlar o modal
+        function openForgotPasswordModal() {
+            document.getElementById('forgotPasswordModal').style.display = 'block';
+        }
+
+        function closeForgotPasswordModal() {
+            document.getElementById('forgotPasswordModal').style.display = 'none';
+            document.getElementById('forgotPasswordForm').reset();
+        }
+
+        // Fechar modal clicando fora dele
+        window.onclick = function(event) {
+            const modal = document.getElementById('forgotPasswordModal');
+            if (event.target === modal) {
+                closeForgotPasswordModal();
+            }
+        }
+    </script>
+</body>
+</html>

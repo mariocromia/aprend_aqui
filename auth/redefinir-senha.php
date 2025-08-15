@@ -62,70 +62,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $validToken) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redefinir Senha - <?= Environment::get('APP_NAME', 'Prompt Builder IA') ?></title>
-    <link rel="stylesheet" href="../assets/css/auth/auth.css">
+    <link rel="stylesheet" href="../assets/css/auth/auth-split.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="login-container">
-        <!-- Logo -->
-        <div class="logo">
-            <div class="logo-icon">
-                <i class="fas fa-magic"></i>
-            </div>
-            <span class="logo-text"><?= Environment::get('APP_NAME', 'Prompt Builder IA') ?></span>
+    <div class="main-container">
+        <!-- Seção da Imagem (63%) -->
+        <div class="image-section">
         </div>
-        
-        <!-- Card de Redefinição -->
-        <div class="login-card">
-            <div class="login-header">
-                <h1>Redefinir senha</h1>
-                <p>Digite sua nova senha</p>
-            </div>
-            
-            <?php if (!empty($mensagem)): ?>
-                <div class="<?= strpos($mensagem, 'sucesso') !== false ? 'success-message' : 'error-message' ?>">
-                    <?= $mensagem ?>
-                </div>
-            <?php endif; ?>
-            
-            <?php if ($validToken): ?>
-                <form method="post" action="" class="login-form">
-                    <?= CSRF::getHiddenField() ?>
-                    <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
-                    
-                    <div class="form-group required">
-                        <label for="nova_senha">Nova senha</label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-lock input-icon"></i>
-                            <input type="password" name="nova_senha" id="nova_senha" class="form-input has-icon has-toggle" placeholder="Digite sua nova senha" required>
-                            <i class="fas fa-eye password-toggle" onclick="togglePassword('nova_senha', this)"></i>
-                        </div>
-                        <div class="form-help">
-                            Mínimo 8 caracteres, incluindo maiúscula, minúscula e número
-                        </div>
+
+        <!-- Seção do Formulário (37%) -->
+        <div class="login-section">
+            <div class="login-container">
+                <!-- Logo -->
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-magic"></i>
                     </div>
-                    
-                    <div class="form-group required">
-                        <label for="confirmar_senha">Confirmar nova senha</label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-lock input-icon"></i>
-                            <input type="password" name="confirmar_senha" id="confirmar_senha" class="form-input has-icon has-toggle" placeholder="Confirme sua nova senha" required>
-                            <i class="fas fa-eye password-toggle" onclick="togglePassword('confirmar_senha', this)"></i>
-                        </div>
-                    </div>
-                    
-                    <button type="submit" class="login-button">Redefinir senha</button>
-                </form>
-            <?php else: ?>
-                <div style="text-align: center; margin-top: 20px;">
-                    <a href="login.php" class="login-button" style="display: inline-block; text-decoration: none;">
-                        Voltar ao login
-                    </a>
+                    <span class="logo-text"><?= Environment::get('APP_NAME', 'Prompt Builder IA') ?></span>
                 </div>
-            <?php endif; ?>
-            
-            <div class="signup-link">
-                <a href="login.php">Voltar ao login</a>
+                
+                <div class="login-header">
+                    <h1>Redefinir senha</h1>
+                    <p>Digite sua nova senha</p>
+                </div>
+                
+                <?php if (!empty($mensagem)): ?>
+                    <div class="<?= strpos($mensagem, 'sucesso') !== false ? 'success-message' : 'error-message' ?>">
+                        <?= $mensagem ?>
+                    </div>
+                <?php endif; ?>
+                
+                <?php if ($validToken): ?>
+                    <form method="post" action="" class="login-form">
+                        <?= CSRF::getHiddenField() ?>
+                        <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
+                        
+                        <div class="form-group required">
+                            <label for="nova_senha">Nova senha</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input type="password" name="nova_senha" id="nova_senha" class="form-input has-icon has-toggle" placeholder="Digite sua nova senha" required>
+                                <i class="fas fa-eye password-toggle" onclick="togglePassword('nova_senha', this)"></i>
+                            </div>
+                            <div class="form-help">
+                                Mínimo 8 caracteres, incluindo maiúscula, minúscula e número
+                            </div>
+                        </div>
+                        
+                        <div class="form-group required">
+                            <label for="confirmar_senha">Confirmar nova senha</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input type="password" name="confirmar_senha" id="confirmar_senha" class="form-input has-icon has-toggle" placeholder="Confirme sua nova senha" required>
+                                <i class="fas fa-eye password-toggle" onclick="togglePassword('confirmar_senha', this)"></i>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="login-button">Redefinir senha</button>
+                    </form>
+                <?php else: ?>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <a href="login.php" class="login-button" style="display: inline-block; text-decoration: none;">
+                            Voltar ao login
+                        </a>
+                    </div>
+                <?php endif; ?>
+                
+                <div class="signup-link">
+                    <a href="login.php">Voltar ao login</a>
+                </div>
             </div>
         </div>
     </div>
