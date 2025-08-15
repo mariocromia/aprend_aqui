@@ -16,9 +16,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mensagem = 'Erro de segurança detectado. Tente novamente.';
     } else {
         // Verificar se é recuperação de senha
-        if (isset($_POST['forgot_email'])) {
+        if (isset($_POST['forgot_email']) || isset($_POST['recovery_method'])) {
             // Processar recuperação de senha
             $email = Sanitizer::sanitizeEmail($_POST['forgot_email']);
+            $method = $_POST['recovery_method'] ?? 'email';
             
             if (!$email) {
                 $mensagem = 'E-mail inválido. Verifique o formato.';
@@ -26,21 +27,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 try {
                     $supabase = new SupabaseClient();
                     
-                    // Verificar se o email existe
-                    if ($supabase->emailExists($email)) {
-                        // Gerar token de recuperação
-                        $token = EmailManager::generateResetToken(null, $email);
-                        
-                        if ($token) {
-                            // Enviar email (simulado por enquanto)
-                            $emailSent = EmailManager::sendPasswordReset($email, $token);
-                            if ($emailSent) {
-                                $mensagem = 'Se o e-mail estiver cadastrado, você receberá instruções para redefinir sua senha.';
+                    // Verificar se o email existe e buscar dados do usuário
+                    $user = $supabase->getUserByEmail($email);
+                    if ($user) {
+                        if ($method === 'whatsapp') {
+                            // Verificar se usuário tem WhatsApp cadastrado
+                            if (empty($user['whatsapp'])) {
+                                $mensagem = 'Este usuário não possui WhatsApp cadastrado. Use a recuperação por email.';
                             } else {
-                                $mensagem = 'Erro ao enviar email. Tente novamente mais tarde.';
+                                // Gerar código e enviar via WhatsApp
+                                $code = EmailManager::generateResetCode($email, 'whatsapp');
+                                if ($code) {
+                                    $whatsappSent = EmailManager::sendRecoveryCodeByWhatsApp($user['whatsapp'], $code, $user['nome']);
+                                    if ($whatsappSent) {
+                                        // Redirecionar para página de confirmação
+                                        header('Location: confirmar-recuperacao.php?email=' . urlencode($email) . '&method=whatsapp');
+                                        exit();
+                                    } else {
+                                        $mensagem = 'Erro ao enviar código via WhatsApp. Tente a recuperação por email.';
+                                    }
+                                } else {
+                                    $mensagem = 'Erro interno. Tente novamente mais tarde.';
+                                }
                             }
                         } else {
-                            $mensagem = 'Erro interno. Tente novamente mais tarde.';
+                            // Método por email - pode usar tanto código quanto token
+                            $useCode = isset($_POST['use_code']) && $_POST['use_code'] === '1';
+                            
+                            if ($useCode) {
+                                // Gerar código e enviar por email
+                                error_log("Login.php: Tentativa de recuperação por código de email para: $email");
+                                $code = EmailManager::generateResetCode($email, 'email');
+                                if ($code) {
+                                    error_log("Login.php: Código gerado com sucesso: $code para $email");
+                                    $emailSent = EmailManager::sendRecoveryCodeByEmail($email, $code, $user['nome']);
+                                    if ($emailSent) {
+                                        error_log("Login.php: Email enviado com sucesso para: $email");
+                                        // Redirecionar para página de confirmação
+                                        header('Location: confirmar-recuperacao.php?email=' . urlencode($email) . '&method=email');
+                                        exit();
+                                    } else {
+                                        error_log("Login.php: ERRO - Falha no envio de email para: $email");
+                                        $mensagem = 'Erro ao enviar código por email. Tente novamente mais tarde.';
+                                    }
+                                } else {
+                                    error_log("Login.php: ERRO - Falha ao gerar código para: $email");
+                                    $mensagem = 'Erro interno. Tente novamente mais tarde.';
+                                }
+                            } else {
+                                // Método tradicional com token e link
+                                $token = EmailManager::generateResetToken(null, $email);
+                                if ($token) {
+                                    $emailSent = EmailManager::sendPasswordReset($email, $token);
+                                    if ($emailSent) {
+                                        $mensagem = 'Se o e-mail estiver cadastrado, você receberá instruções para redefinir sua senha.';
+                                    } else {
+                                        $mensagem = 'Erro ao enviar email. Tente novamente mais tarde.';
+                                    }
+                                } else {
+                                    $mensagem = 'Erro interno. Tente novamente mais tarde.';
+                                }
+                            }
                         }
                     } else {
                         // Não revelar se o email existe ou não
@@ -48,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                     
                     // Registrar tentativa de recuperação
-                    $supabase->logLoginAttempt($email, false, 'recuperacao_senha_solicitada');
+                    $supabase->logLoginAttempt($email, false, "recuperacao_senha_$method");
                     
                 } catch (Exception $e) {
                     error_log("Erro na recuperação de senha: " . $e->getMessage());
@@ -162,6 +209,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .demo-info strong {
             color: #1d4ed8;
         }
+        
+        .recovery-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .method-option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .method-option:hover {
+            border-color: #3b82f6;
+            background-color: #f8fafc;
+        }
+        
+        .method-option input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+        
+        .method-option input[type="radio"]:checked + .method-content {
+            color: #3b82f6;
+        }
+        
+        .method-option:has(input[type="radio"]:checked) {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        
+        .method-content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .method-content i {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        
+        .method-content span {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .method-content small {
+            color: #6b7280;
+            font-size: 12px;
+        }
+        
+        .method-option input[type="radio"]:checked + .method-content i {
+            color: #3b82f6;
+        }
+        
+        .fab.fa-whatsapp {
+            color: #25d366;
+        }
     </style>
 </head>
 <body>
@@ -229,7 +341,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="modal-content">
             <span class="close" onclick="closeForgotPasswordModal()">&times;</span>
             <h2>Recuperar Senha</h2>
-            <p>Digite seu email para receber instruções de recuperação:</p>
+            <p>Digite seu email e escolha como deseja receber o código de recuperação:</p>
             
             <form id="forgotPasswordForm" method="post">
                 <?= CSRF::getHiddenField() ?>
@@ -240,7 +352,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <input type="email" id="forgot_email" name="forgot_email" class="form-input has-icon" placeholder="seu@email.com" required>
                     </div>
                 </div>
-                <button type="submit" class="login-button">Enviar Instruções</button>
+                
+                <div class="form-group">
+                    <label>Método de Recuperação</label>
+                    <div class="recovery-methods">
+                        <label class="method-option">
+                            <input type="radio" name="recovery_method" value="email" checked>
+                            <div class="method-content">
+                                <i class="fas fa-envelope"></i>
+                                <span>Email</span>
+                                <small>Código por email</small>
+                            </div>
+                        </label>
+                        
+                        <label class="method-option">
+                            <input type="radio" name="recovery_method" value="whatsapp">
+                            <div class="method-content">
+                                <i class="fab fa-whatsapp"></i>
+                                <span>WhatsApp</span>
+                                <small>Código via WhatsApp</small>
+                            </div>
+                        </label>
+                        
+                        <label class="method-option">
+                            <input type="radio" name="recovery_method" value="email" onclick="document.getElementById('use_code').value='0'">
+                            <div class="method-content">
+                                <i class="fas fa-link"></i>
+                                <span>Link por Email</span>
+                                <small>Link tradicional</small>
+                            </div>
+                        </label>
+                    </div>
+                    <input type="hidden" id="use_code" name="use_code" value="1">
+                </div>
+                
+                <button type="submit" class="login-button">Enviar Código</button>
             </form>
         </div>
     </div>

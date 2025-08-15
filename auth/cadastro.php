@@ -99,13 +99,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $userId = $usuarioCriado['id'] ?? 'criado-com-sucesso';
                             error_log("Usuário criado com sucesso no banco: ID=$userId, Nome=$nome, Email=$email");
                             
-                            // Enviar código APENAS via WhatsApp (WAHA)
+                            // Enviar email de boas-vindas
+                            error_log("📧 ENVIANDO EMAIL: Email de boas-vindas para $email");
+                            try {
+                                $emailEnviado = EmailManager::sendWelcomeEmail($email, $nome);
+                                error_log("📧 RESULTADO EMAIL: " . ($emailEnviado ? 'SUCESSO' : 'FALHA'));
+                            } catch (Exception $emailException) {
+                                error_log("🚨 ERRO EMAIL: " . $emailException->getMessage());
+                            }
+                            
+                            // Enviar código via WhatsApp (WAHA) e Email
                             error_log("🚀 INICIANDO ENVIO: Tentando enviar código via WAHA para $whatsapp");
                             error_log("📱 DADOS: Nome=$nome, Email=$email, Código=$codigoAtivacao");
                             
                             try {
+                                // Enviar por WhatsApp
                                 $whatsappEnviado = WhatsAppManager::sendActivationCode($whatsapp, $codigoAtivacao, $nome);
                                 error_log("📤 RESULTADO WAHA: " . ($whatsappEnviado ? 'SUCESSO' : 'FALHA'));
+                                
+                                // Enviar também por email como backup
+                                try {
+                                    $emailCodigoEnviado = EmailManager::sendActivationCode($email, $codigoAtivacao, $nome);
+                                    error_log("📧 RESULTADO EMAIL CÓDIGO: " . ($emailCodigoEnviado ? 'SUCESSO' : 'FALHA'));
+                                } catch (Exception $emailException) {
+                                    error_log("🚨 ERRO EMAIL CÓDIGO: " . $emailException->getMessage());
+                                }
                                 
                                 if ($whatsappEnviado) {
                                     error_log("✅ CADASTRO COMPLETO: Usuário criado e código enviado para $whatsapp");

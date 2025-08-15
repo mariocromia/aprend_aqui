@@ -63,17 +63,67 @@ Acesse: `http://seu-dominio/test_email.php`
 - **PHP 7.4+**
 - **Extensão OpenSSL**
 
+## Arquivos de Teste
+
+### 1. Teste Básico
+Acesse: `http://seu-dominio/test_email.php`
+
+### 2. Debug Detalhado  
+Acesse: `http://seu-dominio/debug_email.php`
+
+### 3. Teste SMTP Direto
+Acesse: `http://seu-dominio/test_smtp_direto.php`
+
+## Melhorias Implementadas
+
+### Fallback Automático
+O sistema agora tenta automaticamente:
+1. **Porta 587 com STARTTLS** (padrão)
+2. **Porta 465 com SSL** (fallback)
+
+### Logs Detalhados
+- Logs de debug em modo desenvolvimento
+- Rastreamento de tentativas de envio
+- Informações de configuração
+
+### Integração Completa
+- Email de boas-vindas no cadastro
+- Código de ativação por email (backup do WhatsApp)
+- Recuperação de senha funcional
+
 ## Troubleshooting
 
-### Erro de autenticação
-- Verificar se a senha está correta
-- Confirmar se o email existe no painel da Hostinger
+### 1. Emails não são enviados
+```bash
+# Verificar configurações
+php debug_email.php
 
-### Erro de conexão
-- Verificar firewall na porta 587
-- Testar conectividade: `telnet smtp.hostinger.com 587`
+# Verificar logs
+tail -f /var/log/apache2/error.log
+```
 
-### Emails não chegam
-- Verificar pasta de spam
-- Verificar logs do servidor
-- Confirmar registros MX do domínio
+### 2. Erro de autenticação
+- ✅ Verificar se a senha está correta no env.config
+- ✅ Confirmar se o email existe no painel da Hostinger
+- ✅ Verificar se não há autenticação de dois fatores
+
+### 3. Erro de conexão
+- ✅ Verificar firewall nas portas 587 e 465
+- ✅ Testar conectividade: `telnet smtp.hostinger.com 587`
+- ✅ O sistema tenta automaticamente porta alternativa
+
+### 4. Emails não chegam ao destinatário
+- ✅ Verificar pasta de spam
+- ✅ Verificar logs do servidor
+- ✅ Confirmar registros MX do domínio
+- ✅ Testar com email real (não teste@exemplo.com)
+
+### 5. Verificar status do envio
+```php
+// Verificar se foi enviado
+if (EmailManager::sendWelcomeEmail($email, $nome)) {
+    echo "Email enviado com sucesso";
+} else {
+    echo "Falha no envio - verificar logs";
+}
+```

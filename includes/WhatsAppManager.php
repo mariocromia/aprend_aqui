@@ -422,5 +422,36 @@ class WhatsAppManager {
             return ['success' => false, 'message' => 'Erro interno. Tente novamente.'];
         }
     }
+    
+    /**
+     * Enviar mensagem customizada via WhatsApp
+     */
+    public static function sendMessage($whatsapp, $mensagem) {
+        self::init();
+        
+        if (empty($whatsapp)) {
+            error_log("WhatsAppManager: Número de WhatsApp não fornecido");
+            return false;
+        }
+        
+        try {
+            error_log("WhatsAppManager: Enviando mensagem customizada para $whatsapp");
+            
+            // Usar WahaManager para enviar
+            $result = WahaManager::sendMessage($whatsapp, $mensagem);
+            
+            if ($result) {
+                error_log("WhatsAppManager: ✅ Mensagem customizada enviada para $whatsapp");
+                return true;
+            } else {
+                error_log("WhatsAppManager: ❌ Falha ao enviar mensagem customizada para $whatsapp");
+                return false;
+            }
+            
+        } catch (Exception $e) {
+            error_log("WhatsAppManager: ❌ Exceção ao enviar mensagem: " . $e->getMessage());
+            return false;
+        }
+    }
 }
 ?>

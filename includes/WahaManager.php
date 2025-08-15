@@ -209,6 +209,106 @@ class WahaManager {
     }
     
     /**
+     * Enviar mensagem genérica via WhatsApp (método estático)
+     */
+    public static function sendMessage($whatsapp, $mensagem) {
+        try {
+            $sessionName = 'dev_aprend_aqui_cadastro';
+            $wahaServer = Environment::get('WAHA_SERVER', 'https://waha.zapfunil.app');
+            
+            error_log("WahaManager: Enviando mensagem customizada para $whatsapp");
+            
+            // Verificar status da sessão
+            $statusUrl = "$wahaServer/api/sessions/$sessionName";
+            $context = stream_context_create([
+                'http' => [
+                    'method' => 'GET',
+                    'timeout' => 10,
+                    'ignore_errors' => true
+                ]
+            ]);
+            
+            $statusResponse = @file_get_contents($statusUrl, false, $context);
+            if ($statusResponse === false) {
+                error_log("WahaManager: Não foi possível conectar ao servidor WAHA");
+                return false;
+            }
+            
+            $statusData = json_decode($statusResponse, true);
+            if (!isset($statusData['status']) || $statusData['status'] !== 'WORKING') {
+                error_log("WahaManager: Sessão não está WORKING");
+                return false;
+            }
+            
+            // Formatar número corretamente
+            $formattedNumber = preg_replace('/[^0-9]/', '', $whatsapp);
+            if (!preg_match('/^55/', $formattedNumber)) {
+                $formattedNumber = '55' . $formattedNumber;
+            }
+            $chatId = $formattedNumber . '@c.us';
+            
+            // Enviar mensagem
+            $sendUrl = "$wahaServer/api/sendText";
+            $sendData = [
+                'session' => $sessionName,
+                'chatId' => $chatId,
+                'text' => $mensagem
+            ];
+            
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $sendUrl);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($sendData));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json',
+                'Accept: application/json'
+            ]);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+            
+            $sendResponse = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($ch);
+            curl_close($ch);
+            
+            if ($sendResponse === false || !empty($curlError)) {
+                error_log("WahaManager: Erro cURL: $curlError");
+                return false;
+            }
+            
+            $sendResult = json_decode($sendResponse, true);
+            
+            // Verificar sucesso
+            $success = false;
+            if (isset($sendResult['sent']) && $sendResult['sent']) {
+                $success = true;
+            } elseif (isset($sendResult['success']) && $sendResult['success']) {
+                $success = true;
+            } elseif (isset($sendResult['id']) && !empty($sendResult['id'])) {
+                $success = true;
+            } elseif (isset($sendResult['key']) && isset($sendResult['messageTimestamp'])) {
+                $success = true;
+            } elseif (!isset($sendResult['error']) && !empty($sendResult)) {
+                $success = true;
+            }
+            
+            if ($success) {
+                error_log("WahaManager: ✅ Mensagem customizada enviada para $whatsapp");
+                return true;
+            } else {
+                error_log("WahaManager: ❌ Falha no envio: " . json_encode($sendResult));
+                return false;
+            }
+            
+        } catch (Exception $e) {
+            error_log("WahaManager: Exceção ao enviar mensagem: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Enviar código de ativação via WhatsApp
      */
     public static function sendActivationCode($whatsapp, $codigo, $nome) {

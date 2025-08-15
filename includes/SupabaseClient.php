@@ -23,7 +23,7 @@ class SupabaseClient {
     /**
      * Fazer requisição para a API do Supabase
      */
-    private function makeRequest($endpoint, $method = 'GET', $data = null, $useServiceKey = false) {
+    public function makeRequest($endpoint, $method = 'GET', $data = null, $useServiceKey = false) {
         $url = rtrim($this->supabaseUrl, '/') . '/rest/v1/' . ltrim($endpoint, '/');
         
         $headers = [
@@ -67,7 +67,9 @@ class SupabaseClient {
      * Buscar usuário por email
      */
     public function getUserByEmail($email) {
-        $response = $this->makeRequest('usuarios?email=eq.' . urlencode($email) . '&select=*');
+        $response = $this->makeRequest('usuarios?email=eq.' . urlencode($email) . '&select=*', 'GET', null, true);
+        
+        error_log("SupabaseClient: getUserByEmail - Status: {$response['status']}, Raw: " . $response['raw']);
         
         if ($response['status'] === 200 && !empty($response['data'])) {
             return $response['data'][0];
@@ -119,29 +121,267 @@ class SupabaseClient {
     }
     
     /**
-     * Gerar token de recuperação de senha
+     * Criar token de recuperação de senha na tabela
      */
-    public function generatePasswordResetToken($email) {
-        $response = $this->makeRequest('rpc/generate_password_reset_token', 'POST', ['user_email' => $email]);
-        
-        if ($response['status'] === 200 && !empty($response['data'])) {
-            return $response['data'][0];
+    public function createPasswordResetToken($tokenData) {
+        try {
+            // Primeiro, remover tokens antigos para este email
+            $this->cleanupExpiredTokens($tokenData['email']);
+            
+            $response = $this->makeRequest('password_reset_tokens', 'POST', $tokenData, true);
+            
+            if ($response['status'] === 201 || $response['status'] === 200) {
+                return true;
+            }
+            
+            error_log("Erro ao criar token de reset: " . json_encode($response));
+            return false;
+            
+        } catch (Exception $e) {
+            error_log("Exceção ao criar token de reset: " . $e->getMessage());
+            return false;
         }
-        
-        return null;
+    }
+    
+    /**
+     * Limpar tokens expirados
+     */
+    private function cleanupExpiredTokens($email) {
+        try {
+            // Remover tokens antigos deste email
+            $response = $this->makeRequest(
+                "password_reset_tokens?email=eq.$email", 
+                'DELETE', 
+                null, 
+                true
+            );
+            
+            return true;
+        } catch (Exception $e) {
+            error_log("Erro ao limpar tokens antigos: " . $e->getMessage());
+            return false;
+        }
     }
     
     /**
      * Verificar token de recuperação
      */
     public function verifyPasswordResetToken($token) {
-        $response = $this->makeRequest('rpc/verify_password_reset_token', 'POST', ['reset_token' => $token]);
-        
-        if ($response['status'] === 200 && !empty($response['data'])) {
-            return $response['data'][0];
+        try {
+            $response = $this->makeRequest(
+                "password_reset_tokens?token=eq.$token&used=eq.false", 
+                'GET', 
+                null, 
+                true
+            );
+            
+            if ($response['status'] === 200 && !empty($response['data'])) {
+                $tokenData = $response['data'][0];
+                
+                // Verificar se não expirou
+                $expiresAt = strtotime($tokenData['expires_at']);
+                if ($expiresAt > time()) {
+                    return [
+                        'valid' => true,
+                        'email' => $tokenData['email'],
+                        'user_id' => null
+                    ];
+                } else {
+                    error_log("Token expirado para: " . $tokenData['email']);
+                }
+            }
+            
+            return ['valid' => false];
+            
+        } catch (Exception $e) {
+            error_log("Erro ao verificar token: " . $e->getMessage());
+            return ['valid' => false];
         }
-        
-        return null;
+    }
+    
+    /**
+     * Marcar token como usado
+     */
+    public function markTokenAsUsed($token) {
+        try {
+            $response = $this->makeRequest(
+                "password_reset_tokens?token=eq.$token", 
+                'PATCH', 
+                ['used' => true], 
+                true
+            );
+            
+            return $response['status'] === 200;
+            
+        } catch (Exception $e) {
+            error_log("Erro ao marcar token como usado: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Criar código de recuperação temporário
+     */
+    public function createPasswordResetCode($codeData) {
+        try {
+            // Primeiro, remover códigos antigos para este email
+            $this->cleanupExpiredCodes($codeData['email']);
+            
+            $response = $this->makeRequest('password_reset_codes', 'POST', $codeData, true);
+            
+            if ($response['status'] === 201 || $response['status'] === 200) {
+                return true;
+            }
+            
+            error_log("Erro ao criar código de reset: " . json_encode($response));
+            return false;
+            
+        } catch (Exception $e) {
+            error_log("Exceção ao criar código de reset: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Verificar código de recuperação temporário
+     */
+    public function verifyPasswordResetCode($email, $code) {
+        try {
+            $response = $this->makeRequest(
+                "password_reset_codes?email=eq." . urlencode($email) . "&code=eq.$code&used=eq.false", 
+                'GET', 
+                null, 
+                true
+            );
+            
+            if ($response['status'] === 200 && !empty($response['data'])) {
+                $codeData = $response['data'][0];
+                
+                // Verificar se não expirou
+                $expiresAt = strtotime($codeData['expires_at']);
+                if ($expiresAt > time()) {
+                    return [
+                        'valid' => true,
+                        'email' => $codeData['email'],
+                        'method' => $codeData['method']
+                    ];
+                } else {
+                    error_log("Código expirado para: " . $codeData['email']);
+                }
+            }
+            
+            return ['valid' => false];
+            
+        } catch (Exception $e) {
+            error_log("Erro ao verificar código: " . $e->getMessage());
+            return ['valid' => false];
+        }
+    }
+    
+    /**
+     * Marcar código como usado
+     */
+    public function markCodeAsUsed($email, $code) {
+        try {
+            $response = $this->makeRequest(
+                "password_reset_codes?email=eq." . urlencode($email) . "&code=eq.$code", 
+                'PATCH', 
+                ['used' => true], 
+                true
+            );
+            
+            return $response['status'] === 200;
+            
+        } catch (Exception $e) {
+            error_log("Erro ao marcar código como usado: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Limpar códigos expirados
+     */
+    private function cleanupExpiredCodes($email) {
+        try {
+            // Remover códigos antigos deste email
+            $response = $this->makeRequest(
+                "password_reset_codes?email=eq." . urlencode($email), 
+                'DELETE', 
+                null, 
+                true
+            );
+            
+            return true;
+        } catch (Exception $e) {
+            error_log("Erro ao limpar códigos antigos: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Detectar qual coluna de senha usar (senha ou senha_hash)
+     */
+    private function getPasswordColumn() {
+        try {
+            $response = $this->makeRequest('usuarios?limit=1', 'GET', null, true);
+            
+            if ($response['status'] === 200 && !empty($response['data'])) {
+                $columns = array_keys($response['data'][0]);
+                
+                if (in_array('senha_hash', $columns)) {
+                    return 'senha_hash';
+                } elseif (in_array('senha', $columns)) {
+                    return 'senha';
+                }
+            }
+            
+            // Fallback para 'senha' se não conseguir detectar
+            return 'senha';
+            
+        } catch (Exception $e) {
+            error_log("Erro ao detectar coluna de senha: " . $e->getMessage());
+            return 'senha';
+        }
+    }
+    
+    /**
+     * Atualizar senha do usuário
+     */
+    public function updateUserPassword($email, $newPassword) {
+        try {
+            error_log("SupabaseClient: Iniciando atualização de senha para $email");
+            
+            $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+            error_log("SupabaseClient: Hash gerado: " . substr($hashedPassword, 0, 20) . "...");
+            
+            // Detectar qual coluna usar
+            $passwordColumn = $this->getPasswordColumn();
+            error_log("SupabaseClient: Usando coluna: $passwordColumn");
+            
+            $updateData = [$passwordColumn => $hashedPassword];
+            error_log("SupabaseClient: Dados para atualização: " . json_encode($updateData));
+            
+            $response = $this->makeRequest(
+                "usuarios?email=eq." . urlencode($email), 
+                'PATCH', 
+                $updateData, 
+                true
+            );
+            
+            error_log("SupabaseClient: Resposta da atualização - Status: {$response['status']}, Data: " . json_encode($response['data']) . ", Raw: " . $response['raw']);
+            
+            if ($response['status'] === 200 || $response['status'] === 204) {
+                error_log("SupabaseClient: Senha atualizada com sucesso para $email");
+                return true;
+            }
+            
+            error_log("SupabaseClient: Erro ao atualizar senha - Status: {$response['status']}, Response: " . json_encode($response));
+            return false;
+            
+        } catch (Exception $e) {
+            error_log("SupabaseClient: Exceção ao atualizar senha: " . $e->getMessage());
+            return false;
+        }
     }
     
     /**
