@@ -125,11 +125,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             position: sticky;
             top: 0;
             z-index: 1000;
-            background: var(--gradient-primary);
+            background: rgba(15, 23, 42, 0.95);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1rem 0;
-            box-shadow: var(--shadow-lg);
+            border-bottom: 1px solid rgba(124, 58, 237, 0.2);
+            padding: 0.75rem 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
         }
 
         .header-content {
@@ -139,6 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             display: flex;
             justify-content: space-between;
             align-items: center;
+            height: 60px;
         }
 
         .logo {
@@ -147,43 +148,167 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             gap: 0.75rem;
             text-decoration: none;
             color: var(--text-primary);
-            font-weight: 700;
-            font-size: 1.25rem;
+            font-weight: 800;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: translateY(-1px);
         }
 
         .logo .material-icons {
-            font-size: 1.5rem;
-            color: var(--accent-cyan);
+            font-size: 2rem;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 8px rgba(6, 182, 212, 0.3));
+        }
+
+        .logo-text {
+            background: var(--gradient-secondary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .user-menu {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
+            gap: 1rem;
             color: var(--text-primary);
+        }
+
+        .user-account {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+            border: 2px solid rgba(124, 58, 237, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .user-avatar:hover {
+            border-color: var(--secondary-purple);
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
         }
 
         .user-info {
             display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 500;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.125rem;
         }
 
-        .btn-logout {
-            color: var(--text-secondary);
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: var(--radius-sm);
+        .user-name {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .user-email {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1.2;
+        }
+
+        .account-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            border-radius: var(--radius);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            padding: 0.75rem 0;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
             transition: all 0.3s ease;
+            z-index: 1001;
+        }
+
+        .user-account:hover .account-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.875rem;
         }
 
-        .btn-logout:hover {
-            background: rgba(255, 255, 255, 0.1);
+        .dropdown-item:hover {
+            background: rgba(124, 58, 237, 0.1);
             color: var(--text-primary);
+        }
+
+        .dropdown-item .material-icons {
+            font-size: 1.125rem;
+            color: var(--accent-cyan);
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: rgba(124, 58, 237, 0.2);
+            margin: 0.5rem 0;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(124, 58, 237, 0.1);
+            color: var(--accent-cyan);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .action-btn:hover {
+            background: rgba(124, 58, 237, 0.2);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
+        }
+
+        .action-btn .material-icons {
+            font-size: 1.25rem;
         }
 
         /* Container principal */
@@ -821,6 +946,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
         /* Responsivo */
         @media (max-width: 1024px) {
+            .header-content {
+                padding: 0 1.5rem;
+            }
+
+            .logo {
+                font-size: 1.25rem;
+            }
+
+            .logo .material-icons {
+                font-size: 1.75rem;
+            }
+
+            .user-info {
+                display: none;
+            }
+
+            .nav-actions {
+                gap: 0.5rem;
+            }
+
+            .action-btn {
+                width: 36px;
+                height: 36px;
+            }
+
+            .user-avatar {
+                width: 36px;
+                height: 36px;
+                font-size: 0.75rem;
+            }
+
             .content-container { 
                 padding: 1.5rem;
                 gap: 1.5rem;
@@ -862,7 +1018,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
         @media (max-width: 768px) {
             .header-content { 
-                padding: 0 1rem; 
+                padding: 0 1rem;
+                height: 56px;
+            }
+
+            .logo {
+                font-size: 1.125rem;
+            }
+
+            .logo .material-icons {
+                font-size: 1.5rem;
+            }
+
+            .nav-actions {
+                display: none;
+            }
+
+            .user-avatar {
+                width: 32px;
+                height: 32px;
+                font-size: 0.7rem;
+            }
+
+            .account-dropdown {
+                right: -1rem;
+                min-width: 180px;
             }
             
             .content-container { 
@@ -1127,18 +1307,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             <div class="header-content">
                 <a href="index.php" class="logo">
                     <i class="material-icons">auto_fix_high</i>
-                    <span>Gerador de Prompt - AprendAqui</span>
+                    <span class="logo-text">Gerador de Prompt</span>
                 </a>
                 
                 <div class="user-menu">
-                    <div class="user-info">
-                        <i class="material-icons">person</i>
-                        <span><?= htmlspecialchars($_SESSION['usuario_nome'] ?? 'Usuário') ?></span>
+                    <div class="nav-actions">
+                        <a href="#" class="action-btn" title="Notificações">
+                            <i class="material-icons">notifications</i>
+                        </a>
+                        <a href="#" class="action-btn" title="Configurações">
+                            <i class="material-icons">settings</i>
+                        </a>
                     </div>
-                    <a href="auth/logout.php" class="btn-logout">
-                        <i class="material-icons">logout</i>
-                        Sair
-                    </a>
+                    
+                    <div class="user-account">
+                        <div class="user-avatar">
+                            <?= strtoupper(substr($_SESSION['usuario_nome'] ?? 'U', 0, 2)) ?>
+                        </div>
+                        <div class="user-info">
+                            <div class="user-name"><?= htmlspecialchars($_SESSION['usuario_nome'] ?? 'Usuário') ?></div>
+                            <div class="user-email"><?= htmlspecialchars($_SESSION['usuario_email'] ?? 'usuario@exemplo.com') ?></div>
+                        </div>
+                        
+                        <div class="account-dropdown">
+                            <a href="#" class="dropdown-item">
+                                <i class="material-icons">person</i>
+                                Meu Perfil
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="material-icons">history</i>
+                                Histórico de Prompts
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="material-icons">bookmark</i>
+                                Prompts Salvos
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="material-icons">account_circle</i>
+                                Configurações da Conta
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="material-icons">help</i>
+                                Ajuda & Suporte
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="auth/logout.php" class="dropdown-item">
+                                <i class="material-icons">logout</i>
+                                Sair
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </header>
