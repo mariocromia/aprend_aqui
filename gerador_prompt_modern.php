@@ -26,12 +26,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             'character' => $_POST['selected_character'] ?? null,
             'camera' => $_POST['selected_camera'] ?? null,
             'voice' => $_POST['selected_voice'] ?? null,
+            'action' => $_POST['selected_action'] ?? null,
             'custom_descriptions' => json_encode([
                 'environment' => $_POST['custom_environment'] ?? '',
                 'lighting' => $_POST['custom_lighting'] ?? '',
                 'character' => $_POST['custom_character'] ?? '',
                 'camera' => $_POST['custom_camera'] ?? '',
-                'voice' => $_POST['custom_voice'] ?? ''
+                'voice' => $_POST['custom_voice'] ?? '',
+                'action' => $_POST['custom_action'] ?? ''
             ])
         ]);
         
@@ -1408,6 +1410,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         <i class="material-icons">mic</i>
                         <span>Voz</span>
                     </button>
+                    <button class="tab-button" data-tab="acao">
+                        <i class="material-icons">play_arrow</i>
+                        <span>Ação</span>
+                    </button>
                     <button class="tab-button" data-tab="prompt">
                         <i class="material-icons">edit_note</i>
                         <span>Seu Prompt</span>
@@ -1422,6 +1428,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     <input type="hidden" id="selected_character" name="selected_character">
                     <input type="hidden" id="selected_camera" name="selected_camera">
                     <input type="hidden" id="selected_voice" name="selected_voice">
+                    <input type="hidden" id="selected_action" name="selected_action">
                     <input type="hidden" id="settings" name="settings">
 
                                          <!-- ABA 1: CENA/AMBIENTE - DESIGN COMPACTO E MODERNO -->
@@ -2231,7 +2238,237 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         </div>
                     </div>
 
-                    <!-- ABA 6: SEU PROMPT -->
+                    <!-- ABA 6: AÇÃO -->
+                    <div class="tab-content" id="tab-acao">
+                        <div class="tab-header">
+                            <h2><i class="material-icons">play_arrow</i> Ações e Movimentos</h2>
+                            <p>Configure ações, movimentos e atividades dos personagens</p>
+                        </div>
+
+                        <div class="categories-grid">
+                            <!-- Ações Corporais -->
+                            <div class="category-section">
+                                <div class="category-header">
+                                    <div class="category-icon">
+                                        <i class="material-icons">directions_run</i>
+                                    </div>
+                                    <h3 class="category-title">Ações Corporais</h3>
+                                </div>
+                                
+                                <div class="subcategories-grid">
+                                    <div class="subcategory-card" data-type="acao" data-value="correndo">
+                                        <i class="material-icons">directions_run</i>
+                                        <span>Correndo</span>
+                                    </div>
+                                    <div class="subcategory-card" data-type="acao" data-value="caminhando">
+                                        <i class="material-icons">directions_walk</i>
+                                        <span>Caminhando</span>
+                                    </div>
+                                    <div class="subcategory-card" data-type="acao" data-value="saltando">
+                                        <i class="material-icons">fitness_center</i>
+                                        <span>Saltando</span>
+                                    </div>
+                                    <div class="subcategory-card" data-type="acao" data-value="dancando">
+                                        <i class="material-icons">music_note</i>
+                                        <span>Dançando</span>
+                                    </div>
+                                    <div class="subcategory-card" data-type="acao" data-value="sentado">
+                                        <i class="material-icons">chair</i>
+                                        <span>Sentado</span>
+                                    </div>
+                                    <div class="subcategory-card" data-type="acao" data-value="deitado">
+                                        <i class="material-icons">bed</i>
+                                        <span>Deitado</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Expressões Faciais -->
+                            <div class="category-section">
+                                <div class="category-header">
+                                    <div class="category-icon">
+                                        <i class="material-icons">sentiment_satisfied</i>
+                                    </div>
+                                    <h3 class="category-title">Expressões</h3>
+                                </div>
+                                
+                                <div class="subcategories-grid">
+                                    <div class="subcategory-card" data-type="acao" data-value="sorrindo">
+                                        <i class="material-icons">sentiment_very_satisfied</i>
+                                        <span>Sorrindo</span>
+                                    </div>
+                                    <div class="subcategory-card" data-type="acao" data-value="pensativo">
+                                        <i class="material-icons">psychology</i>
+                                        <span>Pensativo</span>
+                                    </div>
+                                    <div class="subcategory-card" data-type="acao" data-value="surpreso">
+                                        <i class="material-icons">sentiment_neutral</i>
+                                        <span>Surpreso</span>
+                                    </div>
+                                    <div class="subcategory-card" data-type="acao" data-value="concentrado">
+                                        <i class="material-icons">visibility</i>
+                                        <span>Concentrado</span>
+                                    </div>
+                                    <div class="subcategory-card" data-type="acao" data-value="conversando">
+                                        <i class="material-icons">chat</i>
+                                        <span>Conversando</span>
+                                    </div>
+                                    <div class="subcategory-card" data-type="acao" data-value="gritando">
+                                        <i class="material-icons">volume_up</i>
+                                        <span>Gritando</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Gestos com Mãos -->
+                            <div class="category-section">
+                                <div class="category-header">
+                                    <div class="category-icon">
+                                        <i class="material-icons">pan_tool</i>
+                                    </div>
+                                    <h3 class="category-title">Gestos</h3>
+                                </div>
+                                
+                                <div class="subcategories-grid">
+                                    <div class="subcategory-card" data-type="acao" data-value="apontando">
+                                        <i class="material-icons">touch_app</i>
+                                        <span>Apontando</span>
+                                    </div>
+                                    <div class="subcategory-card" data-type="acao" data-value="acenando">
+                                        <i class="material-icons">waving_hand</i>
+                                        <span>Acenando</span>
+                                    </div>
+                                    <div class="subcategory-card" data-type="acao" data-value="aplaudindo">
+                                        <i class="material-icons">celebration</i>
+                                        <span>Aplaudindo</span>
+                                    </div>
+                                    <div class="subcategory-card" data-type="acao" data-value="segurando">
+                                        <i class="material-icons">pan_tool</i>
+                                        <span>Segurando</span>
+                                    </div>
+                                    <div class="subcategory-card" data-type="acao" data-value="escrevendo">
+                                        <i class="material-icons">edit</i>
+                                        <span>Escrevendo</span>
+                                    </div>
+                                    <div class="subcategory-card" data-type="acao" data-value="digitando">
+                                        <i class="material-icons">keyboard</i>
+                                        <span>Digitando</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Interações -->
+                            <div class="category-section">
+                                <div class="category-header">
+                                    <div class="category-icon">
+                                        <i class="material-icons">handshake</i>
+                                    </div>
+                                    <h3 class="category-title">Interações</h3>
+                                </div>
+                                
+                                <div class="subcategories-grid">
+                                    <div class="subcategory-card" data-type="acao" data-value="cumprimentando">
+                                        <i class="material-icons">handshake</i>
+                                        <span>Cumprimentando</span>
+                                    </div>
+                                    <div class="subcategory-card" data-type="acao" data-value="abraçando">
+                                        <i class="material-icons">favorite</i>
+                                        <span>Abraçando</span>
+                                    </div>
+                                    <div class="subcategory-card" data-type="acao" data-value="ensinando">
+                                        <i class="material-icons">school</i>
+                                        <span>Ensinando</span>
+                                    </div>
+                                    <div class="subcategory-card" data-type="acao" data-value="apresentando">
+                                        <i class="material-icons">present_to_all</i>
+                                        <span>Apresentando</span>
+                                    </div>
+                                    <div class="subcategory-card" data-type="acao" data-value="ajudando">
+                                        <i class="material-icons">help</i>
+                                        <span>Ajudando</span>
+                                    </div>
+                                    <div class="subcategory-card" data-type="acao" data-value="observando">
+                                        <i class="material-icons">visibility</i>
+                                        <span>Observando</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Movimentos Dinâmicos -->
+                            <div class="category-section">
+                                <div class="category-header">
+                                    <div class="category-icon">
+                                        <i class="material-icons">speed</i>
+                                    </div>
+                                    <h3 class="category-title">Dinâmicos</h3>
+                                </div>
+                                
+                                <div class="subcategories-grid">
+                                    <div class="subcategory-card" data-type="acao" data-value="voando">
+                                        <i class="material-icons">flight</i>
+                                        <span>Voando</span>
+                                    </div>
+                                    <div class="subcategory-card" data-type="acao" data-value="escalando">
+                                        <i class="material-icons">terrain</i>
+                                        <span>Escalando</span>
+                                    </div>
+                                    <div class="subcategory-card" data-type="acao" data-value="nadando">
+                                        <i class="material-icons">pool</i>
+                                        <span>Nadando</span>
+                                    </div>
+                                    <div class="subcategory-card" data-type="acao" data-value="pedalando">
+                                        <i class="material-icons">pedal_bike</i>
+                                        <span>Pedalando</span>
+                                    </div>
+                                    <div class="subcategory-card" data-type="acao" data-value="dirigindo">
+                                        <i class="material-icons">drive_eta</i>
+                                        <span>Dirigindo</span>
+                                    </div>
+                                    <div class="subcategory-card" data-type="acao" data-value="flutuando">
+                                        <i class="material-icons">air</i>
+                                        <span>Flutuando</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Container de 3 colunas na base -->
+                        <div class="bottom-controls-container">
+                            <!-- Coluna 1: Campo de descrição personalizada -->
+                            <div class="custom-description">
+                                <label for="custom_action">
+                                    <i class="material-icons">edit</i>
+                                    Ação Personalizada
+                                </label>
+                                <textarea 
+                                    id="custom_action" 
+                                    name="custom_action" 
+                                    placeholder="Descreva uma ação ou movimento específico que não está nas opções abaixo..."
+                                    rows="3"></textarea>
+                            </div>
+
+                            <!-- Coluna 2: Controles de navegação -->
+                            <div class="tab-navigation">
+                                <button type="button" class="btn btn-secondary" onclick="promptGenerator.previousTab()">
+                                    <i class="material-icons">arrow_back</i>
+                                </button>
+                                <button type="button" class="btn btn-primary" onclick="promptGenerator.nextTab()">
+                                    <i class="material-icons">arrow_forward</i>
+                                </button>
+                            </div>
+
+                            <!-- Coluna 3: Propaganda ou conteúdo promocional -->
+                            <div class="advertisement-container">
+                                <div class="advertisement-content">
+                                    <div class="advertisement-placeholder">
+                                        Espaço para propaganda
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ABA 7: SEU PROMPT -->
                     <div class="tab-content" id="tab-prompt">
                         <div class="tab-header">
                             <h2><i class="material-icons">edit_note</i> Seu Prompt Final</h2>
@@ -2308,20 +2545,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         class ModernPromptGenerator {
             constructor() {
                 this.currentTab = 0;
-                this.tabs = ['ambiente', 'iluminacao', 'avatar', 'camera', 'voz', 'prompt'];
+                this.tabs = ['ambiente', 'iluminacao', 'avatar', 'camera', 'voz', 'acao', 'prompt'];
                 this.selections = {
                     environment: null,
                     lighting: null,
                     character: null,
                     camera: null,
-                    voice: null
+                    voice: null,
+                    action: null
                 };
                 this.customDescriptions = {
                     environment: '',
                     lighting: '',
                     character: '',
                     camera: '',
-                    voice: ''
+                    voice: '',
+                    action: ''
                 };
                 
                 this.init();
@@ -2460,6 +2699,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 
                 if (this.customDescriptions.voice) {
                     enhancements.push(`Voz personalizada: ${this.customDescriptions.voice}`);
+                }
+
+                if (this.selections.action) {
+                    enhancements.push(`Ação: ${this.selections.action.replace(/_/g, ' ')}`);
+                }
+                
+                if (this.customDescriptions.action) {
+                    enhancements.push(`Ação personalizada: ${this.customDescriptions.action}`);
                 }
 
                 if (enhancements.length > 0) {
