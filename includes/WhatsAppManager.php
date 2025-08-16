@@ -3,6 +3,10 @@
  * Classe para Gerenciamento de Envio de WhatsApp
  * Suporte a múltiplas APIs: Twilio, Z-API, EvolutionAPI
  */
+
+require_once __DIR__ . '/Environment.php';
+require_once __DIR__ . '/WahaManager.php';
+
 class WhatsAppManager {
     
     private static $provider;

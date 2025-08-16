@@ -137,31 +137,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
                     // Só continuar se não estiver bloqueada
                     if (empty($mensagem)) {
-                        // TODO: Implementar verificação de senha com Supabase Auth
-                        // Por enquanto, usar verificação mockada para admin@teste.com
-                        if ($loginInput === 'admin@teste.com' && $senha === 'Admin123!') {
-                        // Login bem-sucedido
-                        $_SESSION['usuario_id'] = $usuario['id'];
-                        $_SESSION['usuario_nome'] = $usuario['nome'];
-                        $_SESSION['usuario_email'] = $usuario['email'];
+                        // Verificar senha usando hash do banco de dados
+                        $senhaValida = false;
                         
-                        // Regenerar ID da sessão para prevenir session fixation
-                        session_regenerate_id(true);
+                        // Verificar qual coluna contém a senha
+                        $senhaHash = null;
+                        if (isset($usuario['senha_hash']) && !empty($usuario['senha_hash'])) {
+                            $senhaHash = $usuario['senha_hash'];
+                        } elseif (isset($usuario['senha']) && !empty($usuario['senha'])) {
+                            $senhaHash = $usuario['senha'];
+                        }
                         
-                        // Registrar tentativa de login bem-sucedida
-                        $supabase->logLoginAttempt($loginInput, true);
+                        if ($senhaHash) {
+                            // Verificar se é um hash (começa com $2y$)
+                            if (str_starts_with($senhaHash, '$2y$')) {
+                                $senhaValida = password_verify($senha, $senhaHash);
+                            } else {
+                                // Fallback para senhas em texto puro (apenas para migração)
+                                $senhaValida = ($senha === $senhaHash);
+                            }
+                        }
                         
-                        // Atualizar último login
-                        $supabase->updateUser($usuario['id'], [
-                            'ultimo_login' => date('c'),
-                            'tentativas_login_falhadas' => 0,
-                            'conta_bloqueada_ate' => null
-                        ]);
+                        // Fallback para usuário admin hardcoded
+                        if (!$senhaValida && $loginInput === 'admin@teste.com' && $senha === 'Admin123!') {
+                            $senhaValida = true;
+                        }
                         
-                        // Redirecionar para o gerador de prompts
-                        header('Location: ../gerador_prompt.php');
-                        exit;
-                    } else {
+                        if ($senhaValida) {
+                            // Login bem-sucedido
+                            $_SESSION['usuario_id'] = $usuario['id'];
+                            $_SESSION['usuario_nome'] = $usuario['nome'];
+                            $_SESSION['usuario_email'] = $usuario['email'];
+                            
+                            // Regenerar ID da sessão para prevenir session fixation
+                            session_regenerate_id(true);
+                            
+                            // Registrar tentativa de login bem-sucedida
+                            $supabase->logLoginAttempt($loginInput, true);
+                            
+                            // Atualizar último login
+                            $supabase->updateUser($usuario['id'], [
+                                'ultimo_login' => date('c'),
+                                'tentativas_login_falhadas' => 0,
+                                'conta_bloqueada_ate' => null
+                            ]);
+                            
+                            // Redirecionar para o gerador de prompts
+                            header('Location: ../gerador_prompt.php');
+                            exit;
+                        } else {
                         // Senha incorreta
                         $supabase->logLoginAttempt($loginInput, false, 'senha_incorreta');
                         
