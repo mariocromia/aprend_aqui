@@ -191,11 +191,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             flex: 1;
             max-width: 1800px;
             margin: 0 auto;
-            padding: 1rem 2rem 2rem 2rem;
+            padding: 3rem 2rem 2rem 2rem;
             width: 100%;
             overflow: visible;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 2rem;
             align-items: start;
         }
@@ -203,7 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         .page-header {
             text-align: center;
             margin-bottom: -3rem;
-            grid-column: 1 / -1;
+            width: 100%;
         }
 
         .page-header h1 {
@@ -229,7 +229,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             box-shadow: var(--shadow-xl);
             overflow: hidden;
             border: 1px solid var(--border-color);
-            grid-column: 1 / -1;
+            width: 100%;
         }
 
         .tabs-nav {
@@ -291,13 +291,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             padding: 2rem;
             height: auto;
             overflow: visible;
+            width: 100%;
         }
 
         .tab-content.active {
             display: block;
         }
-
-
 
         .tab-header {
             text-align: center;
@@ -424,18 +423,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             color: var(--text-muted);
         }
 
-        /* Grid de categorias - Design compacto e moderno */
+        /* Grid de categorias - Design compacto e moderno - LARGURA E ESPAÇAMENTO UNIFORMES */
         .categories-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 0.75rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
             max-height: 70vh;
             overflow-y: auto;
             padding: 1rem 0;
             scrollbar-width: thin;
             scroll-behavior: smooth;
+            width: 100%;
+            align-items: start;
         }
-
 
         .category-section {
             background: var(--gradient-card);
@@ -447,6 +447,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             overflow: hidden;
             backdrop-filter: blur(10px);
             min-height: 340px;
+            width: 100%;
+            height: fit-content;
         }
 
         .category-section:hover {
@@ -493,18 +495,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             background-clip: text;
         }
 
-        /* Grid de subcategorias - Layout compacto */
+        /* Grid de subcategorias - Layout compacto - SEMPRE 1 COLUNA VERTICAL */
         .subcategories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            display: flex;
+            flex-direction: column;
             gap: 0.4rem;
             max-height: 260px;
             overflow-y: auto;
             padding: 0.25rem 0.5rem 0.25rem 0;
             scrollbar-width: thin;
             scroll-behavior: smooth;
+            width: 100%;
         }
-
 
         .subcategory-card {
             background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.6) 100%);
@@ -523,6 +525,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             justify-content: center;
             align-items: center;
             z-index: 1;
+            width: 100%;
+            flex-shrink: 0;
         }
 
         .subcategory-card::before {
@@ -790,7 +794,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             align-items: center;
             gap: 0.75rem;
             font-weight: 500;
-            grid-column: 1 / -1;
+            width: 100%;
         }
 
         .alert-success {
@@ -813,7 +817,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         @media (max-width: 1024px) {
             .content-container { 
                 padding: 1.5rem;
-                grid-template-columns: 1fr;
                 gap: 1rem;
             }
             
@@ -822,13 +825,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             }
             
             .categories-grid { 
-                gap: 1rem;
+                grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+                gap: 1.5rem;
                 padding-bottom: 0.5rem;
-            }
-            
-            .categories-grid {
-                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-                gap: 0.75rem;
             }
             
             .category-section {
@@ -856,7 +855,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             
             .content-container { 
                 padding: 1rem;
-                grid-template-columns: 1fr;
                 gap: 1rem;
             }
             
@@ -872,32 +870,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 padding: 1.5rem 1rem; 
             }
             
-            .category-section { 
-                padding: 1.5rem;
-                min-width: 260px;
-            }
-            
             .categories-grid {
-                gap: 0.75rem;
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                gap: 1rem;
                 padding-bottom: 0.5rem;
             }
             
-            .categories-grid {
-                grid-template-columns: 1fr;
-                max-height: 60vh;
-                gap: 0.5rem;
-            }
-            
-            .category-section {
+            .category-section { 
                 padding: 0.75rem;
-            }
-            
-            .category-section {
                 min-height: 300px;
             }
             
             .subcategories-grid { 
-                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
                 max-height: 220px;
                 gap: 0.3rem;
             }
@@ -934,11 +918,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 flex-direction: column;
                 gap: 1rem;
                 margin-top: 1rem;
-            }
-            
-            .bottom-controls-container {
-                grid-template-columns: 1fr;
-                gap: 1rem;
             }
             
             .custom-description {
@@ -1011,7 +990,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             background: #1e293b !important;
         }
 
-        /* === SCROLLBAR GRID UNIVERSAL === */
+        /* === SCROLLBAR HORIZONTAL PARA CATEGORIAS === */
         
         /* Firefox */
         .categories-grid {
