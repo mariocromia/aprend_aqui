@@ -971,62 +971,93 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             animation: fadeInUp 0.5s ease;
         }
 
-        /* Scrollbar personalizada moderna para os blocos de categoria */
+        /* === SCROLLBAR UNIVERSAL - SUPORTE MULTI-BROWSER === */
+        
+        /* Firefox */
+        .subcategories-grid {
+            scrollbar-width: thin !important;
+            scrollbar-color: #6366f1 #1e293b !important;
+        }
+        
+        /* Webkit (Chrome, Safari, Edge) */
         .subcategories-grid::-webkit-scrollbar {
-            width: 8px;
+            width: 12px !important;
+            background: transparent !important;
         }
 
         .subcategories-grid::-webkit-scrollbar-track {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.3) 0%, rgba(30, 41, 59, 0.2) 100%);
-            border-radius: 10px;
-            border: 1px solid rgba(124, 58, 237, 0.1);
+            background: #1e293b !important;
+            border-radius: 6px !important;
+            margin: 2px !important;
         }
 
         .subcategories-grid::-webkit-scrollbar-thumb {
-            background: var(--gradient-primary);
-            border-radius: 10px;
-            border: 1px solid rgba(6, 182, 212, 0.2);
-            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+            background: #6366f1 !important;
+            border-radius: 6px !important;
+            border: 2px solid #1e293b !important;
+            min-height: 30px !important;
         }
 
         .subcategories-grid::-webkit-scrollbar-thumb:hover {
-            background: var(--gradient-secondary);
-            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4), 0 0 8px rgba(6, 182, 212, 0.3);
-            transform: scaleY(1.1);
+            background: #8b5cf6 !important;
+            border-color: #06b6d4 !important;
         }
         
         .subcategories-grid::-webkit-scrollbar-thumb:active {
-            background: var(--gradient-accent);
-            box-shadow: 0 2px 6px rgba(124, 58, 237, 0.5);
+            background: #ec4899 !important;
+        }
+        
+        .subcategories-grid::-webkit-scrollbar-corner {
+            background: #1e293b !important;
         }
 
-        /* Scrollbar personalizada moderna para o grid principal */
+        /* === SCROLLBAR GRID UNIVERSAL === */
+        
+        /* Firefox */
+        .categories-grid {
+            scrollbar-width: thin !important;
+            scrollbar-color: #6366f1 #1e293b !important;
+        }
+        
+        /* Webkit (Chrome, Safari, Edge) */
         .categories-grid::-webkit-scrollbar {
-            height: 10px;
+            height: 12px !important;
+            background: transparent !important;
         }
 
         .categories-grid::-webkit-scrollbar-track {
-            background: linear-gradient(90deg, rgba(15, 23, 42, 0.3) 0%, rgba(30, 41, 59, 0.2) 100%);
-            border-radius: 10px;
-            border: 1px solid rgba(124, 58, 237, 0.1);
+            background: #1e293b !important;
+            border-radius: 6px !important;
+            margin: 2px !important;
         }
 
         .categories-grid::-webkit-scrollbar-thumb {
-            background: var(--gradient-primary);
-            border-radius: 10px;
-            border: 1px solid rgba(6, 182, 212, 0.2);
-            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+            background: #6366f1 !important;
+            border-radius: 6px !important;
+            border: 2px solid #1e293b !important;
+            min-width: 30px !important;
         }
 
         .categories-grid::-webkit-scrollbar-thumb:hover {
-            background: var(--gradient-secondary);
-            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4), 0 0 8px rgba(6, 182, 212, 0.3);
-            transform: scaleX(1.1);
+            background: #8b5cf6 !important;
+            border-color: #06b6d4 !important;
         }
         
         .categories-grid::-webkit-scrollbar-thumb:active {
-            background: var(--gradient-accent);
-            box-shadow: 0 2px 6px rgba(124, 58, 237, 0.5);
+            background: #ec4899 !important;
+        }
+        
+        .categories-grid::-webkit-scrollbar-corner {
+            background: #1e293b !important;
+        }
+        
+        /* === TESTE VISUAL - DEVE APARECER BORDA VERMELHA === */
+        .subcategories-grid::-webkit-scrollbar {
+            border: 2px solid red !important;
+        }
+        
+        .categories-grid::-webkit-scrollbar {
+            border: 2px solid red !important;
         }
         
         /* Efeitos visuais adicionais para a aba ambiente */
