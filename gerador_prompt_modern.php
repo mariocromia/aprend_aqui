@@ -10,6 +10,19 @@ if (!isset($_SESSION['usuario_id'])) {
 // Carregar apenas Environment para velocidade
 require_once 'includes/Environment.php';
 
+// Carregar sistema de cenas dinâmicas
+require_once 'includes/CenaManager.php';
+require_once 'includes/CenaRendererPrompt.php';
+
+// Inicializar renderer de cenas
+try {
+    $cenaManager = new CenaManager();
+    $cenaRenderer = new CenaRendererPrompt($cenaManager);
+} catch (Exception $e) {
+    error_log("Erro ao inicializar sistema de cenas: " . $e->getMessage());
+    $cenaRenderer = null;
+}
+
 // Processar salvamento de prompt apenas quando necessário
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'save_prompt') {
     try {
@@ -565,7 +578,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             scroll-behavior: smooth;
             width: 100%;
             flex-wrap: nowrap;
+            justify-content: flex-start;
+        }
+        
+        /* Quando há mais de 3 blocos, distribuir igualmente */
+        .categories-grid.many-blocks {
             justify-content: space-between;
+        }
+        
+        /* Alinhamento específico para poucos blocos */
+        .categories-grid.few-blocks {
+            justify-content: flex-start;
         }
 
         .category-section {
@@ -1433,163 +1456,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
                                          <!-- ABA 1: CENA/AMBIENTE - DESIGN COMPACTO E MODERNO -->
                      <div class="tab-content active" id="tab-ambiente">
-                         <div class="categories-grid">
-                            <!-- NATUREZA -->
-                            <div class="category-section">
-                                <div class="category-header">
-                                    <div class="category-icon">
-                                        <i class="material-icons">nature</i>
-                                    </div>
-                                    <h3 class="category-title">Natureza</h3>
-                                </div>
-                                <div class="subcategories-grid">
-                                    <div class="subcategory-card" data-type="environment" data-value="praia_tropical">
-                                        <div class="subcategory-title">Praia Tropical</div>
-                                        <div class="subcategory-desc">Paraíso com palmeiras</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="environment" data-value="cachoeira_gigante">
-                                        <div class="subcategory-title">Cachoeira Gigante</div>
-                                        <div class="subcategory-desc">Queda d'água majestosa</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="environment" data-value="montanha_nevada">
-                                        <div class="subcategory-title">Montanha Nevada</div>
-                                        <div class="subcategory-desc">Picos cobertos de neve</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="environment" data-value="floresta_amazonica">
-                                        <div class="subcategory-title">Floresta Amazônica</div>
-                                        <div class="subcategory-desc">Selva densa</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="environment" data-value="deserto_sahara">
-                                        <div class="subcategory-title">Deserto Sahara</div>
-                                        <div class="subcategory-desc">Dunas infinitas</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="environment" data-value="campo_lavanda">
-                                        <div class="subcategory-title">Campo de Lavanda</div>
-                                        <div class="subcategory-desc">Ondas roxas aromáticas</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="environment" data-value="aurora_boreal">
-                                        <div class="subcategory-title">Aurora Boreal</div>
-                                        <div class="subcategory-desc">Luzes dançantes polares</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="environment" data-value="vulcao_ativo">
-                                        <div class="subcategory-title">Vulcão Ativo</div>
-                                        <div class="subcategory-desc">Cratera incandescente</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- URBANO -->
-                            <div class="category-section">
-                                <div class="category-header">
-                                    <div class="category-icon">
-                                        <i class="material-icons">location_city</i>
-                                    </div>
-                                    <h3 class="category-title">Urbano</h3>
-                                </div>
-                                <div class="subcategories-grid">
-                                    <div class="subcategory-card" data-type="environment" data-value="manhattan_ny">
-                                        <div class="subcategory-title">Manhattan NY</div>
-                                        <div class="subcategory-desc">Selva de concreto</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="environment" data-value="tokyo_neon">
-                                        <div class="subcategory-title">Tóquio Neon</div>
-                                        <div class="subcategory-desc">Metrópole futurística</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="environment" data-value="las_vegas_strip">
-                                        <div class="subcategory-title">Las Vegas Strip</div>
-                                        <div class="subcategory-desc">Cassinos luminosos</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="environment" data-value="paris_boulevards">
-                                        <div class="subcategory-title">Paris Boulevards</div>
-                                        <div class="subcategory-desc">Elegância francesa</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="environment" data-value="veneza_canais">
-                                        <div class="subcategory-title">Veneza Canais</div>
-                                        <div class="subcategory-desc">Cidade aquática</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="environment" data-value="favela_rio">
-                                        <div class="subcategory-title">Favela Rio</div>
-                                        <div class="subcategory-desc">Comunidade colorida</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- INTERIOR -->
-                            <div class="category-section">
-                                <div class="category-header">
-                                    <div class="category-icon">
-                                        <i class="material-icons">home</i>
-                                    </div>
-                                    <h3 class="category-title">Interior</h3>
-                                </div>
-                                <div class="subcategories-grid">
-                                    <div class="subcategory-card" data-type="environment" data-value="loft_industrial">
-                                        <div class="subcategory-title">Loft Industrial</div>
-                                        <div class="subcategory-desc">Estética fabril</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="environment" data-value="penthouse_luxo">
-                                        <div class="subcategory-title">Penthouse Luxo</div>
-                                        <div class="subcategory-desc">Cobertura sofisticada</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="environment" data-value="biblioteca_antiga">
-                                        <div class="subcategory-title">Biblioteca Antiga</div>
-                                        <div class="subcategory-desc">Acervo centenário</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="environment" data-value="home_theater">
-                                        <div class="subcategory-title">Home Theater</div>
-                                        <div class="subcategory-desc">Cinema particular</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- AQUÁTICO -->
-                            <div class="category-section">
-                                <div class="category-header">
-                                    <div class="category-icon">
-                                        <i class="material-icons">waves</i>
-                                    </div>
-                                    <h3 class="category-title">Aquático</h3>
-                                </div>
-                                <div class="subcategories-grid">
-                                    <div class="subcategory-card" data-type="environment" data-value="oceano_profundo">
-                                        <div class="subcategory-title">Oceano Profundo</div>
-                                        <div class="subcategory-desc">Abismo marinho</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="environment" data-value="recife_coral">
-                                        <div class="subcategory-title">Recife Coral</div>
-                                        <div class="subcategory-desc">Jardim submarino</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="environment" data-value="cidade_atlantis">
-                                        <div class="subcategory-title">Atlântida</div>
-                                        <div class="subcategory-desc">Cidade submersa</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- ESPACIAL -->
-                            <div class="category-section">
-                                <div class="category-header">
-                                    <div class="category-icon">
-                                        <i class="material-icons">rocket_launch</i>
-                                    </div>
-                                    <h3 class="category-title">Espacial</h3>
-                                </div>
-                                <div class="subcategories-grid">
-                                    <div class="subcategory-card" data-type="environment" data-value="estacao_espacial">
-                                        <div class="subcategory-title">Estação Espacial</div>
-                                        <div class="subcategory-desc">Laboratório orbital</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="environment" data-value="superficie_lua">
-                                        <div class="subcategory-title">Superfície Lunar</div>
-                                        <div class="subcategory-desc">Paisagem com crateras</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="environment" data-value="marte_vermelho">
-                                        <div class="subcategory-title">Marte</div>
-                                        <div class="subcategory-desc">Planeta vermelho</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                         <?php
+                         // Renderizar ambientes dinamicamente do banco de dados
+                         if ($cenaRenderer) {
+                             echo $cenaRenderer->renderizarAbaAmbiente();
+                         } else {
+                             echo '<div class="categories-grid">
+                                     <div class="category-section">
+                                         <div class="error-state-ambiente">
+                                             <i class="material-icons" style="font-size: 4rem; color: #ef4444; margin-bottom: 1rem;">error</i>
+                                             <h3 style="color: #ef4444; margin-bottom: 0.5rem;">Sistema temporariamente indisponível</h3>
+                                             <p style="color: #64748b;">As opções de ambiente estão sendo carregadas...</p>
+                                         </div>
+                                     </div>
+                                   </div>';
+                         }
+                         ?>
 
                                                                          <!-- Container de 3 colunas na base -->
                         <div class="bottom-controls-container">
@@ -2766,7 +2648,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         // Initialize when DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
             window.promptGenerator = new ModernPromptGenerator();
+            
+            // Aplicar alinhamento correto baseado na quantidade de blocos
+            adjustCategoriesAlignment();
         });
+        
+        // Função para ajustar alinhamento dos blocos
+        function adjustCategoriesAlignment() {
+            const categoriesGrids = document.querySelectorAll('.categories-grid');
+            
+            categoriesGrids.forEach(grid => {
+                const categoryBlocks = grid.querySelectorAll('.category-section');
+                const blockCount = categoryBlocks.length;
+                
+                // Remover classes anteriores
+                grid.classList.remove('few-blocks', 'many-blocks');
+                
+                // Aplicar classe baseada na quantidade
+                if (blockCount <= 3) {
+                    grid.classList.add('few-blocks');
+                } else {
+                    grid.classList.add('many-blocks');
+                }
+            });
+        }
     </script>
+    
+    <?php
+    // Adicionar JavaScript de integração com sistema dinâmico de cenas
+    if ($cenaRenderer) {
+        echo $cenaRenderer->gerarJavaScriptIntegracao();
+    }
+    ?>
 </body>
 </html>

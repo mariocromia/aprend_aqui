@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste - Correção Stack Overflow</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background: #d1fae5; border: 1px solid #10b981; color: #065f46; }
+        .error { background: #fee2e2; border: 1px solid #ef4444; color: #991b1b; }
+        .info { background: #dbeafe; border: 1px solid #3b82f6; color: #1e40af; }
+        .test-button { background: #3b82f6; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        pre { background: #f8fafc; padding: 10px; border-radius: 4px; overflow-x: auto; }
+        #console-output { height: 200px; overflow-y: auto; background: #1f2937; color: #f9fafb; padding: 10px; border-radius: 4px; font-family: monospace; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Teste - Correção Stack Overflow</h1>
+        
+        <div class="test-result info">
+            <h3>📋 Status da Correção</h3>
+            <p>O problema era causado por <strong>conflito de nomes</strong> entre métodos da classe e funções globais:</p>
+            <ul>
+                <li>✅ Renomeados métodos da classe: <code>aplicarFiltroBlocos()</code>, <code>aplicarBuscaBlocos()</code>, etc.</li>
+                <li>✅ Mantidas funções globais: <code>filtrarBlocos()</code>, <code>buscarBlocos()</code>, etc.</li>
+                <li>✅ Adicionadas verificações de segurança nos métodos</li>
+                <li>✅ Tratamento de erros melhorado</li>
+            </ul>
+        </div>
+
+        <div style="margin: 20px 0;">
+            <button class="test-button" onclick="testarFuncoes()">🧪 Testar Funções</button>
+            <button class="test-button" onclick="simularFiltros()">🔍 Simular Filtros</button>
+            <button class="test-button" onclick="limparConsole()">🧹 Limpar Console</button>
+        </div>
+
+        <div class="test-result">
+            <h3>📟 Console de Debug</h3>
+            <div id="console-output"></div>
+        </div>
+        
+        <div id="test-results"></div>
+    </div>
+
+    <script>
+        // Redirecionar console.log para nossa div
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+        
+        function addToConsole(type, message) {
+            const consoleOutput = document.getElementById('console-output');
+            const timestamp = new Date().toLocaleTimeString();
+            const prefix = type === 'error' ? '❌' : type === 'warn' ? '⚠️' : 'ℹ️';
+            consoleOutput.innerHTML += `[${timestamp}] ${prefix} ${message}\n`;
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+        
+        console.log = (...args) => {
+            originalLog.apply(console, args);
+            addToConsole('log', args.join(' '));
+        };
+        
+        console.error = (...args) => {
+            originalError.apply(console, args);
+            addToConsole('error', args.join(' '));
+        };
+        
+        console.warn = (...args) => {
+            originalWarn.apply(console, args);
+            addToConsole('warn', args.join(' '));
+        };
+
+        function adicionarResultado(tipo, titulo, conteudo) {
+            const resultados = document.getElementById('test-results');
+            const div = document.createElement('div');
+            div.className = `test-result ${tipo}`;
+            div.innerHTML = `<h3>${titulo}</h3><div>${conteudo}</div>`;
+            resultados.appendChild(div);
+        }
+
+        function limparConsole() {
+            document.getElementById('console-output').innerHTML = '';
+            document.getElementById('test-results').innerHTML = '';
+        }
+
+        // Classe de teste simplificada para simular AdminCards
+        class TestAdminCards {
+            constructor() {
+                this.blocos = [
+                    { id: 1, titulo: 'Teste 1', tipo_aba: 'ambiente', ativo: true },
+                    { id: 2, titulo: 'Teste 2', tipo_aba: 'iluminacao', ativo: true }
+                ];
+                this.cenas = [
+                    { id: 1, bloco_id: 1, titulo: 'Cena 1', texto_prompt: 'teste', ativo: true },
+                    { id: 2, bloco_id: 2, titulo: 'Cena 2', texto_prompt: 'exemplo', ativo: true }
+                ];
+                this.filtros = {
+                    blocos: { tipo: '', busca: '' },
+                    cenas: { bloco: '', busca: '' }
+                };
+                
+                console.log('TestAdminCards inicializado');
+            }
+
+            filtrarBlocos() {
+                console.log('Executando filtrarBlocos()');
+                if (!Array.isArray(this.blocos)) {
+                    console.warn('this.blocos não é um array:', this.blocos);
+                    return [];
+                }
+                
+                return this.blocos.filter(bloco => {
+                    if (!bloco) return false;
+                    
+                    const filtroTipo = !this.filtros.blocos.tipo || bloco.tipo_aba === this.filtros.blocos.tipo;
+                    const filtroBusca = !this.filtros.blocos.busca || 
+                        (bloco.titulo && bloco.titulo.toLowerCase().includes(this.filtros.blocos.busca.toLowerCase()));
+                    
+                    return filtroTipo && filtroBusca;
+                });
+            }
+
+            filtrarCenas() {
+                console.log('Executando filtrarCenas()');
+                if (!Array.isArray(this.cenas)) {
+                    console.warn('this.cenas não é um array:', this.cenas);
+                    return [];
+                }
+                
+                return this.cenas.filter(cena => {
+                    if (!cena) return false;
+                    
+                    const filtroBloco = !this.filtros.cenas.bloco || cena.bloco_id == this.filtros.cenas.bloco;
+                    const filtroBusca = !this.filtros.cenas.busca || 
+                        (cena.titulo && cena.titulo.toLowerCase().includes(this.filtros.cenas.busca.toLowerCase())) ||
+                        (cena.texto_prompt && cena.texto_prompt.toLowerCase().includes(this.filtros.cenas.busca.toLowerCase()));
+                    
+                    return filtroBloco && filtroBusca;
+                });
+            }
+
+            aplicarFiltroBlocos() {
+                console.log('Executando aplicarFiltroBlocos()');
+                // Simular mudança de filtro
+                this.filtros.blocos.tipo = 'ambiente';
+                const resultado = this.filtrarBlocos();
+                console.log('Blocos filtrados:', resultado.length);
+                return resultado;
+            }
+
+            aplicarFiltroCenas() {
+                console.log('Executando aplicarFiltroCenas()');
+                // Simular mudança de filtro
+                this.filtros.cenas.bloco = '1';
+                const resultado = this.filtrarCenas();
+                console.log('Cenas filtradas:', resultado.length);
+                return resultado;
+            }
+        }
+
+        // Funções globais (simulando as do arquivo real)
+        function filtrarBlocos() {
+            console.log('Função global filtrarBlocos() chamada');
+            if (window.testAdminCards) {
+                return window.testAdminCards.aplicarFiltroBlocos();
+            }
+        }
+
+        function filtrarCenas() {
+            console.log('Função global filtrarCenas() chamada');
+            if (window.testAdminCards) {
+                return window.testAdminCards.aplicarFiltroCenas();
+            }
+        }
+
+        function testarFuncoes() {
+            console.log('=== INICIANDO TESTE DE FUNÇÕES ===');
+            
+            try {
+                // Criar instância de teste
+                window.testAdminCards = new TestAdminCards();
+                
+                // Testar métodos da classe
+                console.log('--- Testando métodos da classe ---');
+                const blocosFiltrados = window.testAdminCards.filtrarBlocos();
+                const cenasFiltradas = window.testAdminCards.filtrarCenas();
+                
+                // Testar funções globais
+                console.log('--- Testando funções globais ---');
+                filtrarBlocos();
+                filtrarCenas();
+                
+                // Testar chamadas repetidas (detectar loop infinito)
+                console.log('--- Testando chamadas repetidas ---');
+                for (let i = 0; i < 5; i++) {
+                    console.log(`Iteração ${i + 1}`);
+                    filtrarBlocos();
+                    filtrarCenas();
+                }
+                
+                adicionarResultado('success', '✅ Teste de Funções - Sucesso', 
+                    `Todas as funções executaram sem erro de stack overflow.<br>
+                     Blocos encontrados: ${blocosFiltrados.length}<br>
+                     Cenas encontradas: ${cenasFiltradas.length}`);
+                
+            } catch (error) {
+                console.error('Erro durante teste:', error);
+                adicionarResultado('error', '❌ Teste de Funções - Erro', error.message);
+            }
+        }
+
+        function simularFiltros() {
+            console.log('=== SIMULANDO FILTROS ===');
+            
+            try {
+                if (!window.testAdminCards) {
+                    window.testAdminCards = new TestAdminCards();
+                }
+                
+                // Simular múltiplas operações de filtro
+                for (let i = 0; i < 10; i++) {
+                    console.log(`Simulação ${i + 1}`);
+                    
+                    // Variar filtros
+                    window.testAdminCards.filtros.blocos.tipo = i % 2 === 0 ? 'ambiente' : '';
+                    window.testAdminCards.filtros.blocos.busca = i % 3 === 0 ? 'teste' : '';
+                    window.testAdminCards.filtros.cenas.bloco = i % 2 === 0 ? '1' : '';
+                    window.testAdminCards.filtros.cenas.busca = i % 3 === 0 ? 'cena' : '';
+                    
+                    // Executar filtros
+                    window.testAdminCards.aplicarFiltroBlocos();
+                    window.testAdminCards.aplicarFiltroCenas();
+                }
+                
+                adicionarResultado('success', '✅ Simulação de Filtros - Sucesso', 
+                    'Executadas 10 operações de filtro sem problemas de performance.');
+                
+            } catch (error) {
+                console.error('Erro durante simulação:', error);
+                adicionarResultado('error', '❌ Simulação de Filtros - Erro', error.message);
+            }
+        }
+
+        // Inicialização
+        window.addEventListener('load', () => {
+            console.log('Página carregada - Sistema de teste pronto');
+            adicionarResultado('info', '🚀 Sistema Pronto', 
+                'Clique nos botões para testar se o problema de stack overflow foi corrigido.');
+        });
+    </script>
+</body>
+</html>

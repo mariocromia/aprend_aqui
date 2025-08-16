@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste - Operações Válidas da API</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background: #d1fae5; border: 1px solid #10b981; color: #065f46; }
+        .error { background: #fee2e2; border: 1px solid #ef4444; color: #991b1b; }
+        .info { background: #dbeafe; border: 1px solid #3b82f6; color: #1e40af; }
+        .warning { background: #fef3c7; border: 1px solid #f59e0b; color: #92400e; }
+        .test-button { background: #3b82f6; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        .test-button:hover { background: #2563eb; }
+        .test-button:disabled { background: #9ca3af; cursor: not-allowed; }
+        pre { background: #f8fafc; padding: 10px; border-radius: 4px; overflow-x: auto; font-size: 12px; }
+        .status-200 { color: #10b981; font-weight: bold; }
+        .status-500 { color: #ef4444; font-weight: bold; }
+        .loading { opacity: 0.5; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Teste - Operações Válidas da API</h1>
+        
+        <div class="test-result info">
+            <h3>📋 Status Anterior</h3>
+            <p>✅ <strong>Testes anteriores confirmaram:</strong></p>
+            <ul>
+                <li>API responde corretamente a requisições inválidas (Status 500 esperado)</li>
+                <li>Tratamento de erros funcionando</li>
+                <li>JSON bem formatado</li>
+            </ul>
+            <p><strong>Agora vamos testar operações válidas...</strong></p>
+        </div>
+
+        <div style="margin: 20px 0;">
+            <button class="test-button" onclick="testarListarBlocos()">📋 Listar Blocos</button>
+            <button class="test-button" onclick="testarListarCenas()">🎭 Listar Cenas</button>
+            <button class="test-button" onclick="testarCriarBloco()">➕ Criar Bloco</button>
+            <button class="test-button" onclick="testarTodasOperacoes()">🧪 Testar Todas</button>
+            <button class="test-button" style="background: #6b7280;" onclick="limparResultados()">🧹 Limpar</button>
+        </div>
+        
+        <div id="resultados"></div>
+    </div>
+
+    <script>
+        function adicionarResultado(tipo, titulo, conteudo) {
+            const resultados = document.getElementById('resultados');
+            const div = document.createElement('div');
+            div.className = `test-result ${tipo}`;
+            div.innerHTML = `<h3>${titulo}</h3><div>${conteudo}</div>`;
+            resultados.appendChild(div);
+            resultados.scrollTop = resultados.scrollHeight;
+        }
+
+        function limparResultados() {
+            document.getElementById('resultados').innerHTML = '';
+        }
+
+        function formatarStatus(status) {
+            const classe = status >= 200 && status < 300 ? 'status-200' : 'status-500';
+            return `<span class="${classe}">HTTP ${status}</span>`;
+        }
+
+        async function testarListarBlocos() {
+            adicionarResultado('info', '📋 Testando Listar Blocos', 'Enviando requisição...');
+            
+            try {
+                const response = await fetch('api/admin-cards.php?action=listar_blocos');
+                const text = await response.text();
+                
+                let resultado = `<strong>Status:</strong> ${formatarStatus(response.status)}<br>`;
+                resultado += `<strong>Content-Type:</strong> ${response.headers.get('content-type')}<br><br>`;
+                
+                try {
+                    const data = JSON.parse(text);
+                    resultado += `<strong>JSON Válido:</strong> ✅<br>`;
+                    resultado += `<strong>Success:</strong> ${data.success ? '✅ true' : '❌ false'}<br>`;
+                    
+                    if (data.success) {
+                        resultado += `<strong>Total de blocos:</strong> ${data.data ? data.data.length : 0}<br>`;
+                        if (data.data && data.data.length > 0) {
+                            resultado += `<strong>Exemplo de bloco:</strong><br>`;
+                            resultado += `<pre>${JSON.stringify(data.data[0], null, 2)}</pre>`;
+                        }
+                        adicionarResultado('success', '✅ Listar Blocos - Sucesso', resultado);
+                    } else {
+                        resultado += `<strong>Mensagem de erro:</strong> ${data.message}<br>`;
+                        adicionarResultado('warning', '⚠️ Listar Blocos - Resposta de Erro', resultado);
+                    }
+                } catch (jsonError) {
+                    resultado += `<strong>❌ Erro de JSON:</strong> ${jsonError.message}<br>`;
+                    resultado += `<strong>Resposta bruta:</strong><br><pre>${text}</pre>`;
+                    adicionarResultado('error', '❌ Listar Blocos - JSON Inválido', resultado);
+                }
+                
+            } catch (error) {
+                adicionarResultado('error', '❌ Listar Blocos - Erro de Rede', 
+                    `Não foi possível conectar à API: ${error.message}`);
+            }
+        }
+
+        async function testarListarCenas() {
+            adicionarResultado('info', '🎭 Testando Listar Cenas', 'Enviando requisição...');
+            
+            try {
+                const response = await fetch('api/admin-cards.php?action=listar_cenas');
+                const text = await response.text();
+                
+                let resultado = `<strong>Status:</strong> ${formatarStatus(response.status)}<br>`;
+                resultado += `<strong>Content-Type:</strong> ${response.headers.get('content-type')}<br><br>`;
+                
+                try {
+                    const data = JSON.parse(text);
+                    resultado += `<strong>JSON Válido:</strong> ✅<br>`;
+                    resultado += `<strong>Success:</strong> ${data.success ? '✅ true' : '❌ false'}<br>`;
+                    
+                    if (data.success) {
+                        resultado += `<strong>Total de cenas:</strong> ${data.data ? data.data.length : 0}<br>`;
+                        if (data.data && data.data.length > 0) {
+                            resultado += `<strong>Exemplo de cena:</strong><br>`;
+                            resultado += `<pre>${JSON.stringify(data.data[0], null, 2)}</pre>`;
+                        }
+                        adicionarResultado('success', '✅ Listar Cenas - Sucesso', resultado);
+                    } else {
+                        resultado += `<strong>Mensagem de erro:</strong> ${data.message}<br>`;
+                        adicionarResultado('warning', '⚠️ Listar Cenas - Resposta de Erro', resultado);
+                    }
+                } catch (jsonError) {
+                    resultado += `<strong>❌ Erro de JSON:</strong> ${jsonError.message}<br>`;
+                    resultado += `<strong>Resposta bruta:</strong><br><pre>${text}</pre>`;
+                    adicionarResultado('error', '❌ Listar Cenas - JSON Inválido', resultado);
+                }
+                
+            } catch (error) {
+                adicionarResultado('error', '❌ Listar Cenas - Erro de Rede', 
+                    `Não foi possível conectar à API: ${error.message}`);
+            }
+        }
+
+        async function testarCriarBloco() {
+            adicionarResultado('info', '➕ Testando Criar Bloco', 'Enviando requisição POST...');
+            
+            const dadosBloco = {
+                action: 'criar_bloco',
+                titulo: `Teste API ${new Date().getTime()}`,
+                icone: 'science',
+                tipo_aba: 'ambiente',
+                ordem_exibicao: 999
+            };
+            
+            try {
+                const response = await fetch('api/admin-cards.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(dadosBloco)
+                });
+                
+                const text = await response.text();
+                
+                let resultado = `<strong>Status:</strong> ${formatarStatus(response.status)}<br>`;
+                resultado += `<strong>Dados enviados:</strong><br><pre>${JSON.stringify(dadosBloco, null, 2)}</pre>`;
+                
+                try {
+                    const data = JSON.parse(text);
+                    resultado += `<strong>JSON Válido:</strong> ✅<br>`;
+                    resultado += `<strong>Success:</strong> ${data.success ? '✅ true' : '❌ false'}<br>`;
+                    resultado += `<strong>Mensagem:</strong> ${data.message}<br>`;
+                    
+                    if (data.success) {
+                        adicionarResultado('success', '✅ Criar Bloco - Sucesso', resultado);
+                    } else {
+                        adicionarResultado('warning', '⚠️ Criar Bloco - Resposta de Erro', resultado);
+                    }
+                } catch (jsonError) {
+                    resultado += `<strong>❌ Erro de JSON:</strong> ${jsonError.message}<br>`;
+                    resultado += `<strong>Resposta bruta:</strong><br><pre>${text}</pre>`;
+                    adicionarResultado('error', '❌ Criar Bloco - JSON Inválido', resultado);
+                }
+                
+            } catch (error) {
+                adicionarResultado('error', '❌ Criar Bloco - Erro de Rede', 
+                    `Não foi possível conectar à API: ${error.message}`);
+            }
+        }
+
+        async function testarTodasOperacoes() {
+            limparResultados();
+            adicionarResultado('info', '🧪 Executando Todos os Testes', 'Iniciando bateria completa de testes...');
+            
+            // Desabilitar botão durante os testes
+            const botao = event.target;
+            botao.disabled = true;
+            botao.textContent = '⏳ Testando...';
+            
+            try {
+                await testarListarBlocos();
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Pausa de 1s
+                
+                await testarListarCenas();
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Pausa de 1s
+                
+                await testarCriarBloco();
+                
+                adicionarResultado('success', '🎉 Todos os Testes Concluídos', 
+                    'Bateria completa de testes executada. Verifique os resultados acima.');
+                
+            } catch (error) {
+                adicionarResultado('error', '❌ Erro na Bateria de Testes', error.message);
+            } finally {
+                // Reabilitar botão
+                botao.disabled = false;
+                botao.textContent = '🧪 Testar Todas';
+            }
+        }
+
+        // Executar teste inicial automaticamente
+        window.addEventListener('load', () => {
+            adicionarResultado('info', '🚀 Sistema Pronto', 
+                'Sistema de teste carregado. Clique nos botões para testar operações válidas da API.');
+        });
+    </script>
+</body>
+</html>
