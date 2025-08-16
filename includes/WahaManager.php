@@ -211,7 +211,7 @@ class WahaManager {
     /**
      * Enviar mensagem genérica via WhatsApp (método estático)
      */
-    public static function sendMessage($whatsapp, $mensagem) {
+    public static function sendCustomMessage($whatsapp, $mensagem) {
         try {
             $sessionName = 'dev_aprend_aqui_cadastro';
             $wahaServer = Environment::get('WAHA_SERVER', 'https://waha.zapfunil.app');

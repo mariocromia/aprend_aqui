@@ -438,7 +438,7 @@ class WhatsAppManager {
             error_log("WhatsAppManager: Enviando mensagem customizada para $whatsapp");
             
             // Usar WahaManager para enviar
-            $result = WahaManager::sendMessage($whatsapp, $mensagem);
+            $result = WahaManager::sendCustomMessage($whatsapp, $mensagem);
             
             if ($result) {
                 error_log("WhatsAppManager: ✅ Mensagem customizada enviada para $whatsapp");
