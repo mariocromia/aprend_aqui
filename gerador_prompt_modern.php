@@ -191,18 +191,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             flex: 1;
             max-width: 1800px;
             margin: 0 auto;
-            padding: 3rem 2rem 2rem 2rem;
+            padding: 2rem 1.5rem 1.5rem 1.5rem;
             width: 100%;
             overflow: visible;
             display: flex;
             flex-direction: column;
-            gap: 2rem;
+            gap: 1.5rem;
             align-items: start;
         }
 
         .page-header {
             text-align: center;
-            margin-bottom: -3rem;
+            margin-bottom: 0.5rem;
             width: 100%;
         }
 
@@ -213,13 +213,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
         }
 
         .page-header p {
             font-size: 1.125rem;
             color: var(--text-secondary);
             font-weight: 300;
+            margin-bottom: 1.5rem;
         }
 
         /* Sistema de abas moderno */
@@ -288,7 +289,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         /* Conteúdo das abas */
         .tab-content {
             display: none;
-            padding: 2rem;
+            padding: 1.5rem;
             height: auto;
             overflow: visible;
             width: 100%;
@@ -300,7 +301,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
         .tab-header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
         .tab-header h2 {
@@ -332,10 +333,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         .bottom-controls-container {
             display: grid;
             grid-template-columns: 2fr auto 1fr;
-            gap: 1rem;
-            margin-top: 1.5rem;
+            gap: 0.75rem;
+            margin-top: 1rem;
             align-items: start;
-            padding: 1rem;
+            padding: 0.75rem;
             background: linear-gradient(135deg, rgba(30, 64, 175, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
             border-radius: var(--radius);
             border: 1px solid rgba(124, 58, 237, 0.1);
@@ -345,7 +346,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         .custom-description {
             background: linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(30, 41, 59, 0.4) 100%);
             border-radius: var(--radius);
-            padding: 1rem;
+            padding: 0.75rem;
             border: 1px solid rgba(124, 58, 237, 0.2);
             backdrop-filter: blur(10px);
         }
@@ -354,7 +355,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         .advertisement-container {
             background: linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(30, 41, 59, 0.4) 100%);
             border-radius: var(--radius);
-            padding: 1rem;
+            padding: 0.75rem;
             border: 1px solid rgba(124, 58, 237, 0.2);
             min-height: 100px;
             display: flex;
@@ -423,18 +424,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             color: var(--text-muted);
         }
 
-        /* Grid de categorias - Design compacto e moderno - LARGURA E ESPAÇAMENTO UNIFORMES */
+        /* Grid de categorias - Design compacto e moderno - SEMPRE 1 LINHA COM ROLAGEM HORIZONTAL */
         .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
+            display: flex;
+            flex-direction: row;
+            gap: 1rem;
             max-height: 70vh;
             overflow-y: auto;
+            overflow-x: hidden;
             padding: 1rem 0;
             scrollbar-width: thin;
             scroll-behavior: smooth;
             width: 100%;
-            align-items: start;
+            flex-wrap: nowrap;
+            justify-content: space-between;
         }
 
         .category-section {
@@ -446,9 +449,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(10px);
-            min-height: 340px;
-            width: 100%;
-            height: fit-content;
+            min-height: 400px;
+            max-height: 400px;
+            width: calc((100% - 4rem) / 5);
+            height: 400px;
+            flex: 0 0 calc((100% - 4rem) / 5);
         }
 
         .category-section:hover {
@@ -499,10 +504,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         .subcategories-grid {
             display: flex;
             flex-direction: column;
-            gap: 0.4rem;
-            max-height: 260px;
+            gap: 0.75rem;
+            max-height: 300px;
             overflow-y: auto;
-            padding: 0.25rem 0.5rem 0.25rem 0;
+            padding: 0.75rem 0.75rem 0.75rem 0;
             scrollbar-width: thin;
             scroll-behavior: smooth;
             width: 100%;
@@ -512,14 +517,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.6) 100%);
             border: 1.5px solid var(--border-color);
             border-radius: var(--radius-sm);
-            padding: 0.4rem 0.3rem;
+            padding: 0.75rem 0.5rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(5px);
-            height: 55px;
+            height: 60px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -817,34 +822,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         @media (max-width: 1024px) {
             .content-container { 
                 padding: 1.5rem;
-                gap: 1rem;
+                gap: 1.5rem;
             }
             
             .page-header h1 { 
-                font-size: 2.5rem; 
+                font-size: 2.5rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .page-header p {
+                margin-bottom: 1.25rem;
             }
             
             .categories-grid { 
-                grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-                gap: 1.5rem;
-                padding-bottom: 0.5rem;
+                gap: 1.25rem;
+                padding: 1.25rem 0;
             }
             
             .category-section {
-                padding: 0.875rem;
+                padding: 1.25rem;
+                width: calc((100% - 2rem) / 3);
+                flex: 0 0 calc((100% - 2rem) / 3);
             }
             
             .tab-content { 
-                padding: 2rem 1.5rem; 
+                padding: 1.5rem 1rem; 
             }
             
             .bottom-controls-container {
                 grid-template-columns: 1fr;
-                gap: 1rem;
+                gap: 1.25rem;
             }
             
             .custom-description {
-                margin-top: 1rem;
+                margin-top: 1.25rem;
             }
         }
 
@@ -859,11 +870,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             }
             
             .page-header h1 { 
-                font-size: 2rem; 
+                font-size: 2rem;
+                margin-bottom: 0.5rem;
             }
             
             .page-header p { 
-                font-size: 1rem; 
+                font-size: 1rem;
+                margin-bottom: 1rem;
             }
             
             .tab-content { 
@@ -871,24 +884,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             }
             
             .categories-grid {
-                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
                 gap: 1rem;
-                padding-bottom: 0.5rem;
+                padding: 1rem 0;
             }
             
             .category-section { 
-                padding: 0.75rem;
-                min-height: 300px;
+                padding: 1rem;
+                min-height: 340px;
+                max-height: 340px;
+                width: calc((100% - 1rem) / 2);
+                flex: 0 0 calc((100% - 1rem) / 2);
+                height: 340px;
             }
             
             .subcategories-grid { 
-                max-height: 220px;
-                gap: 0.3rem;
+                gap: 0.75rem;
+                padding: 0.75rem 0.75rem 0.75rem 0;
+                max-height: 240px;
             }
             
             .subcategory-card {
-                height: 50px;
-                padding: 0.3rem 0.25rem;
+                height: 55px;
+                padding: 0.75rem 0.5rem;
             }
             
             .subcategory-title {
@@ -931,6 +948,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             
             .btn .material-icons {
                 font-size: 1.125rem;
+            }
+        }
+
+        /* Mobile pequeno */
+        @media (max-width: 480px) {
+            .category-section {
+                width: 100%;
+                flex: 0 0 100%;
+                min-height: 300px;
+                max-height: 300px;
+                height: 300px;
             }
         }
 
