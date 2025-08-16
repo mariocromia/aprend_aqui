@@ -191,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             flex: 1;
             max-width: 1800px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 1rem 2rem 2rem 2rem;
             width: 100%;
             overflow: visible;
             display: grid;
@@ -202,7 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
         .page-header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: -3rem;
             grid-column: 1 / -1;
         }
 
@@ -997,7 +997,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <!-- Container Principal -->
         <div class="content-container">
             <div class="page-header">
-                <p>Crie prompts profissionais com tecnologia avançada e design moderno</p>
             </div>
 
             <!-- Mensagens -->
