@@ -1,0 +1,6 @@
+[16-Aug-2025 01:33:45 UTC] SupabaseClient: Executando em modo desenvolvimento (configurações não definidas)
+[16-Aug-2025 01:33:45 UTC] SupabaseClient: Modo MOCK - GET https://mock.supabase.co/rest/v1/usuarios?email=eq.teste%40exemplo.com&select=*
+[16-Aug-2025 01:33:45 UTC] SupabaseClient: getUserByEmail - Status: 200, Raw: {"mock": true}
+[16-Aug-2025 01:33:45 UTC] SupabaseClient: Modo MOCK - POST https://mock.supabase.co/rest/v1/usuarios
+[16-Aug-2025 01:33:45 UTC] WahaManager: Modo DESENVOLVIMENTO - Simulando envio de WhatsApp
+[16-Aug-2025 01:33:45 UTC] WahaManager: WhatsApp: 21999999999, Código: 964822, Nome: Teste Usuario
