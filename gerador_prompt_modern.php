@@ -357,7 +357,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             border-radius: var(--radius);
             padding: 0.75rem;
             border: 1px solid rgba(124, 58, 237, 0.2);
-            min-height: 100px;
+            min-height: 146px;
+            height: 146px;
             display: flex;
             flex-direction: column;
             justify-content: center;
