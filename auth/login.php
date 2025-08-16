@@ -183,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             ]);
                             
                             // Redirecionar para o gerador de prompts
-                            header('Location: ../gerador_prompt.php');
+                            header('Location: ../gerador_prompt2.php');
                             exit;
                         } else {
                         // Senha incorreta
