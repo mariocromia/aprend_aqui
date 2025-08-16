@@ -329,35 +329,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             font-weight: 300;
         }
 
-        /* Container de 3 colunas na base das abas */
+        /* Container de 3 colunas na base das abas - Design compacto */
         .bottom-controls-container {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: 2fr auto 1fr;
             gap: 1rem;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
             align-items: start;
-        }
-
-        /* Campo de descrição personalizada */
-        .custom-description {
-            background: var(--gradient-card);
+            padding: 1rem;
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
             border-radius: var(--radius);
-            padding: 0.75rem;
-            border: 1px solid var(--border-color);
+            border: 1px solid rgba(124, 58, 237, 0.1);
         }
 
-        /* Container de propaganda */
-        .advertisement-container {
-            background: var(--gradient-card);
+        /* Campo de descrição personalizada - Estilo compacto */
+        .custom-description {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(30, 41, 59, 0.4) 100%);
             border-radius: var(--radius);
             padding: 1rem;
-            border: 1px solid var(--border-color);
-            min-height: 120px;
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Container de propaganda - Design moderno */
+        .advertisement-container {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(30, 41, 59, 0.4) 100%);
+            border-radius: var(--radius);
+            padding: 1rem;
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            min-height: 100px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
         }
 
         .advertisement-placeholder {
@@ -383,6 +391,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             font-weight: 600;
             color: var(--text-primary);
             margin-bottom: 0.75rem;
+            font-size: 0.9rem;
         }
 
         .custom-description .material-icons {
@@ -392,16 +401,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
         .custom-description textarea {
             width: 100%;
-            background: var(--bg-primary);
-            border: 2px solid var(--border-color);
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--border-color);
             border-radius: var(--radius-sm);
-            padding: 0.5rem;
+            padding: 0.75rem;
             color: var(--text-primary);
             font-family: inherit;
             font-size: 0.875rem;
             resize: vertical;
-            min-height: 50px;
+            min-height: 60px;
             transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
         }
 
         .custom-description textarea:focus {
@@ -414,42 +424,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             color: var(--text-muted);
         }
 
-        /* Grid de categorias */
+        /* Grid de categorias - Design compacto e moderno */
         .categories-grid {
-            display: flex;
-            gap: 1.5rem;
-            overflow-x: auto;
-            padding-bottom: 1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 0.75rem;
+            max-height: 70vh;
+            overflow-y: auto;
+            padding: 1rem 0;
             scrollbar-width: thin;
-            -ms-overflow-style: none;
+            scroll-behavior: smooth;
         }
 
-        .categories-grid::-webkit-scrollbar {
-            height: 8px;
-        }
-
-        .categories-grid::-webkit-scrollbar-track {
-            background: var(--bg-primary);
-            border-radius: 4px;
-        }
-
-        .categories-grid::-webkit-scrollbar-thumb {
-            background: var(--gradient-primary);
-            border-radius: 4px;
-        }
-
-        .categories-grid::-webkit-scrollbar-thumb:hover {
-            background: var(--gradient-secondary);
-        }
 
         .category-section {
             background: var(--gradient-card);
             border-radius: var(--radius);
-            padding: 1.5rem;
+            padding: 1rem;
             border: 1px solid var(--border-color);
             transition: all 0.3s ease;
-            min-width: 320px;
-            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            min-height: 340px;
         }
 
         .category-section:hover {
@@ -461,106 +458,107 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         .category-header {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border-color);
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(124, 58, 237, 0.2);
+            position: relative;
         }
 
         .category-icon {
-            width: 3.5rem;
-            height: 3.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
             border-radius: 50%;
             background: var(--gradient-primary);
             color: var(--text-primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: var(--shadow-md);
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+            flex-shrink: 0;
         }
 
         .category-icon .material-icons {
-            font-size: 1.75rem;
+            font-size: 1.25rem;
         }
 
         .category-title {
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: 1.1rem;
+            font-weight: 600;
             margin: 0;
             color: var(--text-primary);
+            background: var(--gradient-secondary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        /* Grid de subcategorias */
+        /* Grid de subcategorias - Layout compacto */
         .subcategories-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 1rem;
-            max-height: 300px;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.4rem;
+            max-height: 260px;
             overflow-y: auto;
-            padding-right: 0.75rem;
+            padding: 0.25rem 0.5rem 0.25rem 0;
             scrollbar-width: thin;
-            -ms-overflow-style: none;
+            scroll-behavior: smooth;
         }
 
-        .subcategories-grid::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .subcategories-grid::-webkit-scrollbar-track {
-            background: var(--bg-primary);
-            border-radius: 3px;
-        }
-
-        .subcategories-grid::-webkit-scrollbar-thumb {
-            background: var(--gradient-primary);
-            border-radius: 3px;
-        }
-
-        .subcategories-grid::-webkit-scrollbar-thumb:hover {
-            background: var(--gradient-secondary);
-        }
 
         .subcategory-card {
-            background: var(--bg-primary);
-            border: 2px solid var(--border-color);
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.6) 100%);
+            border: 1.5px solid var(--border-color);
             border-radius: var(--radius-sm);
-            padding: 1rem;
+            padding: 0.4rem 0.3rem;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(5px);
+            height: 55px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
         }
 
         .subcategory-card::before {
             content: '';
             position: absolute;
             top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: var(--gradient-accent);
             opacity: 0;
-            transition: all 0.3s ease;
+            transition: opacity 0.3s ease;
             z-index: 0;
+            border-radius: inherit;
         }
 
         .subcategory-card:hover::before {
-            left: 0;
-            opacity: 0.1;
+            opacity: 0.15;
         }
 
         .subcategory-card:hover {
             border-color: var(--accent-cyan);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-1px) scale(1.01);
+            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.25), 0 0 15px rgba(6, 182, 212, 0.1);
+            z-index: 10;
+            position: relative;
         }
 
         .subcategory-card.selected {
             border-color: var(--accent-cyan);
             background: var(--gradient-primary);
             color: var(--text-primary);
-            box-shadow: var(--shadow-glow);
+            box-shadow: 0 0 25px rgba(124, 58, 237, 0.4), 0 6px 20px rgba(6, 182, 212, 0.2);
+            transform: translateY(-1px) scale(1.02);
+            z-index: 15;
+            position: relative;
         }
 
         .subcategory-card.selected::after {
@@ -582,21 +580,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
 
         .subcategory-title {
-            font-size: 1rem;
+            font-size: 0.75rem;
             font-weight: 600;
-            margin: 0 0 0.75rem 0;
-            line-height: 1.3;
+            margin: 0 0 0.15rem 0;
+            line-height: 1.0;
             position: relative;
             z-index: 1;
+            letter-spacing: 0.025em;
         }
 
         .subcategory-desc {
-            font-size: 0.875rem;
+            font-size: 0.65rem;
             color: var(--text-muted);
             margin: 0;
-            line-height: 1.4;
+            line-height: 1.1;
             position: relative;
             z-index: 1;
+            opacity: 0.8;
         }
 
         .subcategory-card.selected .subcategory-desc {
@@ -826,8 +826,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 padding-bottom: 0.5rem;
             }
             
+            .categories-grid {
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                gap: 0.75rem;
+            }
+            
             .category-section {
-                min-width: 280px;
+                padding: 0.875rem;
             }
             
             .tab-content { 
@@ -877,9 +882,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 padding-bottom: 0.5rem;
             }
             
+            .categories-grid {
+                grid-template-columns: 1fr;
+                max-height: 60vh;
+                gap: 0.5rem;
+            }
+            
+            .category-section {
+                padding: 0.75rem;
+            }
+            
+            .category-section {
+                min-height: 300px;
+            }
+            
             .subcategories-grid { 
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-                max-height: 250px;
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+                max-height: 220px;
+                gap: 0.3rem;
+            }
+            
+            .subcategory-card {
+                height: 50px;
+                padding: 0.3rem 0.25rem;
+            }
+            
+            .subcategory-title {
+                font-size: 0.7rem;
+            }
+            
+            .subcategory-desc {
+                font-size: 0.6rem;
+            }
+            
+            .bottom-controls-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
             }
             
             .tabs-nav { 
@@ -933,41 +971,113 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             animation: fadeInUp 0.5s ease;
         }
 
-        /* Scrollbar personalizada apenas para os blocos de categoria */
+        /* Scrollbar personalizada moderna para os blocos de categoria */
         .subcategories-grid::-webkit-scrollbar {
-            width: 6px;
+            width: 8px;
         }
 
         .subcategories-grid::-webkit-scrollbar-track {
-            background: var(--bg-primary);
-            border-radius: 3px;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.3) 0%, rgba(30, 41, 59, 0.2) 100%);
+            border-radius: 10px;
+            border: 1px solid rgba(124, 58, 237, 0.1);
         }
 
         .subcategories-grid::-webkit-scrollbar-thumb {
             background: var(--gradient-primary);
-            border-radius: 3px;
+            border-radius: 10px;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
         }
 
         .subcategories-grid::-webkit-scrollbar-thumb:hover {
             background: var(--gradient-secondary);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4), 0 0 8px rgba(6, 182, 212, 0.3);
+            transform: scaleY(1.1);
+        }
+        
+        .subcategories-grid::-webkit-scrollbar-thumb:active {
+            background: var(--gradient-accent);
+            box-shadow: 0 2px 6px rgba(124, 58, 237, 0.5);
         }
 
+        /* Scrollbar personalizada moderna para o grid principal */
         .categories-grid::-webkit-scrollbar {
-            height: 8px;
+            height: 10px;
         }
 
         .categories-grid::-webkit-scrollbar-track {
-            background: var(--bg-primary);
-            border-radius: 4px;
+            background: linear-gradient(90deg, rgba(15, 23, 42, 0.3) 0%, rgba(30, 41, 59, 0.2) 100%);
+            border-radius: 10px;
+            border: 1px solid rgba(124, 58, 237, 0.1);
         }
 
         .categories-grid::-webkit-scrollbar-thumb {
             background: var(--gradient-primary);
-            border-radius: 4px;
+            border-radius: 10px;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
         }
 
         .categories-grid::-webkit-scrollbar-thumb:hover {
             background: var(--gradient-secondary);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4), 0 0 8px rgba(6, 182, 212, 0.3);
+            transform: scaleX(1.1);
+        }
+        
+        .categories-grid::-webkit-scrollbar-thumb:active {
+            background: var(--gradient-accent);
+            box-shadow: 0 2px 6px rgba(124, 58, 237, 0.5);
+        }
+        
+        /* Efeitos visuais adicionais para a aba ambiente */
+        .tab-content#tab-ambiente {
+            position: relative;
+        }
+        
+        .tab-content#tab-ambiente::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.03) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .categories-grid {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Animação suave para os cards */
+        .subcategory-card {
+            will-change: transform;
+        }
+        
+        /* Melhoria no visual da seleção */
+        .subcategory-card.selected::after {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        /* Efeito glassmorphism nas seções */
+        .category-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, transparent 100%);
+            pointer-events: none;
+            border-radius: inherit;
         }
     </style>
 </head>
@@ -1056,7 +1166,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     <input type="hidden" id="selected_voice" name="selected_voice">
                     <input type="hidden" id="settings" name="settings">
 
-                                         <!-- ABA 1: CENA/AMBIENTE -->
+                                         <!-- ABA 1: CENA/AMBIENTE - DESIGN COMPACTO E MODERNO -->
                      <div class="tab-content active" id="tab-ambiente">
                          <div class="categories-grid">
                             <!-- NATUREZA -->
