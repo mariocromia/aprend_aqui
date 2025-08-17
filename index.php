@@ -53,7 +53,7 @@
                             <a href="#contact" class="nav-link">Contato</a>
                         </li>
                         <li class="nav-item nav-cta-mobile">
-                            <a href="gerador_prompt.php" class="nav-link btn-mobile-cta">
+                            <a href="auth/login.php" class="nav-link btn-mobile-cta">
                                 <i class="fas fa-magic"></i>
                                 Gerador de Prompt
                             </a>
@@ -62,7 +62,7 @@
                 </div>
                 
                 <div class="nav-cta">
-                    <a href="gerador_prompt.php" class="btn btn-prompt-generator">
+                    <a href="auth/login.php" class="btn btn-prompt-generator">
                         <i class="fas fa-magic"></i>
                         <span>Gerador de Prompt</span>
                     </a>

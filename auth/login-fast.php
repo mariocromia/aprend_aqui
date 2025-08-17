@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['usuario_email'] = 'admin@teste.com';
                 
                 session_regenerate_id(true);
-                header('Location: ../gerador_prompt2.php');
+                header('Location: ../gerador_prompt_modern.php');
                 exit;
             }
             
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['usuario_email'] = $usuario['email'];
                     
                     session_regenerate_id(true);
-                    header('Location: ../gerador_prompt2.php');
+                    header('Location: ../gerador_prompt_modern.php');
                     exit;
                 } else {
                     $mensagem = 'Email ou senha incorretos.';

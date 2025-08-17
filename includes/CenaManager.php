@@ -10,14 +10,17 @@
  */
 
 require_once 'SupabaseClient.php';
+require_once 'DatabaseOptimizer.php';
 
 class CenaManager {
     private $supabase;
+    private $optimizer;
     private $cache = [];
     private $cacheTime = 3600; // 1 hora em segundos
     
     public function __construct() {
         $this->supabase = new SupabaseClient();
+        $this->optimizer = DatabaseOptimizer::getInstance();
     }
     
     /**
@@ -27,21 +30,22 @@ class CenaManager {
      * @return array Lista de blocos ordenados
      */
     public function getBlocosPorTipo($tipoAba) {
-        $cacheKey = "blocos_{$tipoAba}";
-        
-        // Verificar cache
-        if ($this->isValidCache($cacheKey)) {
-            return $this->cache[$cacheKey]['data'];
-        }
-        
         try {
-            $endpoint = "blocos_cenas?tipo_aba=eq.{$tipoAba}&ativo=eq.true&order=ordem_exibicao.asc,titulo.asc&select=id,titulo,icone,tipo_aba,ordem_exibicao";
-            $result = $this->supabase->makeRequest($endpoint, 'GET', null, true);
+            // Usar consulta otimizada com cache automático
+            $result = $this->optimizer->optimizedQuery(
+                'blocos_cenas',
+                [
+                    'tipo_aba' => $tipoAba,
+                    'ativo' => true
+                ],
+                'id,titulo,icone,tipo_aba,ordem_exibicao',
+                50, // limit
+                0,  // offset
+                'ordem_exibicao.asc,titulo.asc'
+            );
             
             if ($result['status'] === 200 && isset($result['data'])) {
-                $blocos = $result['data'];
-                $this->setCache($cacheKey, $blocos);
-                return $blocos;
+                return $result['data'];
             }
             
             return [];
@@ -59,21 +63,22 @@ class CenaManager {
      * @return array Lista de cenas ordenadas
      */
     public function getCenasPorBloco($blocoId) {
-        $cacheKey = "cenas_bloco_{$blocoId}";
-        
-        // Verificar cache
-        if ($this->isValidCache($cacheKey)) {
-            return $this->cache[$cacheKey]['data'];
-        }
-        
         try {
-            $endpoint = "cenas?bloco_id=eq.{$blocoId}&ativo=eq.true&order=ordem_exibicao.asc,titulo.asc&select=id,titulo,subtitulo,texto_prompt,valor_selecao,ordem_exibicao";
-            $result = $this->supabase->makeRequest($endpoint, 'GET', null, true);
+            // Usar consulta otimizada com cache automático
+            $result = $this->optimizer->optimizedQuery(
+                'cenas',
+                [
+                    'bloco_id' => $blocoId,
+                    'ativo' => true
+                ],
+                'id,titulo,subtitulo,texto_prompt,valor_selecao,ordem_exibicao',
+                100, // limit
+                0,   // offset
+                'ordem_exibicao.asc,titulo.asc'
+            );
             
             if ($result['status'] === 200 && isset($result['data'])) {
-                $cenas = $result['data'];
-                $this->setCache($cacheKey, $cenas);
-                return $cenas;
+                return $result['data'];
             }
             
             return [];
@@ -91,15 +96,33 @@ class CenaManager {
      * @return array Estrutura completa da aba
      */
     public function getDadosCompletos($tipoAba) {
-        $cacheKey = "completo_{$tipoAba}";
-        
-        // Verificar cache
-        if ($this->isValidCache($cacheKey)) {
-            return $this->cache[$cacheKey]['data'];
-        }
-        
         try {
-            // Buscar blocos primeiro
+            // Tentar usar preload otimizado primeiro
+            $result = $this->optimizer->preloadCenaData($tipoAba);
+            
+            if ($result['status'] === 200 && isset($result['data'])) {
+                // Dados já vêm estruturados com relacionamentos
+                return array_map(function($bloco) {
+                    return [
+                        'id' => $bloco['id'],
+                        'titulo' => $bloco['titulo'],
+                        'icone' => $bloco['icone'],
+                        'ordem' => $bloco['ordem_exibicao'],
+                        'cenas' => array_map(function($cena) {
+                            return [
+                                'id' => $cena['id'],
+                                'titulo' => $cena['titulo'],
+                                'subtitulo' => $cena['subtitulo'],
+                                'texto_prompt' => $cena['texto_prompt'],
+                                'valor_selecao' => $cena['valor_selecao'],
+                                'ordem' => $cena['ordem_exibicao']
+                            ];
+                        }, $cena['cenas'] ?? [])
+                    ];
+                }, $result['data']);
+            }
+            
+            // Fallback para método tradicional se preload falhar
             $blocos = $this->getBlocosPorTipo($tipoAba);
             $dados = [];
             
@@ -123,7 +146,6 @@ class CenaManager {
                 ];
             }
             
-            $this->setCache($cacheKey, $dados);
             return $dados;
             
         } catch (Exception $e) {

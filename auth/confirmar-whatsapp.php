@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $email) {
             error_log("WhatsApp confirmado com sucesso para: " . $email);
             
             // Redirecionar para o gerador de prompts
-            header('Location: ../gerador_prompt.php');
+            header('Location: ../gerador_prompt_modern.php');
             exit;
         } else {
             $mensagem = $resultado['message'];
