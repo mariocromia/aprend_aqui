@@ -110,24 +110,70 @@ class ModernPromptGenerator {
     }
 
     loadTabContent(tabName) {
-        const tabContent = document.querySelector(`[data-tab-content="${tabName}"]`);
+        const tabContent = document.querySelector(`#tab-${tabName}`);
         if (!tabContent || this.loadedTabs.has(tabName)) return;
 
-        // Show loading indicator
-        this.showLoadingIndicator(tabContent);
+        // Show skeleton loading
+        this.showSkeletonLoader(tabContent, tabName);
 
-        // Simulate async loading with a small delay for better UX
-        setTimeout(() => {
+        // Load content asynchronously
+        this.loadDynamicContent(tabName).then(() => {
             // Mark tab as loaded
             this.loadedTabs.add(tabName);
             
-            // Remove loading indicator
-            this.hideLoadingIndicator(tabContent);
+            // Remove skeleton and show real content
+            this.hideSkeletonLoader(tabContent);
             
-            // Initialize tab-specific functionality if needed
+            // Initialize tab-specific functionality
             this.initializeTabContent(tabName);
             
-        }, 100); // Small delay to show loading state
+        }).catch(error => {
+            console.error(`Error loading tab ${tabName}:`, error);
+            this.showErrorState(tabContent, tabName);
+        });
+    }
+
+    async loadDynamicContent(tabName) {
+        // For static tabs (already loaded), return immediately
+        if (['elementos_especiais', 'qualidade', 'avatar', 'camera', 'voz', 'acao'].includes(tabName)) {
+            await new Promise(resolve => setTimeout(resolve, 300)); // Simulate loading
+            return;
+        }
+
+        // For dynamic tabs (ambiente, estilo_visual, iluminacao, tecnica), load from server
+        try {
+            const response = await fetch(`api/load_tab_content.php?tab=${tabName}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            if (data.success) {
+                // Update tab content with loaded data
+                this.updateTabContent(tabName, data.html);
+            } else {
+                throw new Error(data.message || 'Failed to load content');
+            }
+        } catch (error) {
+            // Fallback: content is already loaded server-side
+            console.log(`Using server-side rendered content for ${tabName}`);
+            await new Promise(resolve => setTimeout(resolve, 300));
+        }
+    }
+
+    updateTabContent(tabName, html) {
+        const tabContent = document.querySelector(`#tab-${tabName}`);
+        if (tabContent && html) {
+            const contentContainer = tabContent.querySelector('.categories-grid') || tabContent;
+            contentContainer.innerHTML = html;
+        }
     }
 
     preloadNextTab(currentTab) {
@@ -145,18 +191,108 @@ class ModernPromptGenerator {
         }
     }
 
+    showSkeletonLoader(tabContent, tabName) {
+        const categoriesGrid = tabContent.querySelector('.categories-grid');
+        if (!categoriesGrid) return;
+
+        // Add loading class and create skeleton
+        categoriesGrid.classList.add('loading');
+        categoriesGrid.innerHTML = this.createSkeletonHTML(tabName);
+    }
+
+    hideSkeletonLoader(tabContent) {
+        const categoriesGrid = tabContent.querySelector('.categories-grid');
+        if (categoriesGrid) {
+            categoriesGrid.classList.remove('loading');
+        }
+    }
+
+    createSkeletonHTML(tabName) {
+        const categoryCount = this.getCategoryCount(tabName);
+        let skeletonHTML = '';
+
+        for (let i = 0; i < categoryCount; i++) {
+            skeletonHTML += `
+                <div class="skeleton-category shimmer">
+                    <div class="skeleton-category-title skeleton-loader"></div>
+                    <div class="skeleton-subcategories">
+                        ${this.createSkeletonSubcategories()}
+                    </div>
+                </div>
+            `;
+        }
+
+        return skeletonHTML;
+    }
+
+    createSkeletonSubcategories() {
+        let subcategoriesHTML = '';
+        const subcategoryCount = Math.floor(Math.random() * 4) + 4; // 4-7 subcategories
+
+        for (let i = 0; i < subcategoryCount; i++) {
+            subcategoriesHTML += '<div class="skeleton-subcategory skeleton-loader shimmer"></div>';
+        }
+
+        return subcategoriesHTML;
+    }
+
+    getCategoryCount(tabName) {
+        // Return expected number of categories for each tab
+        const categoryCounts = {
+            'ambiente': 4,
+            'estilo_visual': 3,
+            'iluminacao': 3,
+            'tecnica': 2,
+            'elementos_especiais': 2,
+            'qualidade': 2,
+            'avatar': 3,
+            'camera': 2,
+            'voz': 2,
+            'acao': 2
+        };
+        return categoryCounts[tabName] || 3;
+    }
+
+    showErrorState(tabContent, tabName) {
+        const categoriesGrid = tabContent.querySelector('.categories-grid');
+        if (categoriesGrid) {
+            categoriesGrid.classList.remove('loading');
+            categoriesGrid.innerHTML = `
+                <div class="content-loading">
+                    <i class="material-icons" style="font-size: 4rem; color: #ef4444; margin-bottom: 1rem;">error</i>
+                    <h3 style="color: #ef4444; margin-bottom: 0.5rem;">Erro ao carregar conteúdo</h3>
+                    <p style="color: #64748b; text-align: center; margin-bottom: 1rem;">
+                        Não foi possível carregar o conteúdo da aba ${tabName}.
+                    </p>
+                    <button onclick="window.location.reload()" class="btn btn-secondary">
+                        <i class="material-icons">refresh</i>
+                        Tentar novamente
+                    </button>
+                </div>
+            `;
+        }
+    }
+
     showLoadingIndicator(tabContent) {
-        // Only show for tabs that aren't already visible
+        // Fallback method for simple loading
         if (!tabContent.classList.contains('active')) {
             const loader = document.createElement('div');
-            loader.className = 'tab-loading';
-            loader.innerHTML = '<div class="loading-spinner"></div><p>Carregando...</p>';
+            loader.className = 'content-loading';
+            loader.innerHTML = `
+                <div class="loading-pulse"></div>
+                <div class="loading-dots">
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                </div>
+                <p class="loading-text">Carregando conteúdo...</p>
+            `;
             tabContent.appendChild(loader);
         }
     }
 
     hideLoadingIndicator(tabContent) {
-        const loader = tabContent.querySelector('.tab-loading');
+        const loader = tabContent.querySelector('.content-loading, .tab-loading');
         if (loader) {
             loader.remove();
         }
@@ -395,10 +531,58 @@ function adjustCategoriesAlignment() {
     });
 }
 
+// Hide page preloader
+function hidePagePreloader() {
+    const preloader = document.getElementById('pagePreloader');
+    if (preloader) {
+        preloader.classList.add('hidden');
+        setTimeout(() => {
+            preloader.remove();
+        }, 300);
+    }
+}
+
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     window.promptGenerator = new ModernPromptGenerator();
     
+    // Check if dynamic content is loading slowly and show skeleton
+    setTimeout(() => {
+        const activeTab = document.querySelector('.tab-content.active');
+        const categoriesGrid = activeTab?.querySelector('.categories-grid');
+        
+        // If categories grid is empty or has very few elements, show skeleton
+        if (categoriesGrid && categoriesGrid.children.length < 2) {
+            const tabName = activeTab.id?.replace('tab-', '') || 'ambiente';
+            window.promptGenerator.showSkeletonLoader(activeTab, tabName);
+            
+            // Hide skeleton after content loads or timeout
+            const checkContent = setInterval(() => {
+                if (categoriesGrid.children.length > 2 && 
+                    !categoriesGrid.querySelector('.skeleton-category')) {
+                    window.promptGenerator.hideSkeletonLoader(activeTab);
+                    clearInterval(checkContent);
+                }
+            }, 100);
+            
+            // Timeout after 3 seconds
+            setTimeout(() => {
+                clearInterval(checkContent);
+                if (categoriesGrid.classList.contains('loading')) {
+                    window.promptGenerator.hideSkeletonLoader(activeTab);
+                }
+            }, 3000);
+        }
+    }, 500); // Check after 500ms
+    
     // Aplicar alinhamento correto baseado na quantidade de blocos
     adjustCategoriesAlignment();
+    
+    // Hide page preloader after everything is loaded
+    setTimeout(hidePagePreloader, 800);
+});
+
+// Hide preloader when window is fully loaded
+window.addEventListener('load', () => {
+    setTimeout(hidePagePreloader, 200);
 });

@@ -73,8 +73,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <title>Gerador de Prompts IA - Design Moderno - Gerador de Prompt - AprendAqui</title>
     
     <link rel="stylesheet" href="assets/css/gerador-prompt-modern.css">
+    
+    <!-- Preloader para carregamento inicial -->
+    <style>
+        .page-preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-primary, #0f172a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 9999;
+            transition: opacity 0.3s ease;
+        }
+        
+        .preloader-logo {
+            width: 80px;
+            height: 80px;
+            border: 4px solid rgba(59, 130, 246, 0.3);
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+        
+        .preloader-text {
+            color: #cbd5e1;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .preloader-subtext {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+        
+        .page-preloader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body>
+    <!-- Page Preloader -->
+    <div class="page-preloader" id="pagePreloader">
+        <div class="preloader-logo"></div>
+        <div class="preloader-text">Carregando Gerador de Prompts</div>
+        <div class="preloader-subtext">Preparando experiência otimizada...</div>
+    </div>
+
     <div class="main-container">
         <!-- Header -->
         <header class="header">
