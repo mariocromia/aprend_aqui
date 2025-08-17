@@ -1,0 +1,576 @@
+            <!-- Header com Controles -->
+            <div class="avatar-header">
+                <div class="avatar-tabs">
+                    <button class="avatar-tab active" data-tab="criar">
+                        <i class="material-icons">add_circle</i>
+                        Criar Novo
+                    </button>
+                    <button class="avatar-tab" data-tab="galeria">
+                        <i class="material-icons">photo_library</i>
+                        Galeria
+                    </button>
+                    <button class="avatar-tab" data-tab="presets">
+                        <i class="material-icons">collections_bookmark</i>
+                        Templates
+                    </button>
+                    <button class="avatar-tab" data-tab="historico">
+                        <i class="material-icons">history</i>
+                        Histórico
+                    </button>
+                </div>
+                
+                <div class="avatar-actions">
+                    <button class="btn-icon" id="save-avatar" title="Salvar Avatar">
+                        <i class="material-icons">save</i>
+                    </button>
+                    <button class="btn-icon" id="preview-avatar" title="Visualizar">
+                        <i class="material-icons">visibility</i>
+                    </button>
+                    <button class="btn-icon" id="generate-prompt" title="Gerar Prompt">
+                        <i class="material-icons">auto_awesome</i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Conteúdo das Abas -->
+            <div class="avatar-content">
+                
+                <!-- ABA CRIAR NOVO AVATAR -->
+                <div class="avatar-tab-content active" id="tab-criar">
+                    <div class="avatar-form-grid">
+                        
+                        <!-- Seção 1: Informações Básicas -->
+                        <div class="form-section" data-section="basicas">
+                            <div class="section-header">
+                                <div class="section-icon">
+                                    <i class="material-icons">badge</i>
+                                </div>
+                                <div class="section-title">
+                                    <h3>Informações Básicas</h3>
+                                    <p>Nome, gênero e categoria do avatar</p>
+                                </div>
+                                <button class="section-toggle" type="button">
+                                    <i class="material-icons">expand_more</i>
+                                </button>
+                            </div>
+                            
+                            <div class="section-content">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="avatar-nome">
+                                            <i class="material-icons">person</i>
+                                            Nome do Avatar
+                                        </label>
+                                        <input type="text" id="avatar-nome" name="nome" placeholder="Ex: Lara Exploradora" maxlength="100" required>
+                                        <small>Nome único para identificar seu avatar</small>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="avatar-genero">
+                                            <i class="material-icons">people</i>
+                                            Gênero
+                                        </label>
+                                        <select id="avatar-genero" name="genero">
+                                            <option value="neutro">Neutro/Não especificado</option>
+                                            <option value="feminino">Feminino</option>
+                                            <option value="masculino">Masculino</option>
+                                            <option value="outro">Outro</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="avatar-idade">
+                                            <i class="material-icons">cake</i>
+                                            Categoria de Idade
+                                        </label>
+                                        <select id="avatar-idade" name="idade_categoria">
+                                            <option value="adulto">Adulto (25-50 anos)</option>
+                                            <option value="jovem">Jovem (18-25 anos)</option>
+                                            <option value="adolescente">Adolescente (13-17 anos)</option>
+                                            <option value="crianca">Criança (5-12 anos)</option>
+                                            <option value="idoso">Idoso (50+ anos)</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="avatar-categorias">
+                                            <i class="material-icons">category</i>
+                                            Categorias
+                                        </label>
+                                        <div class="multi-select" id="avatar-categorias">
+                                            <!-- Será preenchido dinamicamente -->
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="avatar-descricao">
+                                        <i class="material-icons">description</i>
+                                        Descrição Geral
+                                    </label>
+                                    <textarea id="avatar-descricao" name="descricao" rows="3" 
+                                        placeholder="Descreva a personalidade, background ou características marcantes..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Seção 2: Aparência Física -->
+                        <div class="form-section" data-section="fisica">
+                            <div class="section-header">
+                                <div class="section-icon">
+                                    <i class="material-icons">face</i>
+                                </div>
+                                <div class="section-title">
+                                    <h3>Aparência Física</h3>
+                                    <p>Características corporais e faciais</p>
+                                </div>
+                                <button class="section-toggle" type="button">
+                                    <i class="material-icons">expand_more</i>
+                                </button>
+                            </div>
+                            
+                            <div class="section-content">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="avatar-etnia">
+                                            <i class="material-icons">public</i>
+                                            Etnia/Origem
+                                        </label>
+                                        <select id="avatar-etnia" name="etnia">
+                                            <option value="">Não especificado</option>
+                                            <option value="caucasiana">Caucasiana</option>
+                                            <option value="afrodescendente">Afrodescendente</option>
+                                            <option value="asiatica">Asiática</option>
+                                            <option value="latina">Latina</option>
+                                            <option value="indigena">Indígena</option>
+                                            <option value="mista">Mista</option>
+                                            <option value="fantastica">Fantástica (Elfo, Orc, etc.)</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="avatar-tipo-fisico">
+                                            <i class="material-icons">fitness_center</i>
+                                            Tipo Físico
+                                        </label>
+                                        <select id="avatar-tipo-fisico" name="tipo_fisico">
+                                            <option value="">Não especificado</option>
+                                            <option value="magro">Magro/Esbelto</option>
+                                            <option value="atletico">Atlético</option>
+                                            <option value="medio">Médio/Normal</option>
+                                            <option value="forte">Forte/Robusto</option>
+                                            <option value="musculoso">Musculoso</option>
+                                            <option value="curvilinea">Curvilínea</option>
+                                            <option value="plus_size">Plus Size</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="avatar-altura">
+                                            <i class="material-icons">height</i>
+                                            Altura
+                                        </label>
+                                        <input type="text" id="avatar-altura" name="altura" placeholder="Ex: 1.70m, Alta, Baixa">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="avatar-peso">
+                                            <i class="material-icons">monitor_weight</i>
+                                            Peso/Build
+                                        </label>
+                                        <input type="text" id="avatar-peso" name="peso" placeholder="Ex: 65kg, Leve, Pesado">
+                                    </div>
+                                </div>
+                                
+                                <!-- Características do Cabelo -->
+                                <div class="form-subsection">
+                                    <h4><i class="material-icons">cut</i> Cabelo</h4>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="avatar-cor-cabelo">Cor</label>
+                                            <select id="avatar-cor-cabelo" name="cor_cabelo">
+                                                <option value="">Não especificado</option>
+                                                <option value="preto">Preto</option>
+                                                <option value="castanho_escuro">Castanho Escuro</option>
+                                                <option value="castanho">Castanho</option>
+                                                <option value="castanho_claro">Castanho Claro</option>
+                                                <option value="loiro_escuro">Loiro Escuro</option>
+                                                <option value="loiro">Loiro</option>
+                                                <option value="loiro_platinado">Loiro Platinado</option>
+                                                <option value="ruivo">Ruivo</option>
+                                                <option value="grisalho">Grisalho</option>
+                                                <option value="branco">Branco</option>
+                                                <option value="colorido">Colorido (Rosa, Azul, etc.)</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="avatar-estilo-cabelo">Estilo</label>
+                                            <input type="text" id="avatar-estilo-cabelo" name="estilo_cabelo" 
+                                                placeholder="Ex: Cacheado, Liso, Ondulado, Curto, Longo">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Características Faciais -->
+                                <div class="form-subsection">
+                                    <h4><i class="material-icons">face</i> Rosto</h4>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="avatar-cor-olhos">Cor dos Olhos</label>
+                                            <select id="avatar-cor-olhos" name="cor_olhos">
+                                                <option value="">Não especificado</option>
+                                                <option value="castanho">Castanho</option>
+                                                <option value="azul">Azul</option>
+                                                <option value="verde">Verde</option>
+                                                <option value="cinza">Cinza</option>
+                                                <option value="amendoa">Amendoado</option>
+                                                <option value="preto">Preto</option>
+                                                <option value="heterocromia">Heterocromia</option>
+                                                <option value="especial">Cor Especial (Dourado, Violeta, etc.)</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="avatar-cor-pele">Tom de Pele</label>
+                                            <select id="avatar-cor-pele" name="cor_pele">
+                                                <option value="">Não especificado</option>
+                                                <option value="muito_clara">Muito Clara</option>
+                                                <option value="clara">Clara</option>
+                                                <option value="media_clara">Média Clara</option>
+                                                <option value="media">Média</option>
+                                                <option value="morena">Morena</option>
+                                                <option value="escura">Escura</option>
+                                                <option value="muito_escura">Muito Escura</option>
+                                                <option value="bronzeada">Bronzeada</option>
+                                                <option value="albina">Albina</option>
+                                                <option value="fantastica">Fantástica (Azul, Verde, etc.)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="avatar-expressao">
+                                            <i class="material-icons">sentiment_satisfied</i>
+                                            Expressão Facial
+                                        </label>
+                                        <input type="text" id="avatar-expressao" name="expressao_facial" 
+                                            placeholder="Ex: Sorridente, Séria, Misteriosa, Confiante">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="avatar-postura">
+                                            <i class="material-icons">accessibility</i>
+                                            Postura
+                                        </label>
+                                        <input type="text" id="avatar-postura" name="postura" 
+                                            placeholder="Ex: Ereta, Relaxada, Imponente, Casual">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Seção 3: Personalidade e Background -->
+                        <div class="form-section" data-section="personalidade">
+                            <div class="section-header">
+                                <div class="section-icon">
+                                    <i class="material-icons">psychology</i>
+                                </div>
+                                <div class="section-title">
+                                    <h3>Personalidade e Background</h3>
+                                    <p>Características psicológicas e história</p>
+                                </div>
+                                <button class="section-toggle" type="button">
+                                    <i class="material-icons">expand_more</i>
+                                </button>
+                            </div>
+                            
+                            <div class="section-content">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="avatar-profissao">
+                                            <i class="material-icons">work</i>
+                                            Profissão/Função
+                                        </label>
+                                        <input type="text" id="avatar-profissao" name="profissao" 
+                                            placeholder="Ex: Médica, Guerreiro, Estudante, Artista">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="avatar-personalidade">
+                                            <i class="material-icons">favorite</i>
+                                            Traços de Personalidade
+                                        </label>
+                                        <input type="text" id="avatar-personalidade" name="personalidade" 
+                                            placeholder="Ex: Corajosa, Inteligente, Carismática">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="avatar-historia">
+                                        <i class="material-icons">auto_stories</i>
+                                        História/Background
+                                    </label>
+                                    <textarea id="avatar-historia" name="historia_background" rows="4" 
+                                        placeholder="Conte a história do personagem, suas origens, motivações, objetivos..."></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="avatar-habilidades">
+                                        <i class="material-icons">stars</i>
+                                        Habilidades Especiais
+                                    </label>
+                                    <input type="text" id="avatar-habilidades" name="habilidades_especiais" 
+                                        placeholder="Ex: Magia, Artes Marciais, Hacking, Culinária">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Seção 4: Vestuário e Acessórios -->
+                        <div class="form-section" data-section="vestuario">
+                            <div class="section-header">
+                                <div class="section-icon">
+                                    <i class="material-icons">checkroom</i>
+                                </div>
+                                <div class="section-title">
+                                    <h3>Vestuário e Acessórios</h3>
+                                    <p>Roupas, acessórios e estilo</p>
+                                </div>
+                                <button class="section-toggle" type="button">
+                                    <i class="material-icons">expand_more</i>
+                                </button>
+                            </div>
+                            
+                            <div class="section-content">
+                                <div class="form-group">
+                                    <label for="avatar-vestuario-geral">
+                                        <i class="material-icons">dry_cleaning</i>
+                                        Estilo de Vestuário
+                                    </label>
+                                    <textarea id="avatar-vestuario-geral" name="vestuario" rows="3" 
+                                        placeholder="Descreva o estilo geral das roupas: formal, casual, gótico, futurista..."></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="avatar-acessorios">
+                                        <i class="material-icons">watch</i>
+                                        Acessórios
+                                    </label>
+                                    <input type="text" id="avatar-acessorios" name="acessorios" 
+                                        placeholder="Ex: Óculos, Relógio, Colar, Brincos, Chapéu">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="avatar-marcas">
+                                        <i class="material-icons">brush</i>
+                                        Tatuagens e Marcas
+                                    </label>
+                                    <input type="text" id="avatar-marcas" name="tatuagens_marcas" 
+                                        placeholder="Ex: Tatuagem tribal no braço, Cicatriz no rosto">
+                                </div>
+                                
+                                <!-- Construtor de Vestimentas -->
+                                <div class="form-subsection">
+                                    <h4><i class="material-icons">add_circle</i> Adicionar Peças de Roupa</h4>
+                                    <div id="vestimentas-container">
+                                        <!-- Será preenchido dinamicamente -->
+                                    </div>
+                                    <button type="button" class="btn-outline" id="add-vestimenta">
+                                        <i class="material-icons">add</i>
+                                        Adicionar Peça de Roupa
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Seção 5: Tags e Configurações -->
+                        <div class="form-section" data-section="tags">
+                            <div class="section-header">
+                                <div class="section-icon">
+                                    <i class="material-icons">label</i>
+                                </div>
+                                <div class="section-title">
+                                    <h3>Tags e Configurações</h3>
+                                    <p>Palavras-chave e opções de compartilhamento</p>
+                                </div>
+                                <button class="section-toggle" type="button">
+                                    <i class="material-icons">expand_more</i>
+                                </button>
+                            </div>
+                            
+                            <div class="section-content">
+                                <div class="form-group">
+                                    <label for="avatar-tags">
+                                        <i class="material-icons">local_offer</i>
+                                        Tags/Palavras-chave
+                                    </label>
+                                    <div class="tags-input-container">
+                                        <input type="text" id="avatar-tags-input" placeholder="Digite uma tag e pressione Enter">
+                                        <div id="avatar-tags-display" class="tags-display">
+                                            <!-- Tags serão adicionadas aqui -->
+                                        </div>
+                                    </div>
+                                    <small>Use tags para facilitar a busca posterior. Ex: "guerreiro", "fantasia", "medieval"</small>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="avatar-publico" name="publico">
+                                            <span class="checkmark"></span>
+                                            <span class="label-text">
+                                                <i class="material-icons">public</i>
+                                                Tornar Público
+                                            </span>
+                                        </label>
+                                        <small>Outros usuários poderão ver e usar este avatar</small>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="avatar-template" name="salvar_template">
+                                            <span class="checkmark"></span>
+                                            <span class="label-text">
+                                                <i class="material-icons">bookmark</i>
+                                                Salvar como Template
+                                            </span>
+                                        </label>
+                                        <small>Criar template reutilizável</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Preview do Avatar -->
+                    <div class="avatar-preview-panel">
+                        <div class="preview-header">
+                            <h3><i class="material-icons">visibility</i> Preview</h3>
+                            <div class="preview-actions">
+                                <button class="btn-icon" id="refresh-preview" title="Atualizar Preview">
+                                    <i class="material-icons">refresh</i>
+                                </button>
+                                <button class="btn-icon" id="fullscreen-preview" title="Tela Cheia">
+                                    <i class="material-icons">fullscreen</i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="preview-content">
+                            <div class="avatar-card">
+                                <div class="avatar-image-placeholder">
+                                    <i class="material-icons">person</i>
+                                </div>
+                                <div class="avatar-info">
+                                    <h4 id="preview-nome">Novo Avatar</h4>
+                                    <p id="preview-descricao">Descrição aparecerá aqui...</p>
+                                    <div class="avatar-stats">
+                                        <span id="preview-genero">Neutro</span>
+                                        <span id="preview-idade">Adulto</span>
+                                        <span id="preview-categoria">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="generated-prompt">
+                                <h4><i class="material-icons">auto_awesome</i> Prompt Gerado</h4>
+                                <div class="prompt-content" id="preview-prompt">
+                                    O prompt será gerado automaticamente conforme você preenche os campos...
+                                </div>
+                                <button class="btn-outline btn-small" id="copy-prompt">
+                                    <i class="material-icons">content_copy</i>
+                                    Copiar Prompt
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ABA GALERIA -->
+                <div class="avatar-tab-content" id="tab-galeria">
+                    <div class="galeria-header">
+                        <div class="search-filters">
+                            <div class="search-bar">
+                                <i class="material-icons">search</i>
+                                <input type="text" id="search-avatares" placeholder="Buscar avatares...">
+                            </div>
+                            <div class="filter-buttons">
+                                <select id="filter-categoria">
+                                    <option value="">Todas as categorias</option>
+                                </select>
+                                <select id="filter-genero">
+                                    <option value="">Todos os gêneros</option>
+                                    <option value="masculino">Masculino</option>
+                                    <option value="feminino">Feminino</option>
+                                    <option value="neutro">Neutro</option>
+                                    <option value="outro">Outro</option>
+                                </select>
+                                <button class="btn-outline" id="filter-meus">
+                                    <i class="material-icons">person</i>
+                                    Meus Avatares
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="avatares-grid" id="avatares-galeria">
+                        <!-- Cards de avatares serão carregados aqui -->
+                        <div class="loading-placeholder">
+                            <i class="material-icons spinning">hourglass_empty</i>
+                            <p>Carregando avatares...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ABA TEMPLATES -->
+                <div class="avatar-tab-content" id="tab-presets">
+                    <div class="presets-categories">
+                        <button class="preset-category active" data-category="">
+                            <i class="material-icons">all_inclusive</i>
+                            Todos
+                        </button>
+                        <button class="preset-category" data-category="Profissional">
+                            <i class="material-icons">work</i>
+                            Profissional
+                        </button>
+                        <button class="preset-category" data-category="Fantasia">
+                            <i class="material-icons">auto_fix_high</i>
+                            Fantasia
+                        </button>
+                        <button class="preset-category" data-category="Anime">
+                            <i class="material-icons">animation</i>
+                            Anime
+                        </button>
+                        <button class="preset-category" data-category="Histórico">
+                            <i class="material-icons">history</i>
+                            Histórico
+                        </button>
+                    </div>
+                    
+                    <div class="presets-grid" id="presets-container">
+                        <!-- Templates serão carregados aqui -->
+                    </div>
+                </div>
+                
+                <!-- ABA HISTÓRICO -->
+                <div class="avatar-tab-content" id="tab-historico">
+                    <div class="historico-header">
+                        <h3><i class="material-icons">history</i> Avatares Utilizados Recentemente</h3>
+                        <button class="btn-outline" id="limpar-historico">
+                            <i class="material-icons">clear_all</i>
+                            Limpar Histórico
+                        </button>
+                    </div>
+                    
+                    <div class="historico-lista" id="historico-container">
+                        <!-- Histórico será carregado aqui -->
+                    </div>
+                </div>
+            </div>
+        </div>

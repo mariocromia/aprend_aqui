@@ -263,6 +263,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     <input type="hidden" id="selected_environment" name="selected_environment">
                     <input type="hidden" id="selected_visual_style" name="selected_visual_style">
                     <input type="hidden" id="selected_lighting" name="selected_lighting">
+                    <input type="hidden" id="selected_technique" name="selected_technique">
+                    <input type="hidden" id="selected_special_elements" name="selected_special_elements">
+                    <input type="hidden" id="selected_quality" name="selected_quality">
                     <input type="hidden" id="selected_character" name="selected_character">
                     <input type="hidden" id="selected_camera" name="selected_camera">
                     <input type="hidden" id="selected_voice" name="selected_voice">
@@ -577,12 +580,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                     <div class="category-icon">
                                         <i class="material-icons">high_quality</i>
                                     </div>
-                                    <h3 class="category-title">Em desenvolvimento</h3>
+                                    <h3 class="category-title">Qualidade da Imagem</h3>
                                 </div>
                                 <div class="subcategories-grid">
-                                    <div class="subcategory-card">
-                                        <div class="subcategory-title">Qualidade será implementada em breve</div>
-                                        <div class="subcategory-desc">Aguarde atualizações</div>
+                                    <div class="subcategory-card" data-type="quality" data-value="ultra_hd">
+                                        <div class="subcategory-title">Ultra HD</div>
+                                        <div class="subcategory-desc">4K, 8K, máxima qualidade</div>
+                                    </div>
+                                    <div class="subcategory-card" data-type="quality" data-value="high_quality">
+                                        <div class="subcategory-title">Alta Qualidade</div>
+                                        <div class="subcategory-desc">HD, detalhes nítidos</div>
+                                    </div>
+                                    <div class="subcategory-card" data-type="quality" data-value="photorealistic">
+                                        <div class="subcategory-title">Fotorrealista</div>
+                                        <div class="subcategory-desc">Hiper-realismo</div>
+                                    </div>
+                                    <div class="subcategory-card" data-type="quality" data-value="artistic">
+                                        <div class="subcategory-title">Artístico</div>
+                                        <div class="subcategory-desc">Estilo mais estilizado</div>
+                                    </div>
+                                    <div class="subcategory-card" data-type="quality" data-value="cinematic">
+                                        <div class="subcategory-title">Cinematográfico</div>
+                                        <div class="subcategory-desc">Qualidade de filme</div>
+                                    </div>
+                                    <div class="subcategory-card" data-type="quality" data-value="professional">
+                                        <div class="subcategory-title">Profissional</div>
+                                        <div class="subcategory-desc">Qualidade de estúdio</div>
                                     </div>
                                 </div>
                             </div>
@@ -629,233 +652,681 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     </div>
 
 
-                    <!-- ABA 7: AVATAR/PERSONAGEM -->
+                    <!-- ABA 7: AVATAR/PERSONAGEM - DESIGN COMPACTO -->
                     <div class="tab-content" id="tab-avatar">
+                        <!-- Header Compacto -->
+                        <div class="avatar-header-compact">
+                            <div class="header-main">
+                                <div class="header-info">
+                                    <h2><i class="material-icons">auto_fix_high</i> Criador de Avatares</h2>
+                                    <div class="header-stats">
+                                        <span class="stat"><i class="material-icons">person</i> <span id="avatars-count">0</span> salvos</span>
+                                    </div>
+                                </div>
+                                <div class="progress-compact">
+                                    <div class="progress-bar-mini">
+                                        <div class="progress-fill-mini" id="creation-progress"></div>
+                                    </div>
+                                    <span class="progress-text">Etapa <span id="current-step-text">1</span> de 4</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Layout Compacto em Duas Colunas -->
+                        <div class="avatar-compact-container">
+                            <!-- Coluna Principal: Formulário -->
+                            <div class="main-form-panel">
+                                
+                                <!-- STEP 1: Informações Básicas -->
+                                <div class="creation-step active" id="step-1">
+                                    <div class="compact-card">
+                                        <div class="compact-header">
+                                            <h3><i class="material-icons">person_add</i> Informações Básicas</h3>
+                                        </div>
+                                        
+                                        <div class="compact-content">
+                                            <div class="form-row">
+                                                <div class="input-compact">
+                                                    <label for="avatar_name">Nome do Avatar</label>
+                                                    <input type="text" id="avatar_name" name="avatar_name" placeholder="Digite o nome do avatar">
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="form-row">
+                                                <label class="section-label">Tipo de Ser</label>
+                                                <div class="type-grid-compact">
+                                                    <div class="type-option-compact" data-type="humano">
+                                                        <i class="material-icons">person</i>
+                                                        <span>Humano</span>
+                                                    </div>
+                                                    <div class="type-option-compact" data-type="animal">
+                                                        <i class="material-icons">pets</i>
+                                                        <span>Animal</span>
+                                                    </div>
+                                                    <div class="type-option-compact" data-type="criatura_fantastica">
+                                                        <i class="material-icons">auto_fix_high</i>
+                                                        <span>Fantasia</span>
+                                                    </div>
+                                                    <div class="type-option-compact" data-type="alien">
+                                                        <i class="material-icons">emoji_nature</i>
+                                                        <span>Alien</span>
+                                                    </div>
+                                                    <div class="type-option-compact" data-type="robo_android">
+                                                        <i class="material-icons">smart_toy</i>
+                                                        <span>Robô</span>
+                                                    </div>
+                                                    <div class="type-option-compact" data-type="elemental">
+                                                        <i class="material-icons">whatshot</i>
+                                                        <span>Elemental</span>
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" id="avatar_type" name="avatar_type">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="compact-actions">
+                                            <button type="button" class="btn-compact btn-primary" onclick="nextCreationStep()">
+                                                Continuar <i class="material-icons">arrow_forward</i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- STEP 2: Características Específicas -->
+                                <div class="creation-step" id="step-2">
+                                    <div class="compact-card">
+                                        <div class="compact-header">
+                                            <h3><i class="material-icons">palette</i> Características</h3>
+                                        </div>
+                                        
+                                        <div class="compact-content">
+                                            <div id="dynamic-characteristics">
+                                                <div class="placeholder-content">
+                                                    <i class="material-icons">touch_app</i>
+                                                    <p>Selecione um tipo de ser na etapa anterior</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="compact-actions">
+                                            <button type="button" class="btn-compact btn-secondary" onclick="prevCreationStep()">
+                                                <i class="material-icons">arrow_back</i> Voltar
+                                            </button>
+                                            <button type="button" class="btn-compact btn-primary" onclick="nextCreationStep()">
+                                                Continuar <i class="material-icons">arrow_forward</i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- STEP 3: Aparência e Estilo -->
+                                <div class="creation-step" id="step-3">
+                                    <div class="compact-card" id="appearance-section">
+                                        <div class="compact-header">
+                                            <h3><i class="material-icons">style</i> Aparência e Estilo</h3>
+                                        </div>
+                                        
+                                        <div class="compact-content">
+                                            <div class="form-grid-compact">
+                                                <div class="input-compact">
+                                                    <label for="clothing_style">Estilo de Vestimenta</label>
+                                                    <select id="clothing_style" name="clothing_style">
+                                                        <option value="">Selecione um estilo</option>
+                                                        <option value="casual">Casual</option>
+                                                        <option value="formal">Formal</option>
+                                                        <option value="esportivo">Esportivo</option>
+                                                        <option value="gotico">Gótico</option>
+                                                        <option value="cyberpunk">Cyberpunk</option>
+                                                        <option value="medieval">Medieval</option>
+                                                        <option value="futurista">Futurista</option>
+                                                        <option value="bohemio">Boêmio</option>
+                                                        <option value="militar">Militar</option>
+                                                        <option value="vintage">Vintage</option>
+                                                    </select>
+                                                </div>
+                                                
+                                                <div class="input-compact">
+                                                    <label for="accessories">Acessórios</label>
+                                                    <textarea id="accessories" name="accessories" rows="2" placeholder="Ex: Óculos, joias, armas"></textarea>
+                                                </div>
+                                                
+                                                <div class="input-compact">
+                                                    <label for="distinctive_marks">Marcas Distintivas</label>
+                                                    <textarea id="distinctive_marks" name="distinctive_marks" rows="2" placeholder="Ex: Cicatrizes, tatuagens"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="compact-actions">
+                                            <button type="button" class="btn-compact btn-secondary" onclick="prevCreationStep()">
+                                                <i class="material-icons">arrow_back</i> Voltar
+                                            </button>
+                                            <button type="button" class="btn-compact btn-primary" onclick="nextCreationStep()">
+                                                Finalizar <i class="material-icons">check</i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- STEP 4: Finalização -->
+                                <div class="creation-step" id="step-4">
+                                    <div class="compact-card">
+                                        <div class="compact-header">
+                                            <h3><i class="material-icons">auto_awesome</i> Avatar Criado!</h3>
+                                        </div>
+                                        
+                                        <div class="compact-content">
+                                            <div class="prompt-result-compact">
+                                                <div class="prompt-header-compact">
+                                                    <h4>Prompt Gerado</h4>
+                                                    <div class="prompt-actions-compact">
+                                                        <button type="button" class="btn-icon-mini" onclick="generateAvatarPrompt()" title="Regenerar">
+                                                            <i class="material-icons">refresh</i>
+                                                        </button>
+                                                        <button type="button" class="btn-icon-mini primary" onclick="copyAvatarPrompt()" title="Copiar">
+                                                            <i class="material-icons">content_copy</i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="prompt-display-compact" id="avatar-prompt-display">
+                                                    <div class="prompt-placeholder">
+                                                        <i class="material-icons">auto_awesome</i>
+                                                        <p>O prompt será gerado automaticamente</p>
+                                                    </div>
+                                                </div>
+                                                <div class="prompt-stats-compact" id="prompt-stats">
+                                                    <span class="stat-mini"><i class="material-icons">text_fields</i> <span id="character-count">0</span></span>
+                                                    <span class="stat-mini"><i class="material-icons">article</i> <span id="word-count">0</span></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="compact-actions">
+                                            <button type="button" class="btn-compact btn-secondary" onclick="prevCreationStep()">
+                                                <i class="material-icons">arrow_back</i> Voltar
+                                            </button>
+                                            <button type="button" class="btn-compact btn-success" onclick="saveAvatar()">
+                                                <i class="material-icons">save</i> Salvar
+                                            </button>
+                                            <button type="button" class="btn-compact btn-outline" onclick="resetCreation()">
+                                                <i class="material-icons">refresh</i> Novo
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sidebar Compacta -->
+                            <div class="sidebar-compact">
+                                <!-- Preview Compacto -->
+                                <div class="preview-compact">
+                                    <div class="preview-header-compact">
+                                        <h4><i class="material-icons">visibility</i> Preview</h4>
+                                    </div>
+                                    <div class="preview-info">
+                                        <div class="avatar-icon-display">
+                                            <i class="material-icons" id="avatar-icon-preview">person_outline</i>
+                                        </div>
+                                        <div class="avatar-info-compact">
+                                            <div class="info-item">
+                                                <strong>Nome:</strong> <span id="preview-name">-</span>
+                                            </div>
+                                            <div class="info-item">
+                                                <strong>Tipo:</strong> <span id="preview-type">-</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Avatares Salvos Compacto -->
+                                <div class="saved-compact">
+                                    <div class="saved-header-compact">
+                                        <h4><i class="material-icons">folder</i> Salvos</h4>
+                                        <span class="count-badge" id="saved-count">0</span>
+                                    </div>
+                                    <div class="saved-list-compact" id="saved-avatars-list">
+                                        <div class="avatar-item-compact placeholder">
+                                            <i class="material-icons">add</i>
+                                            <span>Nenhum avatar</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+
+                    <!-- ABA 8: CÂMERA -->
+                    <div class="tab-content" id="tab-camera">
                         <div class="tab-header">
-                            <h2><i class="material-icons">groups</i> Avatar e Personagem</h2>
-                            <p>Defina as características físicas e estilo do personagem</p>
+                            <h2><i class="material-icons">photo_camera</i> Configurações de Câmera</h2>
+                            <p>Configure ângulos, planos e perspectivas da filmagem</p>
                         </div>
 
                         <div class="categories-grid">
-                            <!-- GÊNERO -->
+                            <!-- ÂNGULOS -->
                             <div class="category-section">
                                 <div class="category-header">
                                     <div class="category-icon">
-                                        <i class="material-icons">people</i>
+                                        <i class="material-icons">camera_alt</i>
                                     </div>
-                                    <h3 class="category-title">Gênero</h3>
+                                    <h3 class="category-title">Ângulos</h3>
                                 </div>
                                 <div class="subcategories-grid">
-                                    <div class="subcategory-card" data-type="character" data-value="mulher_jovem">
-                                        <div class="subcategory-title">Mulher Jovem</div>
-                                        <div class="subcategory-desc">18-30 anos</div>
+                                    <div class="subcategory-card" data-type="camera" data-value="eye_level">
+                                        <div class="subcategory-title">Eye Level</div>
+                                        <div class="subcategory-desc">Altura dos olhos</div>
                                     </div>
-                                    <div class="subcategory-card" data-type="character" data-value="homem_jovem">
-                                        <div class="subcategory-title">Homem Jovem</div>
-                                        <div class="subcategory-desc">18-30 anos</div>
+                                    <div class="subcategory-card" data-type="camera" data-value="low_angle">
+                                        <div class="subcategory-title">Low Angle</div>
+                                        <div class="subcategory-desc">Contra-plongé</div>
                                     </div>
-                                    <div class="subcategory-card" data-type="character" data-value="mulher_madura">
-                                        <div class="subcategory-title">Mulher Madura</div>
-                                        <div class="subcategory-desc">30-50 anos</div>
+                                    <div class="subcategory-card" data-type="camera" data-value="high_angle">
+                                        <div class="subcategory-title">High Angle</div>
+                                        <div class="subcategory-desc">Plongé</div>
                                     </div>
-                                    <div class="subcategory-card" data-type="character" data-value="homem_maduro">
-                                        <div class="subcategory-title">Homem Maduro</div>
-                                        <div class="subcategory-desc">30-50 anos</div>
+                                    <div class="subcategory-card" data-type="camera" data-value="birds_eye">
+                                        <div class="subcategory-title">Bird's Eye</div>
+                                        <div class="subcategory-desc">Vista aérea</div>
                                     </div>
-                                    <div class="subcategory-card" data-type="character" data-value="crianca">
-                                        <div class="subcategory-title">Criança</div>
-                                        <div class="subcategory-desc">5-12 anos</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="idoso">
-                                        <div class="subcategory-title">Idoso</div>
-                                        <div class="subcategory-desc">60+ anos</div>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="age_range">Faixa Etária</label>
+                                            <select id="age_range" name="age_range">
+                                                <option value="">Selecione</option>
+                                                <option value="crianca">Criança (5-12 anos)</option>
+                                                <option value="adolescente">Adolescente (13-17 anos)</option>
+                                                <option value="jovem_adulto">Jovem Adulto (18-30 anos)</option>
+                                                <option value="adulto">Adulto (31-50 anos)</option>
+                                                <option value="meia_idade">Meia-idade (51-65 anos)</option>
+                                                <option value="idoso">Idoso (65+ anos)</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="ethnicity">Etnia</label>
+                                            <select id="ethnicity" name="ethnicity">
+                                                <option value="">Selecione</option>
+                                                <option value="brasileiro">Brasileiro</option>
+                                                <option value="caucasiano">Caucasiano</option>
+                                                <option value="afrodescendente">Afrodescendente</option>
+                                                <option value="asiatico">Asiático</option>
+                                                <option value="latino">Latino</option>
+                                                <option value="indigena">Indígena</option>
+                                                <option value="middle_eastern">Oriente Médio</option>
+                                                <option value="misto">Miscigenado</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="body_type">Tipo Físico</label>
+                                            <select id="body_type" name="body_type">
+                                                <option value="">Selecione</option>
+                                                <option value="magro">Magro/Esbelto</option>
+                                                <option value="atletico">Atlético</option>
+                                                <option value="musculoso">Musculoso</option>
+                                                <option value="curvilineo">Curvilíneo</option>
+                                                <option value="robusto">Robusto</option>
+                                                <option value="obeso">Acima do peso</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="height">Altura</label>
+                                            <select id="height" name="height">
+                                                <option value="">Selecione</option>
+                                                <option value="muito_baixo">Muito baixo (< 1.50m)</option>
+                                                <option value="baixo">Baixo (1.50-1.65m)</option>
+                                                <option value="medio">Médio (1.65-1.80m)</option>
+                                                <option value="alto">Alto (1.80-1.95m)</option>
+                                                <option value="muito_alto">Muito alto (> 1.95m)</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="hair_color">Cor do Cabelo</label>
+                                            <select id="hair_color" name="hair_color">
+                                                <option value="">Selecione</option>
+                                                <option value="preto">Preto</option>
+                                                <option value="castanho_escuro">Castanho escuro</option>
+                                                <option value="castanho_claro">Castanho claro</option>
+                                                <option value="loiro_escuro">Loiro escuro</option>
+                                                <option value="loiro_claro">Loiro claro</option>
+                                                <option value="ruivo">Ruivo</option>
+                                                <option value="grisalho">Grisalho</option>
+                                                <option value="branco">Branco</option>
+                                                <option value="colorido">Colorido (artificial)</option>
+                                                <option value="careca">Careca</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="eye_color">Cor dos Olhos</label>
+                                            <select id="eye_color" name="eye_color">
+                                                <option value="">Selecione</option>
+                                                <option value="castanho">Castanho</option>
+                                                <option value="azul">Azul</option>
+                                                <option value="verde">Verde</option>
+                                                <option value="mel">Mel</option>
+                                                <option value="cinza">Cinza</option>
+                                                <option value="preto">Preto</option>
+                                                <option value="heterocromia">Heterocromia</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="profession">Profissão/Ocupação</label>
+                                            <input type="text" id="profession" name="profession" placeholder="Ex: Médico, Artista, Estudante">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- ETNIAS -->
-                            <div class="category-section">
-                                <div class="category-header">
-                                    <div class="category-icon">
-                                        <i class="material-icons">public</i>
+                            <!-- CARACTERÍSTICAS DE ANIMAIS -->
+                            <div id="animal-fields" class="species-fields" style="display: none;">
+                                <div class="form-section">
+                                    <div class="section-header">
+                                        <div class="section-title">
+                                            <i class="material-icons">pets</i>
+                                            <h3>Características do Animal</h3>
+                                        </div>
                                     </div>
-                                    <h3 class="category-title">Etnias</h3>
-                                </div>
-                                <div class="subcategories-grid">
-                                    <div class="subcategory-card" data-type="character" data-value="brasileiro_moreno">
-                                        <div class="subcategory-title">Brasileiro</div>
-                                        <div class="subcategory-desc">Pele morena</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="caucasiano">
-                                        <div class="subcategory-title">Caucasiano</div>
-                                        <div class="subcategory-desc">Pele clara</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="afrodescendente">
-                                        <div class="subcategory-title">Afrodescendente</div>
-                                        <div class="subcategory-desc">Pele escura</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="asiatico">
-                                        <div class="subcategory-title">Asiático</div>
-                                        <div class="subcategory-desc">Traços orientais</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="latino">
-                                        <div class="subcategory-title">Latino</div>
-                                        <div class="subcategory-desc">América Latina</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="indigena">
-                                        <div class="subcategory-title">Indígena</div>
-                                        <div class="subcategory-desc">Nativo americano</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- TIPOS FÍSICOS -->
-                            <div class="category-section">
-                                <div class="category-header">
-                                    <div class="category-icon">
-                                        <i class="material-icons">fitness_center</i>
-                                    </div>
-                                    <h3 class="category-title">Físico</h3>
-                                </div>
-                                <div class="subcategories-grid">
-                                    <div class="subcategory-card" data-type="character" data-value="atlético_definido">
-                                        <div class="subcategory-title">Atlético</div>
-                                        <div class="subcategory-desc">Corpo definido</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="magro_esbelto">
-                                        <div class="subcategory-title">Esbelto</div>
-                                        <div class="subcategory-desc">Corpo magro</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="curvilíneo">
-                                        <div class="subcategory-title">Curvilíneo</div>
-                                        <div class="subcategory-desc">Formas arredondadas</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="forte_robusto">
-                                        <div class="subcategory-title">Robusto</div>
-                                        <div class="subcategory-desc">Porte forte</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="musculoso_bodybuilder">
-                                        <div class="subcategory-title">Musculoso</div>
-                                        <div class="subcategory-desc">Muito definido</div>
+                                    
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="animal_species">Espécie</label>
+                                            <select id="animal_species" name="animal_species">
+                                                <option value="">Selecione</option>
+                                                <option value="gato">Gato</option>
+                                                <option value="cachorro">Cachorro</option>
+                                                <option value="lobo">Lobo</option>
+                                                <option value="leao">Leão</option>
+                                                <option value="tigre">Tigre</option>
+                                                <option value="urso">Urso</option>
+                                                <option value="aguia">Águia</option>
+                                                <option value="coruja">Coruja</option>
+                                                <option value="serpente">Serpente</option>
+                                                <option value="dragao_komodo">Dragão de Komodo</option>
+                                                <option value="tubarao">Tubarão</option>
+                                                <option value="golfinho">Golfinho</option>
+                                                <option value="outro">Outro</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="animal_size">Tamanho</label>
+                                            <select id="animal_size" name="animal_size">
+                                                <option value="">Selecione</option>
+                                                <option value="miniatura">Miniatura</option>
+                                                <option value="pequeno">Pequeno</option>
+                                                <option value="medio">Médio</option>
+                                                <option value="grande">Grande</option>
+                                                <option value="gigante">Gigante</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="fur_pattern">Padrão da Pelagem</label>
+                                            <input type="text" id="fur_pattern" name="fur_pattern" placeholder="Ex: Listrado, Manchado, Sólido">
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="primary_color">Cor Primária</label>
+                                            <input type="text" id="primary_color" name="primary_color" placeholder="Ex: Marrom, Preto, Branco">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- PROFISSÕES -->
-                            <div class="category-section">
-                                <div class="category-header">
-                                    <div class="category-icon">
-                                        <i class="material-icons">work</i>
-                                    </div>
-                                    <h3 class="category-title">Profissões</h3>
-                                </div>
-                                <div class="subcategories-grid">
-                                    <div class="subcategory-card" data-type="character" data-value="executivo_negocios">
-                                        <div class="subcategory-title">Executivo</div>
-                                        <div class="subcategory-desc">Terno e gravata</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="medico_jaleco">
-                                        <div class="subcategory-title">Médico</div>
-                                        <div class="subcategory-desc">Jaleco branco</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="artista_boemia">
-                                        <div class="subcategory-title">Artista</div>
-                                        <div class="subcategory-desc">Estilo boêmio</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="chef_cozinha">
-                                        <div class="subcategory-title">Chef</div>
-                                        <div class="subcategory-desc">Uniforme culinário</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="atleta_esportivo">
-                                        <div class="subcategory-title">Atleta</div>
-                                        <div class="subcategory-desc">Roupa esportiva</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="estudante_casual">
-                                        <div class="subcategory-title">Estudante</div>
-                                        <div class="subcategory-desc">Roupa casual</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- FANTASIA -->
-                            <div class="category-section">
-                                <div class="category-header">
-                                    <div class="category-icon">
+                            <!-- CARACTERÍSTICAS FANTÁSTICAS -->
+                            <div id="fantasy-fields" class="species-fields" style="display: none;">
+                                <div class="form-section">
+                                    <div class="section-header">
                                         <i class="material-icons">auto_fix_high</i>
+                                        <h3>Características Fantásticas</h3>
                                     </div>
-                                    <h3 class="category-title">Fantasia</h3>
+                                    
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="fantasy_type">Tipo de Criatura</label>
+                                            <select id="fantasy_type" name="fantasy_type">
+                                                <option value="">Selecione</option>
+                                                <option value="elfo">Elfo</option>
+                                                <option value="anao">Anão</option>
+                                                <option value="orc">Orc</option>
+                                                <option value="dragao">Dragão</option>
+                                                <option value="vampiro">Vampiro</option>
+                                                <option value="lobisomem">Lobisomem</option>
+                                                <option value="anjo">Anjo</option>
+                                                <option value="demonio">Demônio</option>
+                                                <option value="fada">Fada</option>
+                                                <option value="centauro">Centauro</option>
+                                                <option value="sereia">Sereia</option>
+                                                <option value="minotauro">Minotauro</option>
+                                                <option value="fenix">Fênix</option>
+                                                <option value="unicornio">Unicórnio</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="magical_abilities">Habilidades Mágicas</label>
+                                            <textarea id="magical_abilities" name="magical_abilities" rows="3" placeholder="Descreva as habilidades mágicas especiais"></textarea>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="special_features">Características Especiais</label>
+                                            <textarea id="special_features" name="special_features" rows="3" placeholder="Ex: Asas, chifres, escamas, aura luminosa"></textarea>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="subcategories-grid">
-                                    <div class="subcategory-card" data-type="character" data-value="elfo_magico">
-                                        <div class="subcategory-title">Elfo Mágico</div>
-                                        <div class="subcategory-desc">Orelhas pontudas</div>
+                            </div>
+
+                            <!-- CARACTERÍSTICAS DE ALIEN -->
+                            <div id="alien-fields" class="species-fields" style="display: none;">
+                                <div class="form-section">
+                                    <div class="section-header">
+                                        <i class="material-icons">emoji_nature</i>
+                                        <h3>Características Alienígenas</h3>
                                     </div>
-                                    <div class="subcategory-card" data-type="character" data-value="vampiro_gotico">
-                                        <div class="subcategory-title">Vampiro</div>
-                                        <div class="subcategory-desc">Estilo gótico</div>
+                                    
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="alien_origin">Planeta de Origem</label>
+                                            <input type="text" id="alien_origin" name="alien_origin" placeholder="Ex: Andrômeda, Zeta Reticuli">
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="skin_texture">Textura da Pele</label>
+                                            <select id="skin_texture" name="skin_texture">
+                                                <option value="">Selecione</option>
+                                                <option value="lisa">Lisa</option>
+                                                <option value="escamosa">Escamosa</option>
+                                                <option value="rugosa">Rugosa</option>
+                                                <option value="metalica">Metálica</option>
+                                                <option value="translucida">Translúcida</option>
+                                                <option value="cristalina">Cristalina</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="number_of_eyes">Número de Olhos</label>
+                                            <input type="number" id="number_of_eyes" name="number_of_eyes" min="0" max="10" placeholder="Ex: 2, 3, 4">
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="communication_method">Método de Comunicação</label>
+                                            <select id="communication_method" name="communication_method">
+                                                <option value="">Selecione</option>
+                                                <option value="verbal">Verbal</option>
+                                                <option value="telepatico">Telepático</option>
+                                                <option value="gestual">Gestual</option>
+                                                <option value="luminoso">Sinais Luminosos</option>
+                                                <option value="quimico">Químico (feromônios)</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                    <div class="subcategory-card" data-type="character" data-value="anjo_celestial">
-                                        <div class="subcategory-title">Anjo</div>
-                                        <div class="subcategory-desc">Asas luminosas</div>
+                                </div>
+                            </div>
+
+                            <!-- CARACTERÍSTICAS DE ROBÔ/ANDROID -->
+                            <div id="robot-fields" class="species-fields" style="display: none;">
+                                <div class="form-section">
+                                    <div class="section-header">
+                                        <i class="material-icons">smart_toy</i>
+                                        <h3>Características Robóticas</h3>
                                     </div>
-                                    <div class="subcategory-card" data-type="character" data-value="demonio_sombrio">
-                                        <div class="subcategory-title">Demônio</div>
-                                        <div class="subcategory-desc">Chifres e poder</div>
+                                    
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="robot_type">Tipo de Robô</label>
+                                            <select id="robot_type" name="robot_type">
+                                                <option value="">Selecione</option>
+                                                <option value="android_humanoid">Android Humanoide</option>
+                                                <option value="cyborg">Cyborg</option>
+                                                <option value="robo_industrial">Robô Industrial</option>
+                                                <option value="ia_holografica">IA Holográfica</option>
+                                                <option value="mecha">Mecha</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="power_source">Fonte de Energia</label>
+                                            <select id="power_source" name="power_source">
+                                                <option value="">Selecione</option>
+                                                <option value="bateria">Bateria</option>
+                                                <option value="energia_solar">Energia Solar</option>
+                                                <option value="nuclear">Nuclear</option>
+                                                <option value="plasma">Plasma</option>
+                                                <option value="cristal_energetico">Cristal Energético</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="ai_level">Nível de IA</label>
+                                            <select id="ai_level" name="ai_level">
+                                                <option value="">Selecione</option>
+                                                <option value="basico">Básico</option>
+                                                <option value="avancado">Avançado</option>
+                                                <option value="superinteligente">Superinteligente</option>
+                                                <option value="consciente">Consciente</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                    <div class="subcategory-card" data-type="character" data-value="fada_natureza">
-                                        <div class="subcategory-title">Fada</div>
-                                        <div class="subcategory-desc">Asas delicadas</div>
+                                </div>
+                            </div>
+
+                            <!-- CAMPO DE PROMPT GERADO -->
+                            <div class="form-section prompt-section">
+                                <div class="section-header">
+                                    <i class="material-icons">auto_awesome</i>
+                                    <h3>Prompt Gerado</h3>
+                                    <div class="prompt-actions">
+                                        <button type="button" class="btn btn-secondary btn-icon" onclick="generateAvatarPrompt()" title="Regenerar Prompt">
+                                            <i class="material-icons">refresh</i>
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-icon" onclick="copyAvatarPrompt()" title="Copiar Prompt">
+                                            <i class="material-icons">content_copy</i>
+                                        </button>
                                     </div>
-                                    <div class="subcategory-card" data-type="character" data-value="guerreiro_medieval">
-                                        <div class="subcategory-title">Guerreiro</div>
-                                        <div class="subcategory-desc">Armadura medieval</div>
+                                </div>
+                                
+                                <div class="prompt-container">
+                                    <div class="prompt-display" id="avatar-prompt-display">
+                                        <div class="prompt-placeholder">
+                                            <i class="material-icons">auto_awesome</i>
+                                            <p>Preencha os campos acima para gerar automaticamente o prompt do avatar</p>
+                                        </div>
+                                    </div>
+                                    <div class="prompt-stats" id="prompt-stats">
+                                        <span class="stat-item">
+                                            <i class="material-icons">text_fields</i>
+                                            <span id="character-count">0</span> caracteres
+                                        </span>
+                                        <span class="stat-item">
+                                            <i class="material-icons">article</i>
+                                            <span id="word-count">0</span> palavras
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SEÇÃO DE APARÊNCIA E ESTILO -->
+                            <div class="form-section" id="appearance-section">
+                                <div class="section-header">
+                                    <div class="section-title">
+                                        <i class="material-icons">style</i>
+                                        <h3>Aparência e Estilo</h3>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="clothing_style">Estilo de Vestimenta</label>
+                                        <select id="clothing_style" name="clothing_style">
+                                            <option value="">Selecione</option>
+                                            <option value="casual">Casual</option>
+                                            <option value="formal">Formal</option>
+                                            <option value="esportivo">Esportivo</option>
+                                            <option value="gotico">Gótico</option>
+                                            <option value="cyberpunk">Cyberpunk</option>
+                                            <option value="medieval">Medieval</option>
+                                            <option value="futurista">Futurista</option>
+                                            <option value="bohemio">Boêmio</option>
+                                            <option value="militar">Militar</option>
+                                            <option value="vintage">Vintage</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="accessories">Acessórios Especiais</label>
+                                        <textarea id="accessories" name="accessories" rows="2" placeholder="Ex: Óculos, joias, armas, equipamentos"></textarea>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="distinctive_marks">Marcas Distintivas</label>
+                                        <textarea id="distinctive_marks" name="distinctive_marks" rows="2" placeholder="Ex: Cicatrizes, tatuagens, marcas de nascença"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- BOTÕES DE AÇÃO -->
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-primary" onclick="saveAvatar()">
+                                    <i class="material-icons">save</i>
+                                    Salvar Avatar
+                                </button>
+                                <button type="button" class="btn btn-secondary" onclick="previewAvatar()">
+                                    <i class="material-icons">visibility</i>
+                                    Visualizar
+                                </button>
+                                <button type="button" class="btn btn-secondary" onclick="clearAvatarForm()">
+                                    <i class="material-icons">clear</i>
+                                    Limpar Formulário
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- LISTA DE AVATARES SALVOS -->
+                        <div class="saved-avatars-section">
+                            <div class="section-header">
+                                <i class="material-icons">folder</i>
+                                <h3>Avatares Salvos</h3>
+                            </div>
+                            <div id="saved-avatars-list" class="avatars-grid">
+                                <!-- Avatares salvos serão carregados aqui via JavaScript -->
+                                <div class="avatar-card placeholder">
+                                    <div class="avatar-preview">
+                                        <i class="material-icons">add</i>
+                                    </div>
+                                    <div class="avatar-info">
+                                        <div class="avatar-name">Criar Novo Avatar</div>
+                                        <div class="avatar-type">Clique para começar</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                                                 <!-- Container de 3 colunas na base -->
-                         <div class="bottom-controls-container">
-                             <!-- Coluna 1: Campo de descrição personalizada -->
-                             <div class="custom-description">
-                                 <label>
-                                     <i class="material-icons">edit</i>
-                                     Descrição Personalizada do Personagem
-                                 </label>
-                                 <textarea 
-                                     name="custom_character" 
-                                     placeholder="Descreva um personagem específico que não está nas opções abaixo..."
-                                     rows="3"></textarea>
-                             </div>
-
-                             <!-- Coluna 2: Controles de navegação -->
-                             <div class="tab-navigation">
-                                 <button type="button" class="btn btn-secondary" onclick="goToFirstTab()" title="Início">
-                                     <i class="material-icons">home</i>
-                                 </button>
-                                 <button type="button" class="btn btn-secondary" onclick="prevTab()" title="Anterior">
-                                     <i class="material-icons">arrow_back</i>
-                                 </button>
-                                 <button type="button" class="btn btn-primary" onclick="nextTab()" title="Próxima">
-                                     <i class="material-icons">arrow_forward</i>
-                                 </button>
-                                 <button type="button" class="btn btn-secondary" onclick="goToLastTab()" title="Fim">
-                                     <i class="material-icons">flag</i>
-                                 </button>
-                             </div>
-
-
-                            <!-- Coluna 3: Espaço para propaganda -->
-                            <div class="advertisement-container">
-                                <div class="advertisement-content">
-                                    <i class="material-icons" style="font-size: 2rem; color: var(--text-muted);">campaign</i>
-                                    <div class="advertisement-placeholder">
-                                        Espaço para propaganda<br>
-                                        Anúncios e promoções
-                                    </div>
-                                </div>
-                            </div>
-
                         </div>
 
                     </div>

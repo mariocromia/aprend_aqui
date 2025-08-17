@@ -51,22 +51,25 @@ class ModernPromptGenerator {
             });
         });
 
-        // Subcategory cards
-        document.querySelectorAll('.subcategory-card').forEach(card => {
-            card.addEventListener('click', (e) => {
-                const type = e.currentTarget.dataset.type;
-                const value = e.currentTarget.dataset.value;
-                this.selectOption(type, value, e.currentTarget);
-            });
+        // Use event delegation for subcategory cards to handle dynamically loaded content
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.subcategory-card')) {
+                const card = e.target.closest('.subcategory-card');
+                const type = card.dataset.type;
+                const value = card.dataset.value;
+                if (type && value) {
+                    this.selectOption(type, value, card);
+                }
+            }
         });
 
-        // Custom description textareas
-        document.querySelectorAll('[name^="custom_"]').forEach(textarea => {
-            textarea.addEventListener('input', (e) => {
+        // Custom description textareas - use event delegation
+        document.addEventListener('input', (e) => {
+            if (e.target.name && e.target.name.startsWith('custom_')) {
                 const type = e.target.name.replace('custom_', '');
                 this.customDescriptions[type] = e.target.value;
                 this.updatePromptPreview();
-            });
+            }
         });
 
         // Original prompt textarea
@@ -288,37 +291,13 @@ class ModernPromptGenerator {
 
     initializeTabContent(tabName) {
         // Initialize any tab-specific JavaScript functionality
-        const tabContent = document.querySelector(`[data-tab-content="${tabName}"]`);
-        if (!tabContent) return;
-
-        // Re-bind events for the newly loaded content
-        const cards = tabContent.querySelectorAll('.subcategory-card');
-        cards.forEach(card => {
-            if (!card.hasAttribute('data-events-bound')) {
-                card.addEventListener('click', (e) => {
-                    const type = e.currentTarget.dataset.type;
-                    const value = e.currentTarget.dataset.value;
-                    this.selectOption(type, value, e.currentTarget);
-                });
-                card.setAttribute('data-events-bound', 'true');
-            }
-        });
-
-        // Re-bind custom description textareas
-        const textareas = tabContent.querySelectorAll('[name^="custom_"]');
-        textareas.forEach(textarea => {
-            if (!textarea.hasAttribute('data-events-bound')) {
-                textarea.addEventListener('input', (e) => {
-                    const type = e.target.name.replace('custom_', '');
-                    this.customDescriptions[type] = e.target.value;
-                    this.updatePromptPreview();
-                });
-                textarea.setAttribute('data-events-bound', 'true');
-            }
-        });
+        // With event delegation, no need to rebind events manually
+        console.log(`Tab content initialized for: ${tabName}`);
     }
 
     selectOption(type, value, element) {
+        console.log(`Card selecionado - Tipo: ${type}, Valor: ${value}`);
+        
         // Limpa seleções apenas na aba atual
         const tabContainer = element.closest('.tab-content') || element.closest('.category-section');
         if (tabContainer) {
@@ -339,6 +318,9 @@ class ModernPromptGenerator {
         const input = document.getElementById(`selected_${type}`);
         if (input) {
             input.value = value;
+            console.log(`Input atualizado: selected_${type} = ${value}`);
+        } else {
+            console.warn(`Input não encontrado: selected_${type}`);
         }
 
         // Atualiza o preview do prompt
@@ -346,7 +328,7 @@ class ModernPromptGenerator {
 
         // Navega para a próxima aba após curto delay
         setTimeout(() => {
-            this.autoNavigateToNextTab();
+            this.autoNavigateToNextTab(type);
         }, 500);
     }
 
@@ -398,6 +380,38 @@ class ModernPromptGenerator {
             enhancements.push(`Voz personalizada: ${this.customDescriptions.voice}`);
         }
 
+        if (this.selections.visual_style) {
+            enhancements.push(`Estilo Visual: ${this.selections.visual_style.replace(/_/g, ' ')}`);
+        }
+        
+        if (this.customDescriptions.visual_style) {
+            enhancements.push(`Estilo Visual personalizado: ${this.customDescriptions.visual_style}`);
+        }
+
+        if (this.selections.technique) {
+            enhancements.push(`Técnica: ${this.selections.technique.replace(/_/g, ' ')}`);
+        }
+        
+        if (this.customDescriptions.technique) {
+            enhancements.push(`Técnica personalizada: ${this.customDescriptions.technique}`);
+        }
+
+        if (this.selections.special_elements) {
+            enhancements.push(`Elementos Especiais: ${this.selections.special_elements.replace(/_/g, ' ')}`);
+        }
+        
+        if (this.customDescriptions.special_elements) {
+            enhancements.push(`Elementos Especiais personalizados: ${this.customDescriptions.special_elements}`);
+        }
+
+        if (this.selections.quality) {
+            enhancements.push(`Qualidade: ${this.selections.quality.replace(/_/g, ' ')}`);
+        }
+        
+        if (this.customDescriptions.quality) {
+            enhancements.push(`Qualidade personalizada: ${this.customDescriptions.quality}`);
+        }
+
         if (this.selections.action) {
             enhancements.push(`Ação: ${this.selections.action.replace(/_/g, ' ')}`);
         }
@@ -432,23 +446,66 @@ class ModernPromptGenerator {
         }
     }
 
-    autoNavigateToNextTab() {
-        // Move to the next tab by index, garantindo uma seleção única por aba
-        const currentIndex = this.tabs.findIndex(t => t === this.currentTab);
-        const nextIndex = currentIndex >= 0 ? currentIndex + 1 : 0;
+    autoNavigateToNextTab(selectedType = null) {
+        const currentTabName = this.tabs[this.currentTab];
+        let nextTabName = null;
+        
+        console.log(`Auto-navegação - Tipo: ${selectedType}, Aba atual: ${currentTabName}`);
+        
+        // Definir navegação específica baseada no tipo selecionado e aba atual
+        switch (selectedType) {
+            case 'environment':
+                if (currentTabName === 'ambiente') {
+                    nextTabName = 'estilo_visual';
+                }
+                break;
+            case 'visual_style':
+                if (currentTabName === 'estilo_visual') {
+                    nextTabName = 'iluminacao';
+                }
+                break;
+            case 'lighting':
+                if (currentTabName === 'iluminacao') {
+                    nextTabName = 'tecnica';
+                }
+                break;
+            case 'technique':
+                if (currentTabName === 'tecnica') {
+                    nextTabName = 'elementos_especiais';
+                }
+                break;
+            case 'special_elements':
+                if (currentTabName === 'elementos_especiais') {
+                    nextTabName = 'qualidade';
+                }
+                break;
+            case 'quality':
+                // Última aba com navegação automática, pode ir para avatar ou permanecer
+                if (currentTabName === 'qualidade') {
+                    nextTabName = 'avatar';
+                }
+                break;
+        }
+        
+        console.log(`Próxima aba determinada: ${nextTabName}`);
+        
+        // Se há uma próxima aba específica definida, navegar para ela
+        if (nextTabName && this.tabs.includes(nextTabName)) {
+            console.log(`Navegando para: ${nextTabName}`);
+            this.showTab(nextTabName);
+            this.showNavigationNotification(nextTabName);
+            return;
+        }
+        
+        // Fallback: navegação sequencial padrão
+        const currentIndex = this.currentTab;
+        const nextIndex = currentIndex + 1;
 
         if (nextIndex < this.tabs.length) {
             const nextTab = this.tabs[nextIndex];
+            console.log(`Fallback - Navegando para: ${nextTab}`);
             this.showTab(nextTab);
             this.showNavigationNotification(nextTab);
-        } else {
-            // Já na última aba, manter ou ir para a última conforme UX
-            const lastIndex = this.tabs.length - 1;
-            const lastTab = this.tabs[lastIndex];
-            if (this.currentTab !== lastTab) {
-                this.showTab(lastTab);
-                this.showNavigationNotification(lastTab);
-            }
         }
     }
 
@@ -574,3 +631,1228 @@ document.addEventListener('DOMContentLoaded', () => {
 window.addEventListener('load', () => {
     setTimeout(hidePagePreloader, 200);
 });
+
+// ===== SISTEMA DE AVATAR/PERSONAGEM =====
+
+// Variável global para armazenar avatares
+let savedAvatars = JSON.parse(localStorage.getItem('savedAvatars')) || [];
+
+/**
+ * Alterna a exibição dos campos específicos baseado no tipo de ser selecionado
+ */
+function toggleSpeciesFields(avatarType) {
+    // Esconder todos os campos específicos
+    const allSpeciesFields = document.querySelectorAll('.species-fields');
+    allSpeciesFields.forEach(field => {
+        field.style.display = 'none';
+    });
+    
+    // Controlar seção de aparência e estilo
+    const appearanceSection = document.getElementById('appearance-section');
+    
+    if (appearanceSection) {
+        if (avatarType === 'animal') {
+            appearanceSection.style.display = 'none';
+        } else {
+            appearanceSection.style.display = 'block';
+        }
+    }
+    
+    // Mostrar campos específicos do tipo selecionado
+    if (avatarType) {
+        let fieldsToShow = '';
+        
+        switch(avatarType) {
+            case 'humano':
+                fieldsToShow = 'human-fields';
+                break;
+            case 'animal':
+                fieldsToShow = 'animal-fields';
+                break;
+            case 'criatura_fantastica':
+                fieldsToShow = 'fantasy-fields';
+                break;
+            case 'alien':
+                fieldsToShow = 'alien-fields';
+                break;
+            case 'robo_android':
+                fieldsToShow = 'robot-fields';
+                break;
+            case 'elemental':
+            case 'espirito':
+                fieldsToShow = 'fantasy-fields'; // Usa os mesmos campos de fantasia
+                break;
+            case 'hibrido':
+                // Para híbridos, mostrar múltiplos campos
+                document.getElementById('human-fields').style.display = 'block';
+                document.getElementById('fantasy-fields').style.display = 'block';
+                return;
+        }
+        
+        if (fieldsToShow) {
+            const fieldElement = document.getElementById(fieldsToShow);
+            if (fieldElement) {
+                fieldElement.style.display = 'block';
+            }
+        }
+    }
+}
+
+/**
+ * Coleta todos os dados do formulário de avatar
+ */
+function collectAvatarData() {
+    const formData = {};
+    
+    // Informações básicas
+    formData.name = document.getElementById('avatar_name')?.value || '';
+    formData.type = document.getElementById('avatar_type')?.value || '';
+    
+    // Características humanas
+    if (document.getElementById('gender')) {
+        formData.gender = document.getElementById('gender').value;
+        formData.age_range = document.getElementById('age_range').value;
+        formData.ethnicity = document.getElementById('ethnicity').value;
+        formData.body_type = document.getElementById('body_type').value;
+        formData.height = document.getElementById('height').value;
+        formData.hair_color = document.getElementById('hair_color').value;
+        formData.eye_color = document.getElementById('eye_color').value;
+        formData.profession = document.getElementById('profession').value;
+    }
+    
+    // Características de animais
+    if (document.getElementById('animal_species')) {
+        formData.animal_species = document.getElementById('animal_species').value;
+        formData.animal_size = document.getElementById('animal_size').value;
+        formData.fur_pattern = document.getElementById('fur_pattern').value;
+        formData.primary_color = document.getElementById('primary_color').value;
+    }
+    
+    // Características fantásticas
+    if (document.getElementById('fantasy_type')) {
+        formData.fantasy_type = document.getElementById('fantasy_type').value;
+        formData.magical_abilities = document.getElementById('magical_abilities').value;
+        formData.special_features = document.getElementById('special_features').value;
+    }
+    
+    // Características alien
+    if (document.getElementById('alien_origin')) {
+        formData.alien_origin = document.getElementById('alien_origin').value;
+        formData.skin_texture = document.getElementById('skin_texture').value;
+        formData.number_of_eyes = document.getElementById('number_of_eyes').value;
+        formData.communication_method = document.getElementById('communication_method').value;
+    }
+    
+    // Características robóticas
+    if (document.getElementById('robot_type')) {
+        formData.robot_type = document.getElementById('robot_type').value;
+        formData.power_source = document.getElementById('power_source').value;
+        formData.ai_level = document.getElementById('ai_level').value;
+    }
+    
+    // Aparência e estilo
+    formData.clothing_style = document.getElementById('clothing_style')?.value || '';
+    formData.accessories = document.getElementById('accessories')?.value || '';
+    formData.distinctive_marks = document.getElementById('distinctive_marks')?.value || '';
+    
+    return formData;
+}
+
+/**
+ * Salva o avatar no localStorage
+ */
+function saveAvatar() {
+    const avatarData = collectAvatarData();
+    
+    // Validação básica
+    if (!avatarData.name.trim()) {
+        alert('Por favor, digite um nome para o avatar.');
+        document.getElementById('avatar_name').focus();
+        return;
+    }
+    
+    if (!avatarData.type) {
+        alert('Por favor, selecione o tipo de ser.');
+        document.getElementById('avatar_type').focus();
+        return;
+    }
+    
+    // Adicionar ID único e timestamp
+    avatarData.id = Date.now().toString();
+    avatarData.created_at = new Date().toISOString();
+    avatarData.updated_at = new Date().toISOString();
+    
+    // Verificar se já existe um avatar com o mesmo nome
+    const existingIndex = savedAvatars.findIndex(avatar => avatar.name.toLowerCase() === avatarData.name.toLowerCase());
+    
+    if (existingIndex !== -1) {
+        if (confirm(`Já existe um avatar com o nome "${avatarData.name}". Deseja sobrescrever?`)) {
+            avatarData.id = savedAvatars[existingIndex].id;
+            avatarData.created_at = savedAvatars[existingIndex].created_at;
+            savedAvatars[existingIndex] = avatarData;
+        } else {
+            return;
+        }
+    } else {
+        savedAvatars.push(avatarData);
+    }
+    
+    // Salvar no localStorage
+    localStorage.setItem('savedAvatars', JSON.stringify(savedAvatars));
+    
+    // Atualizar a lista de avatares
+    loadSavedAvatars();
+    
+    // Feedback visual
+    showAvatarSaveSuccess(avatarData.name);
+}
+
+/**
+ * Mostra feedback de sucesso ao salvar avatar
+ */
+function showAvatarSaveSuccess(avatarName) {
+    // Criar elemento de notificação
+    const notification = document.createElement('div');
+    notification.className = 'avatar-save-notification';
+    notification.innerHTML = `
+        <i class="material-icons">check_circle</i>
+        <span>Avatar "${avatarName}" salvo com sucesso!</span>
+    `;
+    
+    // Adicionar estilos inline
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        z-index: 10000;
+        animation: slideInRight 0.3s ease;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Remover após 3 segundos
+    setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease';
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 300);
+    }, 3000);
+}
+
+/**
+ * Gera preview do avatar baseado nos dados do formulário
+ */
+function previewAvatar() {
+    const avatarData = collectAvatarData();
+    
+    if (!avatarData.name.trim()) {
+        alert('Por favor, digite um nome para o avatar antes de visualizar.');
+        return;
+    }
+    
+    const preview = generateAvatarDescription(avatarData);
+    
+    // Criar modal de preview
+    const modal = document.createElement('div');
+    modal.className = 'avatar-preview-modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="material-icons">visibility</i> Preview do Avatar</h3>
+                <button onclick="closeAvatarPreview()" class="close-btn">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4>${avatarData.name}</h4>
+                <div class="avatar-description">${preview}</div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeAvatarPreview()" class="btn btn-secondary">Fechar</button>
+                <button onclick="saveAvatar(); closeAvatarPreview();" class="btn btn-primary">Salvar Avatar</button>
+            </div>
+        </div>
+    `;
+    
+    // Adicionar estilos inline para o modal
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+/**
+ * Fecha o modal de preview
+ */
+function closeAvatarPreview() {
+    const modal = document.querySelector('.avatar-preview-modal');
+    if (modal) {
+        document.body.removeChild(modal);
+    }
+}
+
+/**
+ * Gera descrição textual do avatar
+ */
+function generateAvatarDescription(avatarData) {
+    let description = [];
+    
+    // Tipo de ser
+    if (avatarData.type) {
+        description.push(`<strong>Tipo:</strong> ${getTypeDescription(avatarData.type)}`);
+    }
+    
+    // Características específicas baseadas no tipo
+    if (avatarData.type === 'humano') {
+        if (avatarData.gender) description.push(`<strong>Gênero:</strong> ${avatarData.gender}`);
+        if (avatarData.age_range) description.push(`<strong>Idade:</strong> ${avatarData.age_range.replace('_', ' ')}`);
+        if (avatarData.ethnicity) description.push(`<strong>Etnia:</strong> ${avatarData.ethnicity}`);
+        if (avatarData.body_type) description.push(`<strong>Físico:</strong> ${avatarData.body_type}`);
+        if (avatarData.height) description.push(`<strong>Altura:</strong> ${avatarData.height.replace('_', ' ')}`);
+        if (avatarData.hair_color) description.push(`<strong>Cabelo:</strong> ${avatarData.hair_color.replace('_', ' ')}`);
+        if (avatarData.eye_color) description.push(`<strong>Olhos:</strong> ${avatarData.eye_color}`);
+        if (avatarData.profession) description.push(`<strong>Profissão:</strong> ${avatarData.profession}`);
+    }
+    
+    if (avatarData.type === 'animal') {
+        if (avatarData.animal_species) description.push(`<strong>Espécie:</strong> ${avatarData.animal_species}`);
+        if (avatarData.animal_size) description.push(`<strong>Tamanho:</strong> ${avatarData.animal_size}`);
+        if (avatarData.primary_color) description.push(`<strong>Cor:</strong> ${avatarData.primary_color}`);
+        if (avatarData.fur_pattern) description.push(`<strong>Pelagem:</strong> ${avatarData.fur_pattern}`);
+    }
+    
+    if (avatarData.type === 'criatura_fantastica') {
+        if (avatarData.fantasy_type) description.push(`<strong>Criatura:</strong> ${avatarData.fantasy_type}`);
+        if (avatarData.magical_abilities) description.push(`<strong>Habilidades:</strong> ${avatarData.magical_abilities}`);
+        if (avatarData.special_features) description.push(`<strong>Características:</strong> ${avatarData.special_features}`);
+    }
+    
+    // Estilo
+    if (avatarData.clothing_style) {
+        description.push(`<strong>Estilo:</strong> ${avatarData.clothing_style}`);
+    }
+    
+    return description.join('<br>');
+}
+
+/**
+ * Retorna descrição amigável do tipo de ser
+ */
+function getTypeDescription(type) {
+    const types = {
+        'humano': 'Humano',
+        'animal': 'Animal',
+        'criatura_fantastica': 'Criatura Fantástica',
+        'alien': 'Alien/Extraterrestre',
+        'robo_android': 'Robô/Android',
+        'elemental': 'Elemental',
+        'espirito': 'Espírito/Fantasma',
+        'hibrido': 'Híbrido'
+    };
+    return types[type] || type;
+}
+
+/**
+ * Limpa todos os campos do formulário de avatar
+ */
+function clearAvatarForm() {
+    // Limpar todos os inputs de texto
+    document.querySelectorAll('#tab-avatar input[type="text"], #tab-avatar input[type="number"]').forEach(input => {
+        input.value = '';
+    });
+    
+    // Limpar todos os selects
+    document.querySelectorAll('#tab-avatar select').forEach(select => {
+        select.selectedIndex = 0;
+    });
+    
+    // Limpar todos os textareas
+    document.querySelectorAll('#tab-avatar textarea').forEach(textarea => {
+        textarea.value = '';
+    });
+    
+    // Remover seleção de tipo
+    document.querySelectorAll('.type-option, .type-option-compact').forEach(option => {
+        option.classList.remove('selected');
+    });
+    
+    // Limpar container dinâmico
+    const dynamicContainer = document.getElementById('dynamic-characteristics');
+    if (dynamicContainer) {
+        dynamicContainer.innerHTML = `
+            <div class="placeholder-content">
+                <i class="material-icons">touch_app</i>
+                <p>Selecione um tipo de ser na etapa anterior</p>
+            </div>
+        `;
+    }
+    
+    // Limpar prompt display
+    const promptDisplay = document.getElementById('avatar-prompt-display');
+    if (promptDisplay) {
+        promptDisplay.innerHTML = `
+            <div class="prompt-placeholder">
+                <i class="material-icons">auto_awesome</i>
+                <p>O prompt será gerado automaticamente</p>
+            </div>
+        `;
+    }
+    
+    // Resetar estatísticas
+    updatePromptStats('');
+}
+
+/**
+ * Carrega avatares salvos e exibe na interface
+ */
+function loadSavedAvatars() {
+    const avatarsGrid = document.getElementById('saved-avatars-list');
+    if (!avatarsGrid) return;
+    
+    // Limpar grid mantendo apenas o placeholder
+    const placeholder = avatarsGrid.querySelector('.placeholder');
+    avatarsGrid.innerHTML = '';
+    if (placeholder) {
+        avatarsGrid.appendChild(placeholder);
+    }
+    
+    // Adicionar avatares salvos
+    savedAvatars.forEach(avatar => {
+        const avatarCard = document.createElement('div');
+        avatarCard.className = 'avatar-card';
+        avatarCard.innerHTML = `
+            <div class="avatar-preview">
+                <i class="material-icons">${getAvatarIcon(avatar.type)}</i>
+            </div>
+            <div class="avatar-info">
+                <div class="avatar-name">${avatar.name}</div>
+                <div class="avatar-type">${getTypeDescription(avatar.type)}</div>
+            </div>
+            <div class="avatar-actions">
+                <button onclick="loadAvatar('${avatar.id}')" class="btn-small">
+                    <i class="material-icons">edit</i>
+                </button>
+                <button onclick="deleteAvatar('${avatar.id}')" class="btn-small delete">
+                    <i class="material-icons">delete</i>
+                </button>
+            </div>
+        `;
+        
+        avatarsGrid.appendChild(avatarCard);
+    });
+}
+
+/**
+ * Retorna ícone apropriado para o tipo de avatar
+ */
+function getAvatarIcon(type) {
+    const icons = {
+        'humano': 'person',
+        'animal': 'pets',
+        'criatura_fantastica': 'auto_fix_high',
+        'alien': 'emoji_nature',
+        'robo_android': 'smart_toy',
+        'elemental': 'whatshot',
+        'espirito': 'blur_on',
+        'hibrido': 'merge_type'
+    };
+    return icons[type] || 'person';
+}
+
+/**
+ * Carrega dados de um avatar específico no formulário
+ */
+function loadAvatar(avatarId) {
+    const avatar = savedAvatars.find(a => a.id === avatarId);
+    if (!avatar) return;
+    
+    // Preencher campos básicos
+    if (document.getElementById('avatar_name')) {
+        document.getElementById('avatar_name').value = avatar.name || '';
+    }
+    if (document.getElementById('avatar_type')) {
+        document.getElementById('avatar_type').value = avatar.type || '';
+        toggleSpeciesFields(avatar.type);
+    }
+    
+    // Preencher campos específicos
+    Object.keys(avatar).forEach(key => {
+        const element = document.getElementById(key);
+        if (element && avatar[key]) {
+            element.value = avatar[key];
+        }
+    });
+    
+    // Scroll para o formulário
+    document.querySelector('.avatar-creation-form').scrollIntoView({ behavior: 'smooth' });
+}
+
+/**
+ * Deleta um avatar
+ */
+function deleteAvatar(avatarId) {
+    const avatar = savedAvatars.find(a => a.id === avatarId);
+    if (!avatar) return;
+    
+    if (confirm(`Tem certeza que deseja excluir o avatar "${avatar.name}"?`)) {
+        savedAvatars = savedAvatars.filter(a => a.id !== avatarId);
+        localStorage.setItem('savedAvatars', JSON.stringify(savedAvatars));
+        loadSavedAvatars();
+    }
+}
+
+/**
+ * Gera prompt automaticamente baseado nos dados do avatar
+ */
+function generateAvatarPrompt() {
+    const avatarData = collectAvatarData();
+    const promptDisplay = document.getElementById('avatar-prompt-display');
+    
+    if (!avatarData.name || !avatarData.type) {
+        promptDisplay.innerHTML = `
+            <div class="prompt-placeholder">
+                <i class="material-icons">warning</i>
+                <p>Preencha pelo menos o nome e tipo do avatar para gerar o prompt</p>
+            </div>
+        `;
+        updatePromptStats('');
+        return;
+    }
+    
+    // Mostrar efeito de typing
+    promptDisplay.classList.add('typing');
+    promptDisplay.innerHTML = 'Gerando prompt...';
+    
+    setTimeout(() => {
+        const prompt = buildPromptFromData(avatarData);
+        
+        // Remover efeito de typing e mostrar prompt
+        promptDisplay.classList.remove('typing');
+        promptDisplay.textContent = prompt;
+        
+        // Atualizar estatísticas
+        updatePromptStats(prompt);
+        
+        // Salvar prompt gerado no objeto do avatar
+        avatarData.generated_prompt = prompt;
+    }, 1000);
+}
+
+/**
+ * Constrói o prompt baseado nos dados do avatar
+ */
+function buildPromptFromData(data) {
+    let promptParts = [];
+    
+    // Tipo de ser
+    if (data.type === 'humano') {
+        promptParts.push(buildHumanPrompt(data));
+    } else if (data.type === 'animal') {
+        promptParts.push(buildAnimalPrompt(data));
+    } else if (data.type === 'criatura_fantastica') {
+        promptParts.push(buildFantasyPrompt(data));
+    } else if (data.type === 'alien') {
+        promptParts.push(buildAlienPrompt(data));
+    } else if (data.type === 'robo_android') {
+        promptParts.push(buildRobotPrompt(data));
+    } else {
+        promptParts.push(`${getTypeDescription(data.type)}`);
+    }
+    
+    // Adicionar aparência e estilo
+    if (data.clothing_style) {
+        promptParts.push(`vestindo roupas no estilo ${data.clothing_style}`);
+    }
+    
+    if (data.accessories) {
+        promptParts.push(`com acessórios: ${data.accessories}`);
+    }
+    
+    if (data.distinctive_marks) {
+        promptParts.push(`marcas distintivas: ${data.distinctive_marks}`);
+    }
+    
+    // Adicionar qualificadores de qualidade
+    promptParts.push('imagem em alta resolução');
+    promptParts.push('detalhes ultra realistas');
+    promptParts.push('iluminação cinematográfica');
+    promptParts.push('8K');
+    promptParts.push('fotorrealista');
+    
+    return promptParts.filter(part => part.trim()).join(', ');
+}
+
+/**
+ * Constrói prompt para humanos
+ */
+function buildHumanPrompt(data) {
+    let parts = [];
+    
+    if (data.gender && data.age_range) {
+        const genderMap = {
+            'masculino': 'homem',
+            'feminino': 'mulher',
+            'nao_binario': 'pessoa'
+        };
+        const ageMap = {
+            'crianca': 'criança',
+            'adolescente': 'adolescente',
+            'jovem_adulto': 'jovem',
+            'adulto': 'adulto',
+            'meia_idade': 'de meia-idade',
+            'idoso': 'idoso'
+        };
+        parts.push(`${genderMap[data.gender] || data.gender} ${ageMap[data.age_range] || data.age_range}`);
+    }
+    
+    if (data.ethnicity) {
+        parts.push(data.ethnicity);
+    }
+    
+    if (data.body_type) {
+        const bodyMap = {
+            'magro': 'magro',
+            'atletico': 'atlético',
+            'musculoso': 'musculoso',
+            'curvilineo': 'curvilíneo',
+            'robusto': 'robusto'
+        };
+        parts.push(`físico ${bodyMap[data.body_type] || data.body_type}`);
+    }
+    
+    if (data.hair_color) {
+        parts.push(`cabelo ${data.hair_color.replace('_', ' ')}`);
+    }
+    
+    if (data.eye_color) {
+        parts.push(`olhos ${data.eye_color}`);
+    }
+    
+    if (data.profession) {
+        parts.push(`trabalhando como ${data.profession}`);
+    }
+    
+    return parts.join(', ');
+}
+
+/**
+ * Constrói prompt para animais
+ */
+function buildAnimalPrompt(data) {
+    let parts = [];
+    
+    if (data.animal_species) {
+        parts.push(data.animal_species);
+    }
+    
+    if (data.animal_size) {
+        parts.push(`tamanho ${data.animal_size}`);
+    }
+    
+    if (data.primary_color) {
+        parts.push(`cor ${data.primary_color}`);
+    }
+    
+    if (data.fur_pattern) {
+        parts.push(`pelagem ${data.fur_pattern}`);
+    }
+    
+    return parts.join(', ');
+}
+
+/**
+ * Constrói prompt para criaturas fantásticas
+ */
+function buildFantasyPrompt(data) {
+    let parts = [];
+    
+    if (data.fantasy_type) {
+        parts.push(data.fantasy_type);
+    }
+    
+    if (data.special_features) {
+        parts.push(data.special_features);
+    }
+    
+    if (data.magical_abilities) {
+        parts.push(`com poderes: ${data.magical_abilities}`);
+    }
+    
+    return parts.join(', ');
+}
+
+/**
+ * Constrói prompt para aliens
+ */
+function buildAlienPrompt(data) {
+    let parts = ['ser extraterrestre'];
+    
+    if (data.alien_origin) {
+        parts.push(`do planeta ${data.alien_origin}`);
+    }
+    
+    if (data.skin_texture) {
+        parts.push(`pele ${data.skin_texture}`);
+    }
+    
+    if (data.number_of_eyes && data.number_of_eyes > 0) {
+        parts.push(`${data.number_of_eyes} olhos`);
+    }
+    
+    if (data.communication_method) {
+        parts.push(`comunicação ${data.communication_method}`);
+    }
+    
+    return parts.join(', ');
+}
+
+/**
+ * Constrói prompt para robôs
+ */
+function buildRobotPrompt(data) {
+    let parts = [];
+    
+    if (data.robot_type) {
+        const robotMap = {
+            'android_humanoid': 'android humanoide',
+            'cyborg': 'cyborg',
+            'robo_industrial': 'robô industrial',
+            'ia_holografica': 'IA holográfica',
+            'mecha': 'mecha'
+        };
+        parts.push(robotMap[data.robot_type] || data.robot_type);
+    }
+    
+    if (data.ai_level) {
+        parts.push(`IA ${data.ai_level}`);
+    }
+    
+    if (data.power_source) {
+        parts.push(`energia ${data.power_source.replace('_', ' ')}`);
+    }
+    
+    return parts.join(', ');
+}
+
+/**
+ * Atualiza estatísticas do prompt
+ */
+function updatePromptStats(prompt) {
+    const charCount = document.getElementById('character-count');
+    const wordCount = document.getElementById('word-count');
+    
+    if (charCount) {
+        charCount.textContent = prompt.length;
+    }
+    
+    if (wordCount) {
+        const words = prompt.trim() ? prompt.trim().split(/\s+/).length : 0;
+        wordCount.textContent = words;
+    }
+}
+
+/**
+ * Copia o prompt para a área de transferência
+ */
+async function copyAvatarPrompt() {
+    const promptDisplay = document.getElementById('avatar-prompt-display');
+    const prompt = promptDisplay.textContent;
+    
+    if (!prompt || prompt.includes('Preencha') || prompt.includes('Gerando')) {
+        showCopyFeedback('Nenhum prompt para copiar', 'error');
+        return;
+    }
+    
+    try {
+        await navigator.clipboard.writeText(prompt);
+        showCopyFeedback('Prompt copiado!', 'success');
+        
+        // Efeito visual no botão
+        const copyBtn = document.querySelector('[onclick="copyAvatarPrompt()"]');
+        if (copyBtn) {
+            copyBtn.classList.add('copied');
+            setTimeout(() => copyBtn.classList.remove('copied'), 2000);
+        }
+        
+    } catch (err) {
+        // Fallback para navegadores mais antigos
+        const textArea = document.createElement('textarea');
+        textArea.value = prompt;
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        
+        try {
+            document.execCommand('copy');
+            showCopyFeedback('Prompt copiado!', 'success');
+        } catch (fallbackErr) {
+            showCopyFeedback('Erro ao copiar', 'error');
+        }
+        
+        document.body.removeChild(textArea);
+    }
+}
+
+/**
+ * Mostra feedback da operação de cópia
+ */
+function showCopyFeedback(message, type) {
+    const feedback = document.createElement('div');
+    feedback.className = `copy-feedback ${type}`;
+    feedback.innerHTML = `
+        <i class="material-icons">${type === 'success' ? 'check_circle' : 'error'}</i>
+        <span>${message}</span>
+    `;
+    
+    feedback.style.cssText = `
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        background: ${type === 'success' ? 'linear-gradient(135deg, #10b981, #059669)' : 'linear-gradient(135deg, #ef4444, #dc2626)'};
+        color: white;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        z-index: 10000;
+        animation: slideInRight 0.3s ease;
+        font-size: 0.875rem;
+    `;
+    
+    document.body.appendChild(feedback);
+    
+    setTimeout(() => {
+        feedback.style.animation = 'slideOutRight 0.3s ease';
+        setTimeout(() => {
+            if (document.body.contains(feedback)) {
+                document.body.removeChild(feedback);
+            }
+        }, 300);
+    }, 2500);
+}
+
+// ===== FUNÇÕES PARA O NOVO LAYOUT DA ABA AVATAR =====
+
+// Variáveis globais para o wizard
+let currentStep = 1;
+let totalSteps = 4;
+
+/**
+ * Seleciona tipo de ser no novo layout
+ */
+function selectAvatarType(element, type) {
+    // Remover seleção anterior
+    document.querySelectorAll('.type-option, .type-option-compact').forEach(option => {
+        option.classList.remove('selected');
+    });
+    
+    // Selecionar novo tipo
+    element.classList.add('selected');
+    
+    // Atualizar campo hidden
+    const hiddenInput = document.getElementById('avatar_type');
+    if (hiddenInput) {
+        hiddenInput.value = type;
+    }
+    
+    // Atualizar preview
+    updateAvatarPreview();
+    
+    // Aplicar lógica existente
+    toggleSpeciesFields(type);
+    
+    // Gerar prompt
+    generateAvatarPrompt();
+}
+
+/**
+ * Avança para o próximo step
+ */
+function nextCreationStep() {
+    // Validar step atual
+    if (!validateCurrentStep()) {
+        return;
+    }
+    
+    if (currentStep < totalSteps) {
+        // Esconder step atual
+        document.getElementById(`step-${currentStep}`).classList.remove('active');
+        
+        // Avançar step
+        currentStep++;
+        
+        // Mostrar próximo step
+        document.getElementById(`step-${currentStep}`).classList.add('active');
+        
+        // Atualizar progress bar
+        updateProgressBar();
+        
+        // Atualizar preview
+        updateAvatarPreview();
+        
+        // Se chegou no step 4, gerar prompt final
+        if (currentStep === 4) {
+            generateAvatarPrompt();
+        }
+    }
+}
+
+/**
+ * Volta para o step anterior
+ */
+function prevCreationStep() {
+    if (currentStep > 1) {
+        // Esconder step atual
+        document.getElementById(`step-${currentStep}`).classList.remove('active');
+        
+        // Voltar step
+        currentStep--;
+        
+        // Mostrar step anterior
+        document.getElementById(`step-${currentStep}`).classList.add('active');
+        
+        // Atualizar progress bar
+        updateProgressBar();
+    }
+}
+
+/**
+ * Valida o step atual
+ */
+function validateCurrentStep() {
+    switch(currentStep) {
+        case 1:
+            const avatarName = document.getElementById('avatar_name').value.trim();
+            const avatarType = document.getElementById('avatar_type').value;
+            
+            if (!avatarName) {
+                showValidationError('Por favor, digite um nome para o avatar.');
+                return false;
+            }
+            
+            if (!avatarType) {
+                showValidationError('Por favor, selecione um tipo de ser.');
+                return false;
+            }
+            
+            return true;
+            
+        case 2:
+            // Validação do step 2 (características específicas)
+            return true;
+            
+        case 3:
+            // Validação do step 3 (aparência)
+            return true;
+            
+        default:
+            return true;
+    }
+}
+
+/**
+ * Mostra erro de validação
+ */
+function showValidationError(message) {
+    // Criar ou atualizar elemento de erro
+    let errorElement = document.querySelector('.validation-error');
+    if (!errorElement) {
+        errorElement = document.createElement('div');
+        errorElement.className = 'validation-error';
+        errorElement.style.cssText = `
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: shake 0.5s ease;
+        `;
+        
+        const currentCard = document.querySelector(`#step-${currentStep} .card-content`);
+        currentCard.insertBefore(errorElement, currentCard.firstChild);
+    }
+    
+    errorElement.innerHTML = `
+        <i class="material-icons">error</i>
+        <span>${message}</span>
+    `;
+    
+    // Remover após 4 segundos
+    setTimeout(() => {
+        if (errorElement.parentNode) {
+            errorElement.parentNode.removeChild(errorElement);
+        }
+    }, 4000);
+}
+
+/**
+ * Atualiza a barra de progresso
+ */
+function updateProgressBar() {
+    const progressFill = document.getElementById('creation-progress');
+    const progressSteps = document.querySelectorAll('.progress-steps .step');
+    
+    // Atualizar barra de progresso
+    if (progressFill) {
+        const progressPercentage = (currentStep / totalSteps) * 100;
+        progressFill.style.width = `${progressPercentage}%`;
+    }
+    
+    // Atualizar steps visuais
+    progressSteps.forEach((step, index) => {
+        if (index < currentStep) {
+            step.classList.add('active');
+        } else {
+            step.classList.remove('active');
+        }
+    });
+}
+
+/**
+ * Atualiza o preview do avatar
+ */
+function updateAvatarPreview() {
+    const avatarData = collectAvatarData();
+    
+    // Atualizar nome
+    const previewName = document.getElementById('preview-name');
+    if (previewName) {
+        previewName.textContent = avatarData.name || '-';
+    }
+    
+    // Atualizar tipo
+    const previewType = document.getElementById('preview-type');
+    if (previewType) {
+        previewType.textContent = avatarData.type ? getTypeDescription(avatarData.type) : '-';
+    }
+    
+    // Atualizar contador de avatares criados
+    const avatarsCount = document.getElementById('avatars-count');
+    if (avatarsCount) {
+        avatarsCount.textContent = savedAvatars.length;
+    }
+    
+    // Atualizar contador de avatares salvos
+    const savedCount = document.getElementById('saved-count');
+    if (savedCount) {
+        savedCount.textContent = savedAvatars.length;
+    }
+}
+
+/**
+ * Reseta o processo de criação
+ */
+function resetCreation() {
+    if (confirm('Tem certeza que deseja limpar todos os dados e começar novamente?')) {
+        // Voltar para o step 1
+        document.getElementById(`step-${currentStep}`).classList.remove('active');
+        currentStep = 1;
+        document.getElementById('step-1').classList.add('active');
+        
+        // Limpar formulário
+        clearAvatarForm();
+        
+        // Atualizar progress bar
+        updateProgressBar();
+        
+        // Atualizar preview
+        updateAvatarPreview();
+    }
+}
+
+/**
+ * Carrega características dinâmicas baseadas no tipo
+ */
+function loadDynamicCharacteristics(avatarType) {
+    const dynamicContainer = document.getElementById('dynamic-characteristics');
+    if (!dynamicContainer) return;
+    
+    let content = '';
+    
+    switch(avatarType) {
+        case 'humano':
+            content = `
+                <div class="characteristics-grid">
+                    <div class="input-group">
+                        <label for="gender">Gênero</label>
+                        <select id="gender" name="gender">
+                            <option value="">Selecione</option>
+                            <option value="masculino">Masculino</option>
+                            <option value="feminino">Feminino</option>
+                            <option value="nao_binario">Não-binário</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="age_range">Faixa Etária</label>
+                        <select id="age_range" name="age_range">
+                            <option value="">Selecione</option>
+                            <option value="crianca">Criança (5-12 anos)</option>
+                            <option value="adolescente">Adolescente (13-17 anos)</option>
+                            <option value="jovem_adulto">Jovem Adulto (18-30 anos)</option>
+                            <option value="adulto">Adulto (31-50 anos)</option>
+                            <option value="idoso">Idoso (65+ anos)</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="ethnicity">Etnia</label>
+                        <select id="ethnicity" name="ethnicity">
+                            <option value="">Selecione</option>
+                            <option value="brasileiro">Brasileiro</option>
+                            <option value="caucasiano">Caucasiano</option>
+                            <option value="afrodescendente">Afrodescendente</option>
+                            <option value="asiatico">Asiático</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="hair_color">Cor do Cabelo</label>
+                        <select id="hair_color" name="hair_color">
+                            <option value="">Selecione</option>
+                            <option value="preto">Preto</option>
+                            <option value="castanho">Castanho</option>
+                            <option value="loiro">Loiro</option>
+                            <option value="ruivo">Ruivo</option>
+                        </select>
+                    </div>
+                </div>
+            `;
+            break;
+            
+        case 'animal':
+            content = `
+                <div class="characteristics-grid">
+                    <div class="input-group">
+                        <label for="animal_species">Espécie</label>
+                        <select id="animal_species" name="animal_species">
+                            <option value="">Selecione</option>
+                            <option value="gato">Gato</option>
+                            <option value="cachorro">Cachorro</option>
+                            <option value="lobo">Lobo</option>
+                            <option value="leao">Leão</option>
+                            <option value="aguia">Águia</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="animal_size">Tamanho</label>
+                        <select id="animal_size" name="animal_size">
+                            <option value="">Selecione</option>
+                            <option value="pequeno">Pequeno</option>
+                            <option value="medio">Médio</option>
+                            <option value="grande">Grande</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="primary_color">Cor Principal</label>
+                        <input type="text" id="primary_color" name="primary_color" placeholder="Ex: Marrom, Preto">
+                    </div>
+                </div>
+            `;
+            break;
+            
+        case 'criatura_fantastica':
+            content = `
+                <div class="characteristics-grid">
+                    <div class="input-group">
+                        <label for="fantasy_type">Tipo de Criatura</label>
+                        <select id="fantasy_type" name="fantasy_type">
+                            <option value="">Selecione</option>
+                            <option value="elfo">Elfo</option>
+                            <option value="dragao">Dragão</option>
+                            <option value="vampiro">Vampiro</option>
+                            <option value="anjo">Anjo</option>
+                            <option value="demonio">Demônio</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="magical_abilities">Habilidades Mágicas</label>
+                        <textarea id="magical_abilities" name="magical_abilities" rows="3" placeholder="Descreva as habilidades mágicas"></textarea>
+                    </div>
+                </div>
+            `;
+            break;
+            
+        default:
+            content = `
+                <div class="placeholder-content">
+                    <i class="material-icons">info</i>
+                    <p>Selecione um tipo de ser na etapa anterior para ver as características específicas.</p>
+                </div>
+            `;
+    }
+    
+    dynamicContainer.innerHTML = content;
+    
+    // Adicionar listeners aos novos campos
+    const newInputs = dynamicContainer.querySelectorAll('input, select, textarea');
+    newInputs.forEach(input => {
+        input.addEventListener('change', generateAvatarPrompt);
+        input.addEventListener('input', debounce(generateAvatarPrompt, 500));
+    });
+}
+
+// Inicializar sistema de avatares quando a página carregar
+document.addEventListener('DOMContentLoaded', function() {
+    // Carregar avatares salvos
+    loadSavedAvatars();
+    
+    // Adicionar listeners para seleção de tipo (layout normal e compacto)
+    document.querySelectorAll('.type-option, .type-option-compact').forEach(option => {
+        option.addEventListener('click', function() {
+            const type = this.getAttribute('data-type');
+            selectAvatarType(this, type);
+            loadDynamicCharacteristics(type);
+        });
+    });
+    
+    // Adicionar listener para input de nome
+    const avatarNameInput = document.getElementById('avatar_name');
+    if (avatarNameInput) {
+        avatarNameInput.addEventListener('input', updateAvatarPreview);
+    }
+    
+    // Inicializar preview
+    updateAvatarPreview();
+    updateProgressBar();
+    
+    // Adicionar listeners para geração automática de prompt
+    const formInputs = document.querySelectorAll('#tab-avatar input, #tab-avatar select, #tab-avatar textarea');
+    formInputs.forEach(input => {
+        input.addEventListener('change', generateAvatarPrompt);
+        input.addEventListener('input', debounce(generateAvatarPrompt, 500));
+    });
+});
+
+// Função debounce para evitar muitas chamadas
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}

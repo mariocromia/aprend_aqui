@@ -1,0 +1,445 @@
+<!-- SISTEMA MODERNO DE CRIAÇÃO DE AVATARES -->
+<div class="avatar-creator-system">
+    <!-- Header Principal -->
+    <div class="creator-header">
+        <div class="header-content">
+            <div class="title-section">
+                <h1><i class="material-icons">auto_awesome</i> Criador de Seres</h1>
+                <p>Crie personagens únicos com nosso sistema inteligente</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn-icon" id="reset-form" title="Limpar Formulário">
+                    <i class="material-icons">refresh</i>
+                </button>
+                <button class="btn-icon" id="save-draft" title="Salvar Rascunho">
+                    <i class="material-icons">save</i>
+                </button>
+                <button class="btn-primary" id="create-avatar">
+                    <i class="material-icons">check</i>
+                    Criar Ser
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="form-progress"></div>
+        </div>
+        <div class="progress-text">
+            <span id="progress-percentage">0%</span>
+            <span>completo</span>
+        </div>
+    </div>
+
+    <!-- Formulário Principal -->
+    <div class="creator-main">
+        <!-- Coluna Esquerda: Formulário -->
+        <div class="form-container">
+            
+            <!-- ETAPA 1: TIPO DE SER -->
+            <div class="form-step active" data-step="1">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <div class="step-info">
+                        <h2>Que tipo de ser você quer criar?</h2>
+                        <p>Escolha o tipo para personalizar os campos específicos</p>
+                    </div>
+                </div>
+
+                <div class="being-types-grid">
+                    <div class="being-type-card" data-type="humano">
+                        <div class="type-icon">
+                            <i class="material-icons">person</i>
+                        </div>
+                        <h3>Humano</h3>
+                        <p>Pessoas reais ou fictícias</p>
+                        <div class="type-features">
+                            <span>Roupas</span>
+                            <span>Profissão</span>
+                            <span>Personalidade</span>
+                        </div>
+                    </div>
+
+                    <div class="being-type-card" data-type="animal">
+                        <div class="type-icon">
+                            <i class="material-icons">pets</i>
+                        </div>
+                        <h3>Animal</h3>
+                        <p>Criaturas da natureza</p>
+                        <div class="type-features">
+                            <span>Espécie</span>
+                            <span>Pelagem</span>
+                            <span>Habitat</span>
+                        </div>
+                    </div>
+
+                    <div class="being-type-card" data-type="fantastico">
+                        <div class="type-icon">
+                            <i class="material-icons">auto_fix_high</i>
+                        </div>
+                        <h3>Fantástico</h3>
+                        <p>Seres mágicos e mitológicos</p>
+                        <div class="type-features">
+                            <span>Poderes</span>
+                            <span>Magia</span>
+                            <span>Origem</span>
+                        </div>
+                    </div>
+
+                    <div class="being-type-card" data-type="extraterrestre">
+                        <div class="type-icon">
+                            <i class="material-icons">rocket_launch</i>
+                        </div>
+                        <h3>Extraterrestre</h3>
+                        <p>Seres de outros mundos</p>
+                        <div class="type-features">
+                            <span>Planeta</span>
+                            <span>Tecnologia</span>
+                            <span>Biologia</span>
+                        </div>
+                    </div>
+
+                    <div class="being-type-card" data-type="robotico">
+                        <div class="type-icon">
+                            <i class="material-icons">smart_toy</i>
+                        </div>
+                        <h3>Robótico/IA</h3>
+                        <p>Androides e inteligências artificiais</p>
+                        <div class="type-features">
+                            <span>Sistema</span>
+                            <span>Hardware</span>
+                            <span>Programação</span>
+                        </div>
+                    </div>
+
+                    <div class="being-type-card" data-type="hibrido">
+                        <div class="type-icon">
+                            <i class="material-icons">merge_type</i>
+                        </div>
+                        <h3>Híbrido</h3>
+                        <p>Combinação de tipos</p>
+                        <div class="type-features">
+                            <span>Multi-forma</span>
+                            <span>Adaptável</span>
+                            <span>Complexo</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ETAPA 2: INFORMAÇÕES BÁSICAS -->
+            <div class="form-step" data-step="2">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <div class="step-info">
+                        <h2>Informações Básicas</h2>
+                        <p>Nome e características fundamentais</p>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="avatar-name" class="form-label">
+                            <i class="material-icons">badge</i>
+                            Nome do Ser
+                        </label>
+                        <input type="text" id="avatar-name" name="nome" 
+                               placeholder="Ex: Aria, Fluffy, Zyx-400..." 
+                               class="form-input" required>
+                        <div class="input-helper">Dê um nome único e memorável</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="avatar-category" class="form-label">
+                            <i class="material-icons">category</i>
+                            Categoria Principal
+                        </label>
+                        <select id="avatar-category" name="categoria" class="form-select">
+                            <!-- Será preenchido dinamicamente baseado no tipo -->
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="avatar-subcategory" class="form-label">
+                            <i class="material-icons">label</i>
+                            Subcategoria
+                        </label>
+                        <select id="avatar-subcategory" name="subcategoria" class="form-select">
+                            <option value="">Selecione uma categoria primeiro</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="avatar-description" class="form-label">
+                            <i class="material-icons">description</i>
+                            Descrição Geral
+                        </label>
+                        <textarea id="avatar-description" name="descricao" 
+                                  placeholder="Descreva as características principais, personalidade ou comportamento..."
+                                  class="form-textarea" rows="4"></textarea>
+                        <div class="char-counter">
+                            <span id="desc-counter">0</span>/500 caracteres
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ETAPA 3: APARÊNCIA FÍSICA -->
+            <div class="form-step" data-step="3">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <div class="step-info">
+                        <h2>Aparência Física</h2>
+                        <p>Como o ser se apresenta visualmente</p>
+                    </div>
+                </div>
+
+                <!-- Campos dinâmicos baseados no tipo de ser -->
+                <div id="appearance-fields" class="dynamic-fields">
+                    <!-- Será preenchido pelo JavaScript -->
+                </div>
+            </div>
+
+            <!-- ETAPA 4: CARACTERÍSTICAS ESPECIAIS -->
+            <div class="form-step" data-step="4">
+                <div class="step-header">
+                    <div class="step-number">4</div>
+                    <div class="step-info">
+                        <h2>Características Especiais</h2>
+                        <p>Poderes, habilidades e traços únicos</p>
+                    </div>
+                </div>
+
+                <div id="special-fields" class="dynamic-fields">
+                    <!-- Será preenchido pelo JavaScript -->
+                </div>
+            </div>
+
+            <!-- ETAPA 5: CONTEXTO E AMBIENTE -->
+            <div class="form-step" data-step="5">
+                <div class="step-header">
+                    <div class="step-number">5</div>
+                    <div class="step-info">
+                        <h2>Contexto e Ambiente</h2>
+                        <p>Onde e como o ser vive</p>
+                    </div>
+                </div>
+
+                <div id="context-fields" class="dynamic-fields">
+                    <!-- Será preenchido pelo JavaScript -->
+                </div>
+            </div>
+
+            <!-- ETAPA 6: FINALIZAÇÃO -->
+            <div class="form-step" data-step="6">
+                <div class="step-header">
+                    <div class="step-number">6</div>
+                    <div class="step-info">
+                        <h2>Finalização</h2>
+                        <p>Tags e configurações finais</p>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label class="form-label">
+                            <i class="material-icons">local_offer</i>
+                            Tags de Busca
+                        </label>
+                        <div class="tags-input">
+                            <input type="text" id="tags-input" placeholder="Digite uma tag e pressione Enter">
+                            <div class="tags-container" id="tags-container">
+                                <!-- Tags serão adicionadas aqui -->
+                            </div>
+                        </div>
+                        <div class="input-helper">Use tags para facilitar a busca posterior</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Visibilidade</label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="visibilidade" value="privado" checked>
+                                <span class="radio-mark"></span>
+                                <div class="radio-content">
+                                    <strong>Privado</strong>
+                                    <small>Apenas você pode ver</small>
+                                </div>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="visibilidade" value="publico">
+                                <span class="radio-mark"></span>
+                                <div class="radio-content">
+                                    <strong>Público</strong>
+                                    <small>Outros usuários podem ver e usar</small>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Opções Avançadas</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="salvar_template">
+                                <span class="checkbox-mark"></span>
+                                <span>Salvar como template reutilizável</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="gerar_variacoes">
+                                <span class="checkbox-mark"></span>
+                                <span>Gerar variações automáticas</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navegação entre etapas -->
+            <div class="step-navigation">
+                <button type="button" class="btn-secondary" id="prev-step" disabled>
+                    <i class="material-icons">arrow_back</i>
+                    Anterior
+                </button>
+                
+                <div class="steps-indicator">
+                    <div class="step-dot active" data-step="1"></div>
+                    <div class="step-dot" data-step="2"></div>
+                    <div class="step-dot" data-step="3"></div>
+                    <div class="step-dot" data-step="4"></div>
+                    <div class="step-dot" data-step="5"></div>
+                    <div class="step-dot" data-step="6"></div>
+                </div>
+
+                <button type="button" class="btn-primary" id="next-step">
+                    Próximo
+                    <i class="material-icons">arrow_forward</i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Coluna Direita: Preview -->
+        <div class="preview-container">
+            <div class="preview-header">
+                <h3><i class="material-icons">visibility</i> Preview do Ser</h3>
+                <div class="preview-actions">
+                    <button class="btn-icon" id="refresh-preview" title="Atualizar">
+                        <i class="material-icons">refresh</i>
+                    </button>
+                    <button class="btn-icon" id="fullscreen-preview" title="Tela Cheia">
+                        <i class="material-icons">fullscreen</i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="preview-content">
+                <!-- Card do Avatar -->
+                <div class="avatar-preview-card">
+                    <div class="avatar-visual">
+                        <div class="avatar-placeholder" id="avatar-placeholder">
+                            <i class="material-icons">help_outline</i>
+                            <span>Selecione um tipo</span>
+                        </div>
+                        <div class="avatar-type-badge" id="type-badge">
+                            <i class="material-icons">label</i>
+                            <span>Tipo não selecionado</span>
+                        </div>
+                    </div>
+                    
+                    <div class="avatar-info">
+                        <h3 id="preview-name">Nome do Ser</h3>
+                        <p id="preview-description">A descrição aparecerá aqui conforme você preenche o formulário...</p>
+                        
+                        <div class="avatar-stats">
+                            <div class="stat-item">
+                                <span class="stat-label">Categoria:</span>
+                                <span class="stat-value" id="preview-category">-</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Tipo:</span>
+                                <span class="stat-value" id="preview-type">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prompt Gerado -->
+                <div class="generated-prompt-section">
+                    <h4><i class="material-icons">auto_awesome</i> Prompt Gerado</h4>
+                    <div class="prompt-preview" id="generated-prompt">
+                        O prompt será gerado automaticamente baseado nas suas escolhas...
+                    </div>
+                    
+                    <div class="prompt-actions">
+                        <button class="btn-outline" id="copy-prompt">
+                            <i class="material-icons">content_copy</i>
+                            Copiar
+                        </button>
+                        <button class="btn-outline" id="test-prompt">
+                            <i class="material-icons">play_arrow</i>
+                            Testar
+                        </button>
+                    </div>
+
+                    <div class="prompt-stats">
+                        <div class="stat">
+                            <span class="stat-number" id="prompt-words">0</span>
+                            <span class="stat-label">palavras</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number" id="prompt-chars">0</span>
+                            <span class="stat-label">caracteres</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sugestões Inteligentes -->
+                <div class="smart-suggestions" id="smart-suggestions">
+                    <h4><i class="material-icons">lightbulb</i> Sugestões</h4>
+                    <div class="suggestions-list">
+                        <!-- Sugestões serão adicionadas dinamicamente -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Salvamento -->
+    <div class="modal" id="save-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="material-icons">save</i> Salvar Ser</h3>
+                <button class="btn-icon" id="close-modal">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="save-options">
+                    <div class="save-option">
+                        <div class="option-icon">
+                            <i class="material-icons">person_add</i>
+                        </div>
+                        <div class="option-content">
+                            <h4>Criar Novo Ser</h4>
+                            <p>Salvar como um novo ser na sua biblioteca</p>
+                        </div>
+                        <button class="btn-primary" id="save-new">Criar</button>
+                    </div>
+                    
+                    <div class="save-option">
+                        <div class="option-icon">
+                            <i class="material-icons">bookmark</i>
+                        </div>
+                        <div class="option-content">
+                            <h4>Salvar como Template</h4>
+                            <p>Criar um modelo reutilizável para futuros seres</p>
+                        </div>
+                        <button class="btn-outline" id="save-template">Template</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
