@@ -1008,15 +1008,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             }
             
             .page-header h1 { 
-                font-size: 2.5rem;
+                font-size: 2.5rem; 
                 margin-bottom: 0.5rem;
             }
-
+            
             .page-header p {
                 margin-bottom: 1.25rem;
             }
             
-            .categories-grid { 
+            .categories-grid {
                 gap: 1.25rem;
                 padding: 1.25rem 0;
             }
@@ -1043,7 +1043,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
         @media (max-width: 768px) {
             .header-content { 
-                padding: 0 1rem;
+                padding: 0 1rem; 
                 height: 56px;
             }
 
@@ -1076,12 +1076,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             }
             
             .page-header h1 { 
-                font-size: 2rem;
+                font-size: 2rem; 
                 margin-bottom: 0.5rem;
             }
             
             .page-header p { 
-                font-size: 1rem;
+                font-size: 1rem; 
                 margin-bottom: 1rem;
             }
             
@@ -1094,7 +1094,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 padding: 1rem 0;
             }
             
-            .category-section { 
+            .category-section {
                 padding: 1rem;
                 min-height: 340px;
                 max-height: 340px;
@@ -1349,10 +1349,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         <div class="user-avatar">
                             <?= strtoupper(substr($_SESSION['usuario_nome'] ?? 'U', 0, 2)) ?>
                         </div>
-                        <div class="user-info">
+                    <div class="user-info">
                             <div class="user-name"><?= htmlspecialchars($_SESSION['usuario_nome'] ?? 'Usuário') ?></div>
                             <div class="user-email"><?= htmlspecialchars($_SESSION['usuario_email'] ?? 'usuario@exemplo.com') ?></div>
-                        </div>
+                    </div>
                         
                         <div class="account-dropdown">
                             <a href="#" class="dropdown-item">
@@ -1378,9 +1378,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                             </a>
                             <div class="dropdown-divider"></div>
                             <a href="auth/logout.php" class="dropdown-item">
-                                <i class="material-icons">logout</i>
-                                Sair
-                            </a>
+                        <i class="material-icons">logout</i>
+                        Sair
+                    </a>
                         </div>
                     </div>
                 </div>
@@ -1417,9 +1417,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         <i class="material-icons">landscape</i>
                         <span>Cena/Ambiente</span>
                     </button>
+                    <button class="tab-button" data-tab="estilo_visual">
+                        <i class="material-icons">palette</i>
+                        <span>Estilo Visual</span>
+                    </button>
                     <button class="tab-button" data-tab="iluminacao">
                         <i class="material-icons">wb_sunny</i>
                         <span>Iluminação</span>
+                    </button>
+                    <button class="tab-button" data-tab="tecnica">
+                        <i class="material-icons">settings</i>
+                        <span>Técnica</span>
+                    </button>
+                    <button class="tab-button" data-tab="elementos_especiais">
+                        <i class="material-icons">auto_awesome</i>
+                        <span>Elementos Especiais</span>
+                    </button>
+                    <button class="tab-button" data-tab="qualidade">
+                        <i class="material-icons">high_quality</i>
+                        <span>Qualidade</span>
                     </button>
                     <button class="tab-button" data-tab="avatar">
                         <i class="material-icons">groups</i>
@@ -1437,16 +1453,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         <i class="material-icons">play_arrow</i>
                         <span>Ação</span>
                     </button>
-                    <button class="tab-button" data-tab="prompt">
-                        <i class="material-icons">edit_note</i>
-                        <span>Seu Prompt</span>
-                    </button>
                 </div>
 
                 <!-- Form Principal -->
                 <form id="promptForm" method="post">
                     <input type="hidden" name="action" value="save_prompt">
                     <input type="hidden" id="selected_environment" name="selected_environment">
+                    <input type="hidden" id="selected_visual_style" name="selected_visual_style">
                     <input type="hidden" id="selected_lighting" name="selected_lighting">
                     <input type="hidden" id="selected_character" name="selected_character">
                     <input type="hidden" id="selected_camera" name="selected_camera">
@@ -1462,13 +1475,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                              echo $cenaRenderer->renderizarAbaAmbiente();
                          } else {
                              echo '<div class="categories-grid">
-                                     <div class="category-section">
+                            <div class="category-section">
                                          <div class="error-state-ambiente">
                                              <i class="material-icons" style="font-size: 4rem; color: #ef4444; margin-bottom: 1rem;">error</i>
                                              <h3 style="color: #ef4444; margin-bottom: 0.5rem;">Sistema temporariamente indisponível</h3>
                                              <p style="color: #64748b;">As opções de ambiente estão sendo carregadas...</p>
-                                         </div>
-                                     </div>
+                                    </div>
+                                </div>
                                    </div>';
                          }
                          ?>
@@ -1516,138 +1529,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         </div>
                      </div>
 
-                                         <!-- ABA 2: ILUMINAÇÃO -->
-                     <div class="tab-content" id="tab-iluminacao">
+                                         <!-- ABA 2: ESTILO VISUAL -->
+                     <div class="tab-content" id="tab-estilo_visual">
                          <div class="tab-header">
-                             <h2><i class="material-icons">wb_sunny</i> Iluminação</h2>
-                             <p>Configure o tipo e intensidade da luz para sua criação</p>
                          </div>
 
-                         <div class="categories-grid">
-                            <!-- NATURAL -->
-                            <div class="category-section">
-                                <div class="category-header">
-                                    <div class="category-icon">
-                                        <i class="material-icons">wb_sunny</i>
-                                    </div>
-                                    <h3 class="category-title">Natural</h3>
-                                </div>
-                                <div class="subcategories-grid">
-                                    <div class="subcategory-card" data-type="lighting" data-value="golden_hour">
-                                        <div class="subcategory-title">Golden Hour</div>
-                                        <div class="subcategory-desc">Luz dourada suave</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="lighting" data-value="blue_hour">
-                                        <div class="subcategory-title">Blue Hour</div>
-                                        <div class="subcategory-desc">Crepúsculo azulado</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="lighting" data-value="meio_dia">
-                                        <div class="subcategory-title">Meio-dia</div>
-                                        <div class="subcategory-desc">Sol a pino intenso</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="lighting" data-value="luar_noturno">
-                                        <div class="subcategory-title">Luar Noturno</div>
-                                        <div class="subcategory-desc">Clarão lunar</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="lighting" data-value="tempestade">
-                                        <div class="subcategory-title">Tempestade</div>
-                                        <div class="subcategory-desc">Raios dramáticos</div>
-                                    </div>
-                                </div>
-                            </div>
+                         <?php 
+                         // Renderizar aba estilo visual dinamicamente
+                         if ($cenaRenderer) {
+                             echo $cenaRenderer->renderizarAbaEstiloVisual();
+                         } else {
+                             echo '<div class="categories-grid"><div class="category-section"><div class="error-state-estilo_visual"><i class="material-icons" style="font-size: 4rem; color: #ef4444;">error</i><h3 style="color: #ef4444;">Sistema de estilo visual indisponível</h3><p style="color: #64748b;">Carregando configurações padrão...</p></div></div></div>';
+                         }
+                         ?>
 
-                            <!-- ARTIFICIAL -->
-                            <div class="category-section">
-                                <div class="category-header">
-                                    <div class="category-icon">
-                                        <i class="material-icons">lightbulb</i>
-                                    </div>
-                                    <h3 class="category-title">Artificial</h3>
-                                </div>
-                                <div class="subcategories-grid">
-                                    <div class="subcategory-card" data-type="lighting" data-value="neon_cyberpunk">
-                                        <div class="subcategory-title">Neon Cyberpunk</div>
-                                        <div class="subcategory-desc">Luzes coloridas vibrantes</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="lighting" data-value="led_frio">
-                                        <div class="subcategory-title">LED Frio</div>
-                                        <div class="subcategory-desc">Branco azulado</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="lighting" data-value="tungstênio_quente">
-                                        <div class="subcategory-title">Tungstênio Quente</div>
-                                        <div class="subcategory-desc">Amarelo aconchegante</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="lighting" data-value="strobo_festa">
-                                        <div class="subcategory-title">Strobo Festa</div>
-                                        <div class="subcategory-desc">Flashes intermitentes</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="lighting" data-value="laser_show">
-                                        <div class="subcategory-title">Laser Show</div>
-                                        <div class="subcategory-desc">Feixes coloridos</div>
-                                    </div>
-                                </div>
-                            </div>
+                                                 <!-- Container de 3 colunas na base -->
+                         <div class="bottom-controls-container">
+                             <!-- Coluna 1: Campo de descrição personalizada -->
+                             <div class="custom-description">
+                                 <label>
+                                     <i class="material-icons">edit</i>
+                                     Descrição Personalizada do Estilo Visual
+                                 </label>
+                                 <textarea 
+                                     name="custom_visual_style" 
+                                     placeholder="Descreva um estilo visual específico que não está nas opções abaixo..."
+                                     rows="3"></textarea>
+                             </div>
 
-                            <!-- CINEMATOGRÁFICA -->
-                            <div class="category-section">
-                                <div class="category-header">
-                                    <div class="category-icon">
-                                        <i class="material-icons">videocam</i>
-                                    </div>
-                                    <h3 class="category-title">Cinematográfica</h3>
-                                </div>
-                                <div class="subcategories-grid">
-                                    <div class="subcategory-card" data-type="lighting" data-value="three_point">
-                                        <div class="subcategory-title">Three Point</div>
-                                        <div class="subcategory-desc">Configuração clássica</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="lighting" data-value="high_key">
-                                        <div class="subcategory-title">High Key</div>
-                                        <div class="subcategory-desc">Iluminação clara</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="lighting" data-value="low_key">
-                                        <div class="subcategory-title">Low Key</div>
-                                        <div class="subcategory-desc">Sombras dramáticas</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="lighting" data-value="contra_luz">
-                                        <div class="subcategory-title">Contra-luz</div>
-                                        <div class="subcategory-desc">Silhueta rimada</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="lighting" data-value="chiaroscuro">
-                                        <div class="subcategory-title">Chiaroscuro</div>
-                                        <div class="subcategory-desc">Contraste extremo</div>
-                                    </div>
-                                </div>
-                            </div>
+                             <!-- Coluna 2: Controles de navegação -->
+                             <div class="tab-navigation">
+                                 <button type="button" class="btn btn-secondary" onclick="goToFirstTab()" title="Início">
+                                     <i class="material-icons">home</i>
+                                 </button>
+                                 <button type="button" class="btn btn-secondary" onclick="prevTab()" title="Anterior">
+                                     <i class="material-icons">arrow_back</i>
+                                 </button>
+                                 <button type="button" class="btn btn-primary" onclick="nextTab()" title="Próxima">
+                                     <i class="material-icons">arrow_forward</i>
+                                 </button>
+                                 <button type="button" class="btn btn-secondary" onclick="goToLastTab()" title="Fim">
+                                     <i class="material-icons">flag</i>
+                                 </button>
+                             </div>
 
-                            <!-- AMBIENTE -->
-                            <div class="category-section">
-                                <div class="category-header">
-                                    <div class="category-icon">
-                                        <i class="material-icons">mood</i>
-                                    </div>
-                                    <h3 class="category-title">Ambiente</h3>
-                                </div>
-                                <div class="subcategories-grid">
-                                    <div class="subcategory-card" data-type="lighting" data-value="fogueira_acampamento">
-                                        <div class="subcategory-title">Fogueira</div>
-                                        <div class="subcategory-desc">Chamas dançantes</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="lighting" data-value="velas_romanticas">
-                                        <div class="subcategory-title">Velas Românticas</div>
-                                        <div class="subcategory-desc">Luz íntima tremulante</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="lighting" data-value="lanterna_terror">
-                                        <div class="subcategory-title">Lanterna Terror</div>
-                                        <div class="subcategory-desc">Sombras assombradas</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="lighting" data-value="aurora_magica">
-                                        <div class="subcategory-title">Aurora Mágica</div>
-                                        <div class="subcategory-desc">Luzes fantasiosas</div>
+                            <!-- Coluna 3: Espaço para propaganda -->
+                            <div class="advertisement-container">
+                                <div class="advertisement-content">
+                                    <i class="material-icons" style="font-size: 2rem; color: var(--text-muted);">campaign</i>
+                                    <div class="advertisement-placeholder">
+                                        Espaço para propaganda<br>
+                                        Anúncios e promoções
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                                         <!-- ABA 3: ILUMINAÇÃO -->
+                     <div class="tab-content" id="tab-iluminacao">
+                         <div class="tab-header">
+                         </div>
+
+                         <?php 
+                         // Renderizar aba iluminação dinamicamente
+                         if ($cenaRenderer) {
+                             echo $cenaRenderer->renderizarAbaIluminacao();
+                         } else {
+                             echo '<div class="categories-grid"><div class="category-section"><div class="error-state-iluminacao"><i class="material-icons" style="font-size: 4rem; color: #ef4444;">error</i><h3 style="color: #ef4444;">Sistema de iluminação indisponível</h3><p style="color: #64748b;">Carregando configurações padrão...</p></div></div></div>';
+                         }
+                         ?>
 
                                                  <!-- Container de 3 colunas na base -->
                          <div class="bottom-controls-container">
@@ -1692,7 +1643,190 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         </div>
                     </div>
 
-                    <!-- ABA 3: AVATAR/PERSONAGEM -->
+                    <!-- ABA 4: TÉCNICA -->
+                    <div class="tab-content" id="tab-tecnica">
+                        <div class="tab-header">
+                        </div>
+
+                        <div class="categories-grid">
+                            <div class="category-section">
+                                <div class="category-header">
+                                    <div class="category-icon">
+                                        <i class="material-icons">settings</i>
+                                    </div>
+                                    <h3 class="category-title">Em desenvolvimento</h3>
+                                </div>
+                                <div class="subcategories-grid">
+                                    <div class="subcategory-card">
+                                        <div class="subcategory-title">Técnica será implementada em breve</div>
+                                        <div class="subcategory-desc">Aguarde atualizações</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bottom-controls-container">
+                            <div class="custom-description">
+                                <label>
+                                    <i class="material-icons">edit</i>
+                                    Descrição Personalizada da Técnica
+                                </label>
+                                <textarea 
+                                    name="custom_technique" 
+                                    placeholder="Descreva técnicas específicas..."
+                                    rows="3"></textarea>
+                            </div>
+
+                            <div class="tab-navigation">
+                                <button type="button" class="btn btn-secondary" onclick="goToFirstTab()" title="Início">
+                                    <i class="material-icons">home</i>
+                                </button>
+                                <button type="button" class="btn btn-secondary" onclick="prevTab()" title="Anterior">
+                                    <i class="material-icons">arrow_back</i>
+                                </button>
+                                <button type="button" class="btn btn-primary" onclick="nextTab()" title="Próxima">
+                                    <i class="material-icons">arrow_forward</i>
+                                </button>
+                                <button type="button" class="btn btn-secondary" onclick="goToLastTab()" title="Fim">
+                                    <i class="material-icons">flag</i>
+                                </button>
+                            </div>
+
+                            <div class="advertisement-container">
+                                <div class="advertisement-content">
+                                    <i class="material-icons" style="font-size: 2rem; color: var(--text-muted);">campaign</i>
+                                    <div class="advertisement-placeholder">
+                                        Espaço para propaganda<br>
+                                        Anúncios e promoções
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ABA 5: ELEMENTOS ESPECIAIS -->
+                    <div class="tab-content" id="tab-elementos_especiais">
+                        <div class="tab-header">
+                        </div>
+
+                        <div class="categories-grid">
+                            <div class="category-section">
+                                <div class="category-header">
+                                    <div class="category-icon">
+                                        <i class="material-icons">auto_awesome</i>
+                                    </div>
+                                    <h3 class="category-title">Em desenvolvimento</h3>
+                                </div>
+                                <div class="subcategories-grid">
+                                    <div class="subcategory-card">
+                                        <div class="subcategory-title">Elementos Especiais em breve</div>
+                                        <div class="subcategory-desc">Aguarde atualizações</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bottom-controls-container">
+                            <div class="custom-description">
+                                <label>
+                                    <i class="material-icons">edit</i>
+                                    Descrição Personalizada dos Elementos
+                                </label>
+                                <textarea 
+                                    name="custom_special_elements" 
+                                    placeholder="Descreva elementos especiais..."
+                                    rows="3"></textarea>
+                            </div>
+
+                            <div class="tab-navigation">
+                                <button type="button" class="btn btn-secondary" onclick="goToFirstTab()" title="Início">
+                                    <i class="material-icons">home</i>
+                                </button>
+                                <button type="button" class="btn btn-secondary" onclick="prevTab()" title="Anterior">
+                                    <i class="material-icons">arrow_back</i>
+                                </button>
+                                <button type="button" class="btn btn-primary" onclick="nextTab()" title="Próxima">
+                                    <i class="material-icons">arrow_forward</i>
+                                </button>
+                                <button type="button" class="btn btn-secondary" onclick="goToLastTab()" title="Fim">
+                                    <i class="material-icons">flag</i>
+                                </button>
+                            </div>
+
+                            <div class="advertisement-container">
+                                <div class="advertisement-content">
+                                    <i class="material-icons" style="font-size: 2rem; color: var(--text-muted);">campaign</i>
+                                    <div class="advertisement-placeholder">
+                                        Espaço para propaganda<br>
+                                        Anúncios e promoções
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ABA 6: QUALIDADE -->
+                    <div class="tab-content" id="tab-qualidade">
+                        <div class="tab-header">
+                        </div>
+
+                        <div class="categories-grid">
+                            <div class="category-section">
+                                <div class="category-header">
+                                    <div class="category-icon">
+                                        <i class="material-icons">high_quality</i>
+                                    </div>
+                                    <h3 class="category-title">Em desenvolvimento</h3>
+                                </div>
+                                <div class="subcategories-grid">
+                                    <div class="subcategory-card">
+                                        <div class="subcategory-title">Qualidade será implementada em breve</div>
+                                        <div class="subcategory-desc">Aguarde atualizações</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bottom-controls-container">
+                            <div class="custom-description">
+                                <label>
+                                    <i class="material-icons">edit</i>
+                                    Descrição Personalizada da Qualidade
+                                </label>
+                                <textarea 
+                                    name="custom_quality" 
+                                    placeholder="Descreva configurações de qualidade..."
+                                    rows="3"></textarea>
+                            </div>
+
+                            <div class="tab-navigation">
+                                <button type="button" class="btn btn-secondary" onclick="goToFirstTab()" title="Início">
+                                    <i class="material-icons">home</i>
+                                </button>
+                                <button type="button" class="btn btn-secondary" onclick="prevTab()" title="Anterior">
+                                    <i class="material-icons">arrow_back</i>
+                                </button>
+                                <button type="button" class="btn btn-primary" onclick="nextTab()" title="Próxima">
+                                    <i class="material-icons">arrow_forward</i>
+                                </button>
+                                <button type="button" class="btn btn-secondary" onclick="goToLastTab()" title="Fim">
+                                    <i class="material-icons">flag</i>
+                                </button>
+                            </div>
+
+                            <div class="advertisement-container">
+                                <div class="advertisement-content">
+                                    <i class="material-icons" style="font-size: 2rem; color: var(--text-muted);">campaign</i>
+                                    <div class="advertisement-placeholder">
+                                        Espaço para propaganda<br>
+                                        Anúncios e promoções
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ABA 7: AVATAR/PERSONAGEM -->
                     <div class="tab-content" id="tab-avatar">
                         <div class="tab-header">
                             <h2><i class="material-icons">groups</i> Avatar e Personagem</h2>
@@ -1920,7 +2054,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         </div>
                     </div>
 
-                    <!-- ABA 4: CÂMERA -->
+                    <!-- ABA 8: CÂMERA -->
                     <div class="tab-content" id="tab-camera">
                         <div class="tab-header">
                             <h2><i class="material-icons">photo_camera</i> Configurações de Câmera</h2>
@@ -2024,7 +2158,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         </div>
                     </div>
 
-                    <!-- ABA 5: VOZ -->
+                    <!-- ABA 9: VOZ -->
                     <div class="tab-content" id="tab-voz">
                         <div class="tab-header">
                             <h2><i class="material-icons">mic</i> Configurações de Voz</h2>
@@ -2120,7 +2254,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         </div>
                     </div>
 
-                    <!-- ABA 6: AÇÃO -->
+                    <!-- ABA 10: AÇÃO -->
                     <div class="tab-content" id="tab-acao">
                         <div class="tab-header">
                             <h2><i class="material-icons">play_arrow</i> Ações e Movimentos</h2>
@@ -2350,74 +2484,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         </div>
                     </div>
 
-                    <!-- ABA 7: SEU PROMPT -->
-                    <div class="tab-content" id="tab-prompt">
-                        <div class="tab-header">
-                            <h2><i class="material-icons">edit_note</i> Seu Prompt Final</h2>
-                            <p>Finalize e personalize seu prompt antes de gerar</p>
-                        </div>
 
-                        <div class="form-section">
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <i class="material-icons">title</i>
-                                    Título do Prompt
-                                </label>
-                                <input 
-                                    type="text" 
-                                    name="title" 
-                                    class="form-input"
-                                    placeholder="Digite um título para seu prompt..."
-                                    required>
-                            </div>
 
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <i class="material-icons">description</i>
-                                    Seu Prompt Original
-                                </label>
-                                <textarea 
-                                    name="original_prompt" 
-                                    class="form-textarea"
-                                    placeholder="Digite seu prompt base aqui..."
-                                    required></textarea>
-                            </div>
-
-                            <!-- Preview do Prompt Gerado -->
-                            <div class="prompt-preview">
-                                <h3>
-                                    <i class="material-icons">visibility</i>
-                                    Preview do Prompt Aprimorado
-                                </h3>
-                                <div id="enhanced-prompt-preview" class="prompt-text">
-                                    O prompt aprimorado aparecerá aqui conforme você faz suas seleções...
-                                </div>
-                            </div>
-
-                            <!-- Prompt Final -->
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <i class="material-icons">auto_fix_high</i>
-                                    Prompt Final Aprimorado
-                                </label>
-                                <textarea 
-                                    name="enhanced_prompt" 
-                                    id="enhanced-prompt" 
-                                    class="form-textarea"
-                                    placeholder="O prompt aprimorado aparecerá aqui automaticamente..."
-                                    readonly></textarea>
-                            </div>
-                        </div>
-
-                        <div class="tab-navigation">
-                            <button type="button" class="btn btn-secondary" onclick="prevTab()">
-                                <i class="material-icons">arrow_back</i> Anterior
-                            </button>
-                            <button type="submit" class="btn btn-success">
-                                <i class="material-icons">save</i> Salvar Prompt
-                            </button>
-                        </div>
-                    </div>
                 </form>
             </div>
         </div>
@@ -2427,22 +2495,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         class ModernPromptGenerator {
             constructor() {
                 this.currentTab = 0;
-                this.tabs = ['ambiente', 'iluminacao', 'avatar', 'camera', 'voz', 'acao', 'prompt'];
+                this.tabs = ['ambiente', 'estilo_visual', 'iluminacao', 'tecnica', 'elementos_especiais', 'qualidade', 'avatar', 'camera', 'voz', 'acao'];
                 this.selections = {
                     environment: null,
+                    visual_style: null,
                     lighting: null,
                     character: null,
                     camera: null,
                     voice: null,
-                    action: null
+                    action: null,
+                    quality: null,
+                    technique: null,
+                    special_elements: null
                 };
                 this.customDescriptions = {
                     environment: '',
+                    visual_style: '',
                     lighting: '',
                     character: '',
                     camera: '',
                     voice: '',
-                    action: ''
+                    action: '',
+                    quality: '',
+                    technique: '',
+                    special_elements: ''
                 };
                 
                 this.init();
@@ -2513,26 +2589,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             }
 
             selectOption(type, value, element) {
-                // Remove previous selection
-                const container = element.closest('.category-section');
-                container.querySelectorAll('.subcategory-card').forEach(card => {
+                // Limpa seleções apenas na aba atual
+                const tabContainer = element.closest('.tab-content') || element.closest('.category-section');
+                if (tabContainer) {
+                    tabContainer.querySelectorAll('.subcategory-card.selected').forEach(card => {
                     card.classList.remove('selected');
                 });
+                } else {
+                    document.querySelectorAll('.subcategory-card.selected').forEach(card => card.classList.remove('selected'));
+                }
 
-                // Add selection to clicked element
+                // Marca a opção selecionada
                 element.classList.add('selected');
 
-                // Store selection
+                // Armazena a seleção por tipo
                 this.selections[type] = value;
 
-                // Update hidden input
+                // Atualiza input oculto
                 const input = document.getElementById(`selected_${type}`);
                 if (input) {
                     input.value = value;
                 }
 
-                // Update prompt preview
+                // Atualiza o preview do prompt
                 this.updatePromptPreview();
+
+                // Navega para a próxima aba após curto delay
+                setTimeout(() => {
+                    this.autoNavigateToNextTab();
+                }, 500);
             }
 
             updatePromptPreview() {
@@ -2616,6 +2701,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     });
                 }
             }
+
+            autoNavigateToNextTab() {
+                // Move to the next tab by index, garantindo uma seleção única por aba
+                const currentIndex = this.tabs.findIndex(t => t === this.currentTab);
+                const nextIndex = currentIndex >= 0 ? currentIndex + 1 : 0;
+
+                if (nextIndex < this.tabs.length) {
+                    const nextTab = this.tabs[nextIndex];
+                    this.showTab(nextTab);
+                    this.showNavigationNotification(nextTab);
+                } else {
+                    // Já na última aba, manter ou ir para a última conforme UX
+                    const lastIndex = this.tabs.length - 1;
+                    const lastTab = this.tabs[lastIndex];
+                    if (this.currentTab !== lastTab) {
+                        this.showTab(lastTab);
+                        this.showNavigationNotification(lastTab);
+                    }
+                }
+            }
+
         }
 
         // Navigation functions
@@ -2641,9 +2747,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
         function goToLastTab() {
             if (window.promptGenerator) {
-                window.promptGenerator.showTab('prompt');
+                window.promptGenerator.showTab('acao');
             }
         }
+
 
         // Initialize when DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
@@ -2675,9 +2782,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     </script>
     
     <?php
-    // Adicionar JavaScript de integração com sistema dinâmico de cenas
+    // Adicionar JavaScript de integração com sistema dinâmico de cenas para ambiente, estilo visual e iluminação
     if ($cenaRenderer) {
-        echo $cenaRenderer->gerarJavaScriptIntegracao();
+        echo $cenaRenderer->gerarJavaScriptIntegracao(['ambiente', 'estilo_visual', 'iluminacao']);
     }
     ?>
 </body>

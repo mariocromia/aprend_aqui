@@ -20,7 +20,7 @@ class CenaRendererPrompt {
             $blocos = $this->cenaManager->getBlocosPorTipo('ambiente');
             
             if (empty($blocos)) {
-                return $this->renderizarEstadoVazio();
+                return $this->renderizarEstadoVazio('ambiente');
             }
             
             $html = '<div class="categories-grid">';
@@ -40,7 +40,73 @@ class CenaRendererPrompt {
             
         } catch (Exception $e) {
             error_log("Erro ao renderizar aba ambiente: " . $e->getMessage());
-            return $this->renderizarErro();
+            return $this->renderizarErro('ambiente');
+        }
+    }
+
+    /**
+     * Renderiza a aba iluminação completa com dados do banco
+     */
+    public function renderizarAbaIluminacao() {
+        try {
+            // Buscar todos os blocos ativos do tipo 'iluminacao'
+            $blocos = $this->cenaManager->getBlocosPorTipo('iluminacao');
+            
+            if (empty($blocos)) {
+                return $this->renderizarEstadoVazio('iluminacao');
+            }
+            
+            $html = '<div class="categories-grid">';
+            
+            foreach ($blocos as $bloco) {
+                $cenas = $this->cenaManager->getCenasPorBloco($bloco['id']);
+                $cenasAtivas = $cenas; // CenaManager já filtra apenas cenas ativas
+                
+                if (!empty($cenasAtivas)) {
+                    $html .= $this->renderizarBlocoIluminacao($bloco, $cenasAtivas);
+                }
+            }
+            
+            $html .= '</div>';
+            
+            return $html;
+            
+        } catch (Exception $e) {
+            error_log("Erro ao renderizar aba iluminacao: " . $e->getMessage());
+            return $this->renderizarErro('iluminacao');
+        }
+    }
+
+    /**
+     * Renderiza a aba estilo visual completa com dados do banco
+     */
+    public function renderizarAbaEstiloVisual() {
+        try {
+            // Buscar todos os blocos ativos do tipo 'estilo_visual'
+            $blocos = $this->cenaManager->getBlocosPorTipo('estilo_visual');
+            
+            if (empty($blocos)) {
+                return $this->renderizarEstadoVazio('estilo_visual');
+            }
+            
+            $html = '<div class="categories-grid">';
+            
+            foreach ($blocos as $bloco) {
+                $cenas = $this->cenaManager->getCenasPorBloco($bloco['id']);
+                $cenasAtivas = $cenas; // CenaManager já filtra apenas cenas ativas
+                
+                if (!empty($cenasAtivas)) {
+                    $html .= $this->renderizarBlocoEstiloVisual($bloco, $cenasAtivas);
+                }
+            }
+            
+            $html .= '</div>';
+            
+            return $html;
+            
+        } catch (Exception $e) {
+            error_log("Erro ao renderizar aba estilo_visual: " . $e->getMessage());
+            return $this->renderizarErro('estilo_visual');
         }
     }
     
@@ -74,6 +140,68 @@ class CenaRendererPrompt {
         
         return $html;
     }
+
+    /**
+     * Renderiza um bloco específico de iluminação
+     */
+    private function renderizarBlocoIluminacao($bloco, $cenas) {
+        // Ordenar cenas por ordem de exibição
+        usort($cenas, function($a, $b) {
+            return ($a['ordem_exibicao'] ?? 0) - ($b['ordem_exibicao'] ?? 0);
+        });
+        
+        $html = '
+            <!-- ' . strtoupper($this->sanitizar($bloco['titulo'])) . ' -->
+            <div class="category-section" data-bloco-id="' . $bloco['id'] . '">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="material-icons">' . $this->sanitizar($bloco['icone']) . '</i>
+                    </div>
+                    <h3 class="category-title">' . $this->sanitizar($bloco['titulo']) . '</h3>
+                </div>
+                <div class="subcategories-grid">';
+        
+        foreach ($cenas as $cena) {
+            $html .= $this->renderizarCenaIluminacao($cena);
+        }
+        
+        $html .= '
+                </div>
+            </div>';
+        
+        return $html;
+    }
+
+    /**
+     * Renderiza um bloco específico de estilo visual
+     */
+    private function renderizarBlocoEstiloVisual($bloco, $cenas) {
+        // Ordenar cenas por ordem de exibição
+        usort($cenas, function($a, $b) {
+            return ($a['ordem_exibicao'] ?? 0) - ($b['ordem_exibicao'] ?? 0);
+        });
+        
+        $html = '
+            <!-- ' . strtoupper($this->sanitizar($bloco['titulo'])) . ' -->
+            <div class="category-section" data-bloco-id="' . $bloco['id'] . '">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="material-icons">' . $this->sanitizar($bloco['icone']) . '</i>
+                    </div>
+                    <h3 class="category-title">' . $this->sanitizar($bloco['titulo']) . '</h3>
+                </div>
+                <div class="subcategories-grid">';
+        
+        foreach ($cenas as $cena) {
+            $html .= $this->renderizarCenaEstiloVisual($cena);
+        }
+        
+        $html .= '
+                </div>
+            </div>';
+        
+        return $html;
+    }
     
     /**
      * Renderiza uma cena individual como card de ambiente
@@ -89,18 +217,68 @@ class CenaRendererPrompt {
                         <div class="subcategory-desc">' . $subtitulo . '</div>
                     </div>';
     }
+
+    /**
+     * Renderiza uma cena individual como card de iluminação
+     */
+    private function renderizarCenaIluminacao($cena) {
+        $titulo = $this->sanitizar($cena['titulo']);
+        $subtitulo = !empty($cena['subtitulo']) ? $this->sanitizar($cena['subtitulo']) : $this->truncarTexto($cena['texto_prompt'], 30);
+        $valorSelecao = $this->sanitizar($cena['valor_selecao']);
+        
+        return '
+                    <div class="subcategory-card" data-type="lighting" data-value="' . $valorSelecao . '" data-cena-id="' . $cena['id'] . '">
+                        <div class="subcategory-title">' . $titulo . '</div>
+                        <div class="subcategory-desc">' . $subtitulo . '</div>
+                    </div>';
+    }
+
+    /**
+     * Renderiza uma cena individual como card de estilo visual
+     */
+    private function renderizarCenaEstiloVisual($cena) {
+        $titulo = $this->sanitizar($cena['titulo']);
+        $subtitulo = !empty($cena['subtitulo']) ? $this->sanitizar($cena['subtitulo']) : $this->truncarTexto($cena['texto_prompt'], 30);
+        $valorSelecao = $this->sanitizar($cena['valor_selecao']);
+        
+        return '
+                    <div class="subcategory-card" data-type="visual_style" data-value="' . $valorSelecao . '" data-cena-id="' . $cena['id'] . '">
+                        <div class="subcategory-title">' . $titulo . '</div>
+                        <div class="subcategory-desc">' . $subtitulo . '</div>
+                    </div>';
+    }
     
     /**
      * Renderiza estado vazio quando não há blocos/cenas
      */
-    private function renderizarEstadoVazio() {
+    private function renderizarEstadoVazio($tipo = 'ambiente') {
+        $configs = [
+            'ambiente' => [
+                'icone' => 'landscape',
+                'titulo' => 'Nenhum ambiente encontrado',
+                'descricao' => 'Configure ambientes no painel administrativo para exibi-los aqui.'
+            ],
+            'iluminacao' => [
+                'icone' => 'wb_sunny',
+                'titulo' => 'Nenhuma opção de iluminação encontrada',
+                'descricao' => 'Configure opções de iluminação no painel administrativo para exibi-las aqui.'
+            ],
+            'estilo_visual' => [
+                'icone' => 'palette',
+                'titulo' => 'Nenhum estilo visual encontrado',
+                'descricao' => 'Configure estilos visuais no painel administrativo para exibi-los aqui.'
+            ]
+        ];
+        
+        $config = $configs[$tipo] ?? $configs['ambiente'];
+        
         return '
         <div class="categories-grid">
             <div class="category-section">
-                <div class="empty-state-ambiente">
-                    <i class="material-icons" style="font-size: 4rem; color: #cbd5e1; margin-bottom: 1rem;">landscape</i>
-                    <h3 style="color: #64748b; margin-bottom: 0.5rem;">Nenhum ambiente encontrado</h3>
-                    <p style="color: #94a3b8;">Configure ambientes no painel administrativo para exibi-los aqui.</p>
+                <div class="empty-state-' . $tipo . '">
+                    <i class="material-icons" style="font-size: 4rem; color: #cbd5e1; margin-bottom: 1rem;">' . $config['icone'] . '</i>
+                    <h3 style="color: #64748b; margin-bottom: 0.5rem;">' . $config['titulo'] . '</h3>
+                    <p style="color: #94a3b8;">' . $config['descricao'] . '</p>
                 </div>
             </div>
         </div>';
@@ -109,13 +287,21 @@ class CenaRendererPrompt {
     /**
      * Renderiza estado de erro
      */
-    private function renderizarErro() {
+    private function renderizarErro($tipo = 'ambiente') {
+        $titulos = [
+            'ambiente' => 'Erro ao carregar ambientes',
+            'iluminacao' => 'Erro ao carregar opções de iluminação',
+            'estilo_visual' => 'Erro ao carregar estilos visuais'
+        ];
+        
+        $titulo = $titulos[$tipo] ?? $titulos['ambiente'];
+        
         return '
         <div class="categories-grid">
             <div class="category-section">
-                <div class="error-state-ambiente">
+                <div class="error-state-' . $tipo . '">
                     <i class="material-icons" style="font-size: 4rem; color: #ef4444; margin-bottom: 1rem;">error</i>
-                    <h3 style="color: #ef4444; margin-bottom: 0.5rem;">Erro ao carregar ambientes</h3>
+                    <h3 style="color: #ef4444; margin-bottom: 0.5rem;">' . $titulo . '</h3>
                     <p style="color: #64748b;">Tente recarregar a página ou contate o administrador.</p>
                 </div>
             </div>
@@ -152,44 +338,75 @@ class CenaRendererPrompt {
     /**
      * Gera JavaScript para integração com sistema de seleção
      */
-    public function gerarJavaScriptIntegracao() {
-        $dataAttributes = $this->renderizarDataAttributes('ambiente');
+    public function gerarJavaScriptIntegracao($tipos = ['ambiente']) {
+        $js = '<script>';
         
-        $js = '
-        <script>
-        // Dados dinâmicos das cenas de ambiente
-        window.cenasAmbienteData = ' . json_encode($dataAttributes, JSON_UNESCAPED_UNICODE) . ';
+        // Gerar dados para cada tipo especificado
+        foreach ($tipos as $tipo) {
+            $dataAttributes = $this->renderizarDataAttributes($tipo);
+            $varName = 'cenas' . ucfirst($tipo) . 'Data';
+            
+            $js .= '
+        // Dados dinâmicos das cenas de ' . $tipo . '
+        window.' . $varName . ' = ' . json_encode($dataAttributes, JSON_UNESCAPED_UNICODE) . ';';
+        }
+        
+        $js .= '
         
         // Integração com sistema de seleção existente
-        document.addEventListener("DOMContentLoaded", function() {
-            // Verificar se dados foram carregados
-            if (window.cenasAmbienteData && Object.keys(window.cenasAmbienteData).length > 0) {
-                console.log("Dados de ambiente carregados:", Object.keys(window.cenasAmbienteData).length, "cenas");
-                
-                // Ajustar alinhamento dos blocos após carregar conteúdo dinâmico
-                if (typeof window.adjustCategoriesAlignment === "function") {
-                    window.adjustCategoriesAlignment();
-                }
-                
-                // Adicionar event listeners para cards dinâmicos
-                document.querySelectorAll(".subcategory-card[data-cena-id]").forEach(function(card) {
-                    card.addEventListener("click", function() {
-                        const valor = this.dataset.value;
-                        const cenaData = window.cenasAmbienteData[valor];
-                        
-                        if (cenaData) {
-                            console.log("Cena selecionada:", cenaData.titulo, "- Prompt:", cenaData.prompt);
-                            
-                            // Integrar com sistema existente de seleção
-                            if (typeof window.atualizarSelecaoAmbiente === "function") {
-                                window.atualizarSelecaoAmbiente(valor, cenaData);
-                            }
-                        }
-                    });
-                });
+        document.addEventListener("DOMContentLoaded", function() {';
+        
+        // Gerar verificações e integrações para cada tipo
+        foreach ($tipos as $tipo) {
+            $varName = 'cenas' . ucfirst($tipo) . 'Data';
+            $functionName = 'atualizarSelecao' . ucfirst($tipo);
+            
+            $js .= '
+            // Verificar se dados de ' . $tipo . ' foram carregados
+            if (window.' . $varName . ' && Object.keys(window.' . $varName . ').length > 0) {
+                console.log("Dados de ' . $tipo . ' carregados:", Object.keys(window.' . $varName . ').length, "cenas");
             } else {
-                console.warn("Nenhum dado de ambiente carregado do banco de dados");
+                console.warn("Nenhum dado de ' . $tipo . ' carregado do banco de dados");
+            }';
+        }
+        
+        $js .= '
+            
+            // Ajustar alinhamento dos blocos após carregar conteúdo dinâmico
+            if (typeof window.adjustCategoriesAlignment === "function") {
+                window.adjustCategoriesAlignment();
             }
+            
+            // Adicionar event listeners para cards dinâmicos de todos os tipos
+            document.querySelectorAll(".subcategory-card[data-cena-id]").forEach(function(card) {
+                card.addEventListener("click", function() {
+                    const valor = this.dataset.value;
+                    const tipo = this.dataset.type;
+                    let cenaData = null;
+                    
+                    // Buscar dados na variável correspondente ao tipo
+                    if (tipo === "environment" && window.cenasAmbienteData) {
+                        cenaData = window.cenasAmbienteData[valor];
+                    } else if (tipo === "visual_style" && window.cenasEstilo_visualData) {
+                        cenaData = window.cenasEstilo_visualData[valor];
+                    } else if (tipo === "lighting" && window.cenasIluminacaoData) {
+                        cenaData = window.cenasIluminacaoData[valor];
+                    }
+                    
+                    if (cenaData) {
+                        console.log("Cena selecionada:", cenaData.titulo, "- Prompt:", cenaData.prompt);
+                        
+                        // Integrar com sistema existente de seleção
+                        if (tipo === "environment" && typeof window.atualizarSelecaoAmbiente === "function") {
+                            window.atualizarSelecaoAmbiente(valor, cenaData);
+                        } else if (tipo === "visual_style" && typeof window.atualizarSelecaoEstilo_visual === "function") {
+                            window.atualizarSelecaoEstilo_visual(valor, cenaData);
+                        } else if (tipo === "lighting" && typeof window.atualizarSelecaoIluminacao === "function") {
+                            window.atualizarSelecaoIluminacao(valor, cenaData);
+                        }
+                    }
+                });
+            });
         });
         </script>';
         
