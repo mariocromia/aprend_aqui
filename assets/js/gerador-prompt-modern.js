@@ -208,6 +208,8 @@ class ModernPromptGenerator {
     }
 
     createSkeletonHTML(tabName) {
+        // Padronizado: todas as abas mostram estrutura consistente durante carregamento
+        // 6 blocos × 8 subcategorias = layout uniforme e profissional
         const categoryCount = this.getCategoryCount(tabName);
         let skeletonHTML = '';
 
@@ -227,7 +229,9 @@ class ModernPromptGenerator {
 
     createSkeletonSubcategories() {
         let subcategoriesHTML = '';
-        const subcategoryCount = Math.floor(Math.random() * 4) + 4; // 4-7 subcategories
+        // Padronizado: 8 subcategorias por bloco
+        // Baseado na estrutura real: a maioria dos blocos tem entre 6-10 itens
+        const subcategoryCount = 8;
 
         for (let i = 0; i < subcategoryCount; i++) {
             subcategoriesHTML += '<div class="skeleton-subcategory skeleton-loader shimmer"></div>';
@@ -237,20 +241,9 @@ class ModernPromptGenerator {
     }
 
     getCategoryCount(tabName) {
-        // Return expected number of categories for each tab
-        const categoryCounts = {
-            'ambiente': 4,
-            'estilo_visual': 3,
-            'iluminacao': 3,
-            'tecnica': 2,
-            'elementos_especiais': 2,
-            'qualidade': 2,
-            'avatar': 3,
-            'camera': 2,
-            'voz': 2,
-            'acao': 2
-        };
-        return categoryCounts[tabName] || 3;
+        // Padronizado: todas as abas mostram 6 blocos no skeleton loader
+        // Isso garante consistência visual durante o carregamento
+        return 6;
     }
 
     showErrorState(tabContent, tabName) {
