@@ -135,12 +135,12 @@ class ModernPromptGenerator {
 
     async loadDynamicContent(tabName) {
         // For static tabs (already loaded), return immediately
-        if (['elementos_especiais', 'qualidade', 'avatar', 'camera', 'voz', 'acao'].includes(tabName)) {
+        if (['qualidade', 'avatar', 'camera', 'voz', 'acao'].includes(tabName)) {
             await new Promise(resolve => setTimeout(resolve, 300)); // Simulate loading
             return;
         }
 
-        // For dynamic tabs (ambiente, estilo_visual, iluminacao, tecnica), load from server
+        // For dynamic tabs (ambiente, estilo_visual, iluminacao, tecnica, elementos_especiais), load from server
         try {
             const response = await fetch(`api/load_tab_content.php?tab=${tabName}`, {
                 method: 'GET',
@@ -208,8 +208,6 @@ class ModernPromptGenerator {
     }
 
     createSkeletonHTML(tabName) {
-        // Padronizado: todas as abas mostram estrutura consistente durante carregamento
-        // 6 blocos × 8 subcategorias = layout uniforme e profissional
         const categoryCount = this.getCategoryCount(tabName);
         let skeletonHTML = '';
 
@@ -229,9 +227,7 @@ class ModernPromptGenerator {
 
     createSkeletonSubcategories() {
         let subcategoriesHTML = '';
-        // Padronizado: 8 subcategorias por bloco
-        // Baseado na estrutura real: a maioria dos blocos tem entre 6-10 itens
-        const subcategoryCount = 8;
+        const subcategoryCount = 6; // Simplificado
 
         for (let i = 0; i < subcategoryCount; i++) {
             subcategoriesHTML += '<div class="skeleton-subcategory skeleton-loader shimmer"></div>';
@@ -241,9 +237,8 @@ class ModernPromptGenerator {
     }
 
     getCategoryCount(tabName) {
-        // Padronizado: todas as abas mostram 6 blocos no skeleton loader
-        // Isso garante consistência visual durante o carregamento
-        return 6;
+        // Padronizado: 5 blocos para todas as abas
+        return 5;
     }
 
     showErrorState(tabContent, tabName) {

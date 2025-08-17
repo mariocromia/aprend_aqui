@@ -27,7 +27,7 @@ try {
     $tab = $_GET['tab'] ?? '';
     
     // Validar aba solicitada
-    $validTabs = ['ambiente', 'estilo_visual', 'iluminacao', 'tecnica'];
+    $validTabs = ['ambiente', 'estilo_visual', 'iluminacao', 'tecnica', 'elementos_especiais'];
     if (!in_array($tab, $validTabs)) {
         echo json_encode(['success' => false, 'message' => 'Aba inválida']);
         exit;
@@ -61,6 +61,9 @@ try {
                 break;
             case 'tecnica':
                 $html = $cenaRenderer->renderizarAbaTecnica();
+                break;
+            case 'elementos_especiais':
+                $html = $cenaRenderer->renderizarAbaElementosEspeciais();
                 break;
             default:
                 throw new Exception('Aba não suportada');

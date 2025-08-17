@@ -142,6 +142,39 @@ class CenaRendererPrompt {
             return $this->renderizarErro('tecnica');
         }
     }
+
+    /**
+     * Renderiza a aba elementos especiais completa com dados do banco
+     */
+    public function renderizarAbaElementosEspeciais() {
+        try {
+            // Buscar todos os blocos ativos do tipo 'elementos_especiais'
+            $blocos = $this->cenaManager->getBlocosPorTipo('elementos_especiais');
+            
+            if (empty($blocos)) {
+                return $this->renderizarEstadoVazio('elementos_especiais');
+            }
+            
+            $html = '<div class="categories-grid">';
+            
+            foreach ($blocos as $bloco) {
+                $cenas = $this->cenaManager->getCenasPorBloco($bloco['id']);
+                $cenasAtivas = $cenas; // CenaManager já filtra apenas cenas ativas
+                
+                if (!empty($cenasAtivas)) {
+                    $html .= $this->renderizarBlocoElementosEspeciais($bloco, $cenasAtivas);
+                }
+            }
+            
+            $html .= '</div>';
+            
+            return $html;
+            
+        } catch (Exception $e) {
+            error_log("Erro ao renderizar aba elementos_especiais: " . $e->getMessage());
+            return $this->renderizarErro('elementos_especiais');
+        }
+    }
     
     /**
      * Renderiza um bloco específico de ambiente
@@ -266,6 +299,37 @@ class CenaRendererPrompt {
         
         return $html;
     }
+
+    /**
+     * Renderiza um bloco específico de elementos especiais
+     */
+    private function renderizarBlocoElementosEspeciais($bloco, $cenas) {
+        // Ordenar cenas por ordem de exibição
+        usort($cenas, function($a, $b) {
+            return ($a['ordem_exibicao'] ?? 0) - ($b['ordem_exibicao'] ?? 0);
+        });
+        
+        $html = '
+            <!-- ' . strtoupper($this->sanitizar($bloco['titulo'])) . ' -->
+            <div class="category-section" data-bloco-id="' . $bloco['id'] . '">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="material-icons">' . $this->sanitizar($bloco['icone']) . '</i>
+                    </div>
+                    <h3 class="category-title">' . $this->sanitizar($bloco['titulo']) . '</h3>
+                </div>
+                <div class="subcategories-grid">';
+        
+        foreach ($cenas as $cena) {
+            $html .= $this->renderizarCenaElementosEspeciais($cena);
+        }
+        
+        $html .= '
+                </div>
+            </div>';
+        
+        return $html;
+    }
     
     /**
      * Renderiza uma cena individual como card de ambiente
@@ -326,6 +390,21 @@ class CenaRendererPrompt {
                         <div class="subcategory-desc">' . $subtitulo . '</div>
                     </div>';
     }
+
+    /**
+     * Renderiza uma cena individual como card de elementos especiais
+     */
+    private function renderizarCenaElementosEspeciais($cena) {
+        $titulo = $this->sanitizar($cena['titulo']);
+        $subtitulo = !empty($cena['subtitulo']) ? $this->sanitizar($cena['subtitulo']) : $this->truncarTexto($cena['texto_prompt'], 30);
+        $valorSelecao = $this->sanitizar($cena['valor_selecao']);
+        
+        return '
+                    <div class="subcategory-card" data-type="special_elements" data-value="' . $valorSelecao . '" data-cena-id="' . $cena['id'] . '">
+                        <div class="subcategory-title">' . $titulo . '</div>
+                        <div class="subcategory-desc">' . $subtitulo . '</div>
+                    </div>';
+    }
     
     /**
      * Renderiza estado vazio quando não há blocos/cenas
@@ -351,6 +430,11 @@ class CenaRendererPrompt {
                 'icone' => 'settings',
                 'titulo' => 'Nenhuma opção técnica encontrada',
                 'descricao' => 'Configure opções técnicas no painel administrativo para exibi-las aqui.'
+            ],
+            'elementos_especiais' => [
+                'icone' => 'auto_awesome',
+                'titulo' => 'Nenhum elemento especial encontrado',
+                'descricao' => 'Configure elementos especiais no painel administrativo para exibi-los aqui.'
             ]
         ];
         

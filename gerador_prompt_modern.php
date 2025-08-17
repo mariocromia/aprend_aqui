@@ -461,22 +461,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         <div class="tab-header">
                         </div>
 
-                        <div class="categories-grid">
-                            <div class="category-section">
-                                <div class="category-header">
-                                    <div class="category-icon">
-                                        <i class="material-icons">settings</i>
-                                    </div>
-                                    <h3 class="category-title">Em desenvolvimento</h3>
-                                </div>
-                                <div class="subcategories-grid">
-                                    <div class="subcategory-card">
-                                        <div class="subcategory-title">Técnica será implementada em breve</div>
-                                        <div class="subcategory-desc">Aguarde atualizações</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <?php 
+                        // Renderizar aba técnica dinamicamente
+                        if ($cenaRenderer) {
+                            echo $cenaRenderer->renderizarAbaTecnica();
+                        } else {
+                            echo '<div class="categories-grid"><div class="category-section"><div class="error-state-tecnica"><i class="material-icons" style="font-size: 4rem; color: #ef4444;">error</i><h3 style="color: #ef4444;">Sistema técnico indisponível</h3><p style="color: #64748b;">Carregando configurações padrão...</p></div></div></div>';
+                        }
+                        ?>
 
                         <div class="bottom-controls-container">
                             <div class="custom-description">
@@ -524,22 +516,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         <div class="tab-header">
                         </div>
 
-                        <div class="categories-grid">
-                            <div class="category-section">
-                                <div class="category-header">
-                                    <div class="category-icon">
-                                        <i class="material-icons">auto_awesome</i>
-                                    </div>
-                                    <h3 class="category-title">Em desenvolvimento</h3>
-                                </div>
-                                <div class="subcategories-grid">
-                                    <div class="subcategory-card">
-                                        <div class="subcategory-title">Elementos Especiais em breve</div>
-                                        <div class="subcategory-desc">Aguarde atualizações</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <?php 
+                        // Renderizar aba elementos especiais dinamicamente
+                        if ($cenaRenderer) {
+                            echo $cenaRenderer->renderizarAbaElementosEspeciais();
+                        } else {
+                            echo '<div class="categories-grid"><div class="category-section"><div class="error-state-elementos_especiais"><i class="material-icons" style="font-size: 4rem; color: #ef4444;">error</i><h3 style="color: #ef4444;">Sistema de elementos especiais indisponível</h3><p style="color: #64748b;">Carregando configurações padrão...</p></div></div></div>';
+                        }
+                        ?>
 
                         <div class="bottom-controls-container">
                             <div class="custom-description">
