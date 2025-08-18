@@ -175,6 +175,39 @@ class CenaRendererPrompt {
             return $this->renderizarErro('elementos_especiais');
         }
     }
+
+    /**
+     * Renderiza a aba qualidade completa com dados do banco
+     */
+    public function renderizarAbaQualidade() {
+        try {
+            // Buscar todos os blocos ativos do tipo 'qualidade'
+            $blocos = $this->cenaManager->getBlocosPorTipo('qualidade');
+            
+            if (empty($blocos)) {
+                return $this->renderizarEstadoVazio('qualidade');
+            }
+            
+            $html = '<div class="categories-grid">';
+            
+            foreach ($blocos as $bloco) {
+                $cenas = $this->cenaManager->getCenasPorBloco($bloco['id']);
+                $cenasAtivas = $cenas; // CenaManager já filtra apenas cenas ativas
+                
+                if (!empty($cenasAtivas)) {
+                    $html .= $this->renderizarBlocoQualidade($bloco, $cenasAtivas);
+                }
+            }
+            
+            $html .= '</div>';
+            
+            return $html;
+            
+        } catch (Exception $e) {
+            error_log("Erro ao renderizar aba qualidade: " . $e->getMessage());
+            return $this->renderizarErro('qualidade');
+        }
+    }
     
     /**
      * Renderiza um bloco específico de ambiente
@@ -330,6 +363,37 @@ class CenaRendererPrompt {
         
         return $html;
     }
+
+    /**
+     * Renderiza um bloco específico de qualidade
+     */
+    private function renderizarBlocoQualidade($bloco, $cenas) {
+        // Ordenar cenas por ordem de exibição
+        usort($cenas, function($a, $b) {
+            return ($a['ordem_exibicao'] ?? 0) - ($b['ordem_exibicao'] ?? 0);
+        });
+        
+        $html = '
+            <!-- ' . strtoupper($this->sanitizar($bloco['titulo'])) . ' -->
+            <div class="category-section" data-bloco-id="' . $bloco['id'] . '">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="material-icons">' . $this->sanitizar($bloco['icone']) . '</i>
+                    </div>
+                    <h3 class="category-title">' . $this->sanitizar($bloco['titulo']) . '</h3>
+                </div>
+                <div class="subcategories-grid">';
+        
+        foreach ($cenas as $cena) {
+            $html .= $this->renderizarCenaQualidade($cena);
+        }
+        
+        $html .= '
+                </div>
+            </div>';
+        
+        return $html;
+    }
     
     /**
      * Renderiza uma cena individual como card de ambiente
@@ -401,6 +465,21 @@ class CenaRendererPrompt {
         
         return '
                     <div class="subcategory-card" data-type="special_elements" data-value="' . $valorSelecao . '" data-cena-id="' . $cena['id'] . '">
+                        <div class="subcategory-title">' . $titulo . '</div>
+                        <div class="subcategory-desc">' . $subtitulo . '</div>
+                    </div>';
+    }
+
+    /**
+     * Renderiza uma cena individual como card de qualidade
+     */
+    private function renderizarCenaQualidade($cena) {
+        $titulo = $this->sanitizar($cena['titulo']);
+        $subtitulo = !empty($cena['subtitulo']) ? $this->sanitizar($cena['subtitulo']) : $this->truncarTexto($cena['texto_prompt'], 30);
+        $valorSelecao = $this->sanitizar($cena['valor_selecao']);
+        
+        return '
+                    <div class="subcategory-card" data-type="quality" data-value="' . $valorSelecao . '" data-cena-id="' . $cena['id'] . '">
                         <div class="subcategory-title">' . $titulo . '</div>
                         <div class="subcategory-desc">' . $subtitulo . '</div>
                     </div>';

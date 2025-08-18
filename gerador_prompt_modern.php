@@ -574,42 +574,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         <div class="tab-header">
                         </div>
 
-                        <div class="categories-grid">
-                            <div class="category-section">
-                                <div class="category-header">
-                                    <div class="category-icon">
-                                        <i class="material-icons">high_quality</i>
-                                    </div>
-                                    <h3 class="category-title">Qualidade da Imagem</h3>
-                                </div>
-                                <div class="subcategories-grid">
-                                    <div class="subcategory-card" data-type="quality" data-value="ultra_hd">
-                                        <div class="subcategory-title">Ultra HD</div>
-                                        <div class="subcategory-desc">4K, 8K, máxima qualidade</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="quality" data-value="high_quality">
-                                        <div class="subcategory-title">Alta Qualidade</div>
-                                        <div class="subcategory-desc">HD, detalhes nítidos</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="quality" data-value="photorealistic">
-                                        <div class="subcategory-title">Fotorrealista</div>
-                                        <div class="subcategory-desc">Hiper-realismo</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="quality" data-value="artistic">
-                                        <div class="subcategory-title">Artístico</div>
-                                        <div class="subcategory-desc">Estilo mais estilizado</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="quality" data-value="cinematic">
-                                        <div class="subcategory-title">Cinematográfico</div>
-                                        <div class="subcategory-desc">Qualidade de filme</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="quality" data-value="professional">
-                                        <div class="subcategory-title">Profissional</div>
-                                        <div class="subcategory-desc">Qualidade de estúdio</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <?php 
+                        // Renderizar aba qualidade dinamicamente
+                        if ($cenaRenderer) {
+                            echo $cenaRenderer->renderizarAbaQualidade();
+                        } else {
+                            echo '<div class="categories-grid"><div class="category-section"><div class="error-state-qualidade"><i class="material-icons" style="font-size: 4rem; color: #ef4444;">error</i><h3 style="color: #ef4444;">Sistema de qualidade indisponível</h3><p style="color: #64748b;">Carregando configurações padrão...</p></div></div></div>';
+                        }
+                        ?>
 
                         <div class="bottom-controls-container">
                             <div class="custom-description">
@@ -759,54 +731,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                     </div>
                                 </div>
 
-                                <!-- STEP 3: Aparência e Estilo -->
-                                <div class="creation-step" id="step-3">
-                                    <div class="compact-card" id="appearance-section">
-                                        <div class="compact-header">
-                                            <h3><i class="material-icons">style</i> Aparência e Estilo</h3>
-                                        </div>
-                                        
-                                        <div class="compact-content">
-                                            <div class="form-grid-compact">
-                                                <div class="input-compact">
-                                                    <label for="clothing_style">Estilo de Vestimenta</label>
-                                                    <select id="clothing_style" name="clothing_style">
-                                                        <option value="">Selecione um estilo</option>
-                                                        <option value="casual">Casual</option>
-                                                        <option value="formal">Formal</option>
-                                                        <option value="esportivo">Esportivo</option>
-                                                        <option value="gotico">Gótico</option>
-                                                        <option value="cyberpunk">Cyberpunk</option>
-                                                        <option value="medieval">Medieval</option>
-                                                        <option value="futurista">Futurista</option>
-                                                        <option value="bohemio">Boêmio</option>
-                                                        <option value="militar">Militar</option>
-                                                        <option value="vintage">Vintage</option>
-                                                    </select>
-                                                </div>
-                                                
-                                                <div class="input-compact">
-                                                    <label for="accessories">Acessórios</label>
-                                                    <textarea id="accessories" name="accessories" rows="2" placeholder="Ex: Óculos, joias, armas"></textarea>
-                                                </div>
-                                                
-                                                <div class="input-compact">
-                                                    <label for="distinctive_marks">Marcas Distintivas</label>
-                                                    <textarea id="distinctive_marks" name="distinctive_marks" rows="2" placeholder="Ex: Cicatrizes, tatuagens"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="compact-actions">
-                                            <button type="button" class="btn-compact btn-secondary" onclick="prevCreationStep()">
-                                                <i class="material-icons">arrow_back</i> Voltar
-                                            </button>
-                                            <button type="button" class="btn-compact btn-primary" onclick="nextCreationStep()">
-                                                Finalizar <i class="material-icons">check</i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+
 
                                 <!-- STEP 4: Finalização -->
                                 <div class="creation-step" id="step-4">
@@ -816,37 +741,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                         </div>
                                         
                                         <div class="compact-content">
-                                            <div class="prompt-result-compact">
-                                                <div class="prompt-header-compact">
-                                                    <h4>Prompt Gerado</h4>
-                                                    <div class="prompt-actions-compact">
-                                                        <button type="button" class="btn-icon-mini" onclick="generateAvatarPrompt()" title="Regenerar">
-                                                            <i class="material-icons">refresh</i>
-                                                        </button>
-                                                        <button type="button" class="btn-icon-mini primary" onclick="copyAvatarPrompt()" title="Copiar">
-                                                            <i class="material-icons">content_copy</i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                <div class="prompt-display-compact" id="avatar-prompt-display">
-                                                    <div class="prompt-placeholder">
-                                                        <i class="material-icons">auto_awesome</i>
-                                                        <p>O prompt será gerado automaticamente</p>
-                                                    </div>
-                                                </div>
-                                                <div class="prompt-stats-compact" id="prompt-stats">
-                                                    <span class="stat-mini"><i class="material-icons">text_fields</i> <span id="character-count">0</span></span>
-                                                    <span class="stat-mini"><i class="material-icons">article</i> <span id="word-count">0</span></span>
-                                                </div>
+                                            <div class="avatar-created-message">
+                                                <i class="material-icons">check_circle</i>
+                                                <p>Avatar criado com sucesso!</p>
                                             </div>
                                         </div>
                                         
                                         <div class="compact-actions">
                                             <button type="button" class="btn-compact btn-secondary" onclick="prevCreationStep()">
                                                 <i class="material-icons">arrow_back</i> Voltar
-                                            </button>
-                                            <button type="button" class="btn-compact btn-success" onclick="saveAvatar()">
-                                                <i class="material-icons">save</i> Salvar
                                             </button>
                                             <button type="button" class="btn-compact btn-outline" onclick="resetCreation()">
                                                 <i class="material-icons">refresh</i> Novo
@@ -1217,116 +1120,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                 </div>
                             </div>
 
-                            <!-- CAMPO DE PROMPT GERADO -->
-                            <div class="form-section prompt-section">
-                                <div class="section-header">
-                                    <i class="material-icons">auto_awesome</i>
-                                    <h3>Prompt Gerado</h3>
-                                    <div class="prompt-actions">
-                                        <button type="button" class="btn btn-secondary btn-icon" onclick="generateAvatarPrompt()" title="Regenerar Prompt">
-                                            <i class="material-icons">refresh</i>
-                                        </button>
-                                        <button type="button" class="btn btn-primary btn-icon" onclick="copyAvatarPrompt()" title="Copiar Prompt">
-                                            <i class="material-icons">content_copy</i>
-                                        </button>
-                                    </div>
-                                </div>
-                                
-                                <div class="prompt-container">
-                                    <div class="prompt-display" id="avatar-prompt-display">
-                                        <div class="prompt-placeholder">
-                                            <i class="material-icons">auto_awesome</i>
-                                            <p>Preencha os campos acima para gerar automaticamente o prompt do avatar</p>
-                                        </div>
-                                    </div>
-                                    <div class="prompt-stats" id="prompt-stats">
-                                        <span class="stat-item">
-                                            <i class="material-icons">text_fields</i>
-                                            <span id="character-count">0</span> caracteres
-                                        </span>
-                                        <span class="stat-item">
-                                            <i class="material-icons">article</i>
-                                            <span id="word-count">0</span> palavras
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <!-- SEÇÃO DE APARÊNCIA E ESTILO -->
-                            <div class="form-section" id="appearance-section">
-                                <div class="section-header">
-                                    <div class="section-title">
-                                        <i class="material-icons">style</i>
-                                        <h3>Aparência e Estilo</h3>
-                                    </div>
-                                </div>
-                                
-                                <div class="form-grid">
-                                    <div class="form-group">
-                                        <label for="clothing_style">Estilo de Vestimenta</label>
-                                        <select id="clothing_style" name="clothing_style">
-                                            <option value="">Selecione</option>
-                                            <option value="casual">Casual</option>
-                                            <option value="formal">Formal</option>
-                                            <option value="esportivo">Esportivo</option>
-                                            <option value="gotico">Gótico</option>
-                                            <option value="cyberpunk">Cyberpunk</option>
-                                            <option value="medieval">Medieval</option>
-                                            <option value="futurista">Futurista</option>
-                                            <option value="bohemio">Boêmio</option>
-                                            <option value="militar">Militar</option>
-                                            <option value="vintage">Vintage</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="accessories">Acessórios Especiais</label>
-                                        <textarea id="accessories" name="accessories" rows="2" placeholder="Ex: Óculos, joias, armas, equipamentos"></textarea>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="distinctive_marks">Marcas Distintivas</label>
-                                        <textarea id="distinctive_marks" name="distinctive_marks" rows="2" placeholder="Ex: Cicatrizes, tatuagens, marcas de nascença"></textarea>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <!-- BOTÕES DE AÇÃO -->
-                            <div class="form-actions">
-                                <button type="button" class="btn btn-primary" onclick="saveAvatar()">
-                                    <i class="material-icons">save</i>
-                                    Salvar Avatar
-                                </button>
-                                <button type="button" class="btn btn-secondary" onclick="previewAvatar()">
-                                    <i class="material-icons">visibility</i>
-                                    Visualizar
-                                </button>
-                                <button type="button" class="btn btn-secondary" onclick="clearAvatarForm()">
-                                    <i class="material-icons">clear</i>
-                                    Limpar Formulário
-                                </button>
-                            </div>
+
+
+
                         </div>
 
-                        <!-- LISTA DE AVATARES SALVOS -->
-                        <div class="saved-avatars-section">
-                            <div class="section-header">
-                                <i class="material-icons">folder</i>
-                                <h3>Avatares Salvos</h3>
-                            </div>
-                            <div id="saved-avatars-list" class="avatars-grid">
-                                <!-- Avatares salvos serão carregados aqui via JavaScript -->
-                                <div class="avatar-card placeholder">
-                                    <div class="avatar-preview">
-                                        <i class="material-icons">add</i>
-                                    </div>
-                                    <div class="avatar-info">
-                                        <div class="avatar-name">Criar Novo Avatar</div>
-                                        <div class="avatar-type">Clique para começar</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
                         </div>
 
                     </div>
