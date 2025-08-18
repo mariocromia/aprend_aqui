@@ -1668,6 +1668,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
     <script src="assets/js/gerador-prompt-modern.js"></script>
     <script src="assets/js/avatar-compact.js"></script>
+<script src="assets/js/avatar-compact-extended.js"></script>
     
     <!-- Otimização de carregamento e remoção de preloader -->
     <script>

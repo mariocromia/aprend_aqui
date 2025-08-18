@@ -420,6 +420,597 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             color: #991b1b;
         }
 
+        /* AVATAR INTERFACE */
+        .avatar-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: var(--radius);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 0.25rem;
+            background: white;
+            padding: 0.25rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .view-btn {
+            padding: 0.5rem;
+            border: none;
+            background: transparent;
+            border-radius: calc(var(--radius) - 0.25rem);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .view-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .avatar-filters {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: white;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .filter-group label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .filter-select,
+        .filter-input {
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+        }
+
+        .filter-input {
+            background: white;
+        }
+
+        .avatar-container {
+            min-height: 300px;
+        }
+
+        .avatar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .avatar-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .avatar-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .avatar-card.selected {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .avatar-preview {
+            position: relative;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .avatar-image {
+            width: 60px;
+            height: 60px;
+            background: var(--bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem auto;
+            border: 2px solid var(--border);
+        }
+
+        .avatar-icon {
+            font-size: 1.5rem;
+            color: var(--text-light);
+        }
+
+        .avatar-actions {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            display: flex;
+            gap: 0.25rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .avatar-card:hover .avatar-actions {
+            opacity: 1;
+        }
+
+        .action-btn {
+            width: 2rem;
+            height: 2rem;
+            border: none;
+            border-radius: 50%;
+            background: white;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .select-btn:hover { background: var(--success); color: white; }
+        .edit-btn:hover { background: var(--primary); color: white; }
+        .delete-btn:hover { background: var(--error); color: white; }
+
+        .avatar-info {
+            padding: 1rem;
+        }
+
+        .avatar-name {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem 0;
+            color: var(--text);
+        }
+
+        .avatar-description {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin: 0 0 0.75rem 0;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .avatar-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .avatar-tag {
+            padding: 0.125rem 0.5rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        .avatar-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .no-avatars {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+        }
+
+        .no-avatars .emoji {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* NOVA INTERFACE COMPACTA AVATAR */
+        .avatar-type-selection {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .selection-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .selection-header h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .selection-header p {
+            margin: 0;
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+
+        .type-selector-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .type-selector-container .form-group {
+            margin-bottom: 0;
+        }
+
+        .type-selector-container label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+
+        .type-select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .type-select:hover {
+            border-color: var(--border-hover);
+        }
+
+        .type-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .quick-actions {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        .action-row {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .saved-avatars-section {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-header h3 {
+            margin: 0;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .saved-count {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            font-weight: normal;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .compact-search,
+        .compact-filter {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.875rem;
+            transition: border-color 0.2s;
+        }
+
+        .compact-search {
+            min-width: 200px;
+        }
+
+        .compact-filter {
+            min-width: 120px;
+        }
+
+        .compact-search:focus,
+        .compact-filter:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+        }
+
+        .saved-avatars-container {
+            min-height: 200px;
+        }
+
+        .avatars-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .avatar-saved-card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar-saved-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        .avatar-saved-card.placeholder {
+            cursor: default;
+            text-align: center;
+            flex-direction: column;
+            padding: 2rem;
+            color: var(--text-muted);
+        }
+
+        .avatar-saved-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .avatar-saved-info h4 {
+            margin: 0 0 0.25rem 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .avatar-saved-info p {
+            margin: 0;
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .quick-avatar-form {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 1.5rem;
+        }
+
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .form-header h3 {
+            margin: 0;
+            font-size: 1.125rem;
+        }
+
+        .close-form-btn {
+            padding: 0.5rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+
+        .close-form-btn:hover {
+            background: var(--bg);
+        }
+
+        .form-content {
+            padding: 1rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .compact-input,
+        .compact-select {
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            background: white;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .folder-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius);
+            max-width: 500px;
+            width: 90%;
+            max-height: 70vh;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.125rem;
+        }
+
+        .close-modal-btn {
+            padding: 0.5rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+
+        .close-modal-btn:hover {
+            background: var(--bg);
+        }
+
+        .modal-body {
+            padding: 1rem;
+            max-height: calc(70vh - 120px);
+            overflow-y: auto;
+        }
+
+        .folder-actions {
+            margin-bottom: 1rem;
+        }
+
+        .folder-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .folder-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: var(--bg);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .folder-name {
+            font-weight: 500;
+        }
+
+        .folder-item-actions {
+            display: flex;
+            gap: 0.25rem;
+        }
+
         /* RESPONSIVO */
         @media (max-width: 768px) {
             .content-container { padding: 1rem; }
@@ -429,6 +1020,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             .subcategories-grid { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
             .tabs-nav { flex-wrap: wrap; }
             .tab-button { min-width: 100px; font-size: 0.875rem; }
+
+            .avatar-actions {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .filter-row {
+                grid-template-columns: 1fr;
+            }
+
+            .avatar-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+
+            .filter-actions {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .compact-search {
+                min-width: auto;
+            }
+
+            .action-row {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .avatars-list {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
         }
 
         /* Ícones em emoji */
@@ -808,126 +1440,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     <div class="tab-content" id="tab-avatar">
                         <div class="tab-header">
                             <h2><span class="emoji">👥</span> Avatar e Personagem</h2>
-                            <p>Defina os personagens e criaturas da sua criação</p>
+                            <p>Crie e gerencie avatares personalizados de forma rápida e intuitiva</p>
                         </div>
 
-                        <div class="categories-grid">
-                            <div class="category-section">
-                                <div class="category-header">
-                                    <div class="category-icon">👤</div>
-                                    <h3 class="category-title">Humanos</h3>
-                                </div>
-                                <div class="subcategories-grid">
-                                    <div class="subcategory-card" data-type="character" data-value="homem_jovem">
-                                        <div class="subcategory-title">Homem Jovem</div>
-                                        <div class="subcategory-desc">18-30 anos, atlético</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="mulher_jovem">
-                                        <div class="subcategory-title">Mulher Jovem</div>
-                                        <div class="subcategory-desc">18-30 anos, elegante</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="homem_maduro">
-                                        <div class="subcategory-title">Homem Maduro</div>
-                                        <div class="subcategory-desc">40-60 anos, experiente</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="mulher_madura">
-                                        <div class="subcategory-title">Mulher Madura</div>
-                                        <div class="subcategory-desc">40-60 anos, sofisticada</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="crianca_menino">
-                                        <div class="subcategory-title">Menino</div>
-                                        <div class="subcategory-desc">5-12 anos, brincalhão</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="crianca_menina">
-                                        <div class="subcategory-title">Menina</div>
-                                        <div class="subcategory-desc">5-12 anos, alegre</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="idoso">
-                                        <div class="subcategory-title">Idoso</div>
-                                        <div class="subcategory-desc">65+ anos, sábio</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="idosa">
-                                        <div class="subcategory-title">Idosa</div>
-                                        <div class="subcategory-desc">65+ anos, carinhosa</div>
-                                    </div>
-                                </div>
+                        <!-- Avatar Type Selection -->
+                        <div class="avatar-type-selection">
+                            <div class="selection-header">
+                                <h3><span class="emoji">🎭</span> Tipo de Ser</h3>
+                                <p>Selecione o tipo de personagem para abrir o formulário de criação</p>
                             </div>
-
-                            <div class="category-section">
-                                <div class="category-header">
-                                    <div class="category-icon">💼</div>
-                                    <h3 class="category-title">Profissões</h3>
-                                </div>
-                                <div class="subcategories-grid">
-                                    <div class="subcategory-card" data-type="character" data-value="executivo">
-                                        <div class="subcategory-title">Executivo</div>
-                                        <div class="subcategory-desc">Profissional formal</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="artista">
-                                        <div class="subcategory-title">Artista</div>
-                                        <div class="subcategory-desc">Criativo bohemio</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="atleta">
-                                        <div class="subcategory-title">Atleta</div>
-                                        <div class="subcategory-desc">Físico musculoso</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="estudante">
-                                        <div class="subcategory-title">Estudante</div>
-                                        <div class="subcategory-desc">Jovem acadêmico</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="category-section">
-                                <div class="category-header">
-                                    <div class="category-icon">🐾</div>
-                                    <h3 class="category-title">Animais</h3>
-                                </div>
-                                <div class="subcategories-grid">
-                                    <div class="subcategory-card" data-type="character" data-value="gato_domestico">
-                                        <div class="subcategory-title">Gato Doméstico</div>
-                                        <div class="subcategory-desc">Felino elegante</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="cao_labrador">
-                                        <div class="subcategory-title">Cão Labrador</div>
-                                        <div class="subcategory-desc">Amigável leal</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="leao_majestoso">
-                                        <div class="subcategory-title">Leão</div>
-                                        <div class="subcategory-desc">Rei da savana</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="aguia_real">
-                                        <div class="subcategory-title">Águia</div>
-                                        <div class="subcategory-desc">Ave majestosa</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="category-section">
-                                <div class="category-header">
-                                    <div class="category-icon">🧙</div>
-                                    <h3 class="category-title">Fantasia</h3>
-                                </div>
-                                <div class="subcategories-grid">
-                                    <div class="subcategory-card" data-type="character" data-value="mago_sabio">
-                                        <div class="subcategory-title">Mago Sábio</div>
-                                        <div class="subcategory-desc">Feiticeiro experiente</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="guerreiro_epico">
-                                        <div class="subcategory-title">Guerreiro Épico</div>
-                                        <div class="subcategory-desc">Lutador corajoso</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="elfo_gracioso">
-                                        <div class="subcategory-title">Elfo</div>
-                                        <div class="subcategory-desc">Ser mágico gracioso</div>
-                                    </div>
-                                    <div class="subcategory-card" data-type="character" data-value="dragao_antigo">
-                                        <div class="subcategory-title">Dragão</div>
-                                        <div class="subcategory-desc">Criatura lendária</div>
-                                    </div>
+                            <div class="type-selector-container">
+                                <div class="form-group">
+                                    <label for="avatar-type-select">Escolha o tipo de ser:</label>
+                                    <select id="avatar-type-select" class="type-select" onchange="window.avatarCompact ? avatarCompact.selectAvatarType(this.value) : null">
+                                        <option value="">Selecione um tipo de ser</option>
+                                        <option value="human">👤 Humano - Pessoas reais ou personagens humanoides</option>
+                                        <option value="animal">🐾 Animal - Criaturas do mundo animal</option>
+                                        <option value="fantasy">🧙‍♂️ Fantasia - Seres mágicos e mitológicos</option>
+                                        <option value="robot">🤖 Robô/IA - Androides e inteligências artificiais</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Quick Actions -->
+                        <div class="quick-actions">
+                            <div class="action-row">
+                                <button type="button" class="btn btn-secondary" onclick="window.avatarCompact ? avatarCompact.importAvatar() : null">
+                                    <span class="emoji">📤</span> Importar Avatares
+                                </button>
+                                <button type="button" class="btn btn-secondary" onclick="window.avatarCompact ? avatarCompact.exportAvatars() : null">
+                                    <span class="emoji">📥</span> Exportar Avatares
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Saved Avatars Section -->
+                        <div class="saved-avatars-section">
+                            <div class="section-header">
+                                <h3><span class="emoji">💾</span> Avatares Salvos <span class="saved-count">0 salvos</span></h3>
+                                <div class="filter-actions">
+                                    <input type="text" id="avatar-search" class="compact-search" placeholder="Buscar avatares...">
+                                    <select id="avatar-filter" class="compact-filter">
+                                        <option value="">Todos os tipos</option>
+                                        <option value="human">Humanos</option>
+                                        <option value="animal">Animais</option>
+                                        <option value="fantasy">Fantasia</option>
+                                        <option value="robot">Robôs</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="saved-avatars-container">
+                                <div id="saved-avatars-list" class="avatars-list">
+                                    <!-- Avatares salvos serão carregados aqui -->
+                                </div>
+                            </div>
+                        </div>
+
 
                         <div class="tab-navigation">
                             <button type="button" class="btn btn-secondary" onclick="prevTab()">
@@ -1432,6 +2001,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             }
             
             getCharacterPrompt(char) {
+                // Check for custom avatar
+                if (char === 'custom_avatar' && this.customAvatar) {
+                    return window.avatarManager.generateAvatarPrompt(this.customAvatar);
+                }
+                
                 const characters = {
                     'homem_jovem': 'young man',
                     'mulher_jovem': 'young woman',
@@ -1529,9 +2103,492 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             }
         }
         
+        // AVATAR MANAGEMENT CLASS
+        class AvatarManager {
+            constructor() {
+                this.avatars = [];
+                this.folders = [{id: 0, name: 'Raiz', parent_id: null}];
+                this.currentFolder = null;
+                this.selectedAvatar = null;
+                this.viewMode = 'grid';
+                this.init();
+            }
+            
+            init() {
+                this.bindAvatarEvents();
+                this.loadFolders();
+                this.loadAvatars();
+            }
+            
+            bindAvatarEvents() {
+                // Botões principais
+                document.getElementById('create-avatar-btn')?.addEventListener('click', () => {
+                    this.showQuickForm();
+                });
+                
+                document.getElementById('manage-folders-btn')?.addEventListener('click', () => {
+                    this.showFolderModal();
+                });
+                
+                document.getElementById('close-quick-form')?.addEventListener('click', () => {
+                    this.hideQuickForm();
+                });
+                
+                document.getElementById('save-quick-avatar')?.addEventListener('click', () => {
+                    this.saveQuickAvatar();
+                });
+                
+                document.getElementById('cancel-quick-avatar')?.addEventListener('click', () => {
+                    this.hideQuickForm();
+                });
+                
+                // Filtros
+                document.getElementById('folder-filter')?.addEventListener('change', (e) => {
+                    this.currentFolder = e.target.value || null;
+                    this.filterAvatars();
+                });
+                
+                document.getElementById('type-filter')?.addEventListener('change', () => {
+                    this.filterAvatars();
+                });
+                
+                document.getElementById('gender-filter')?.addEventListener('change', () => {
+                    this.filterAvatars();
+                });
+                
+                document.getElementById('search-filter')?.addEventListener('input', () => {
+                    this.filterAvatars();
+                });
+                
+                // View toggle
+                document.querySelectorAll('.view-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        this.changeView(e.target.dataset.view);
+                    });
+                });
+                
+                // Folder modal
+                document.getElementById('close-folder-modal')?.addEventListener('click', () => {
+                    this.hideFolderModal();
+                });
+                
+                document.getElementById('create-folder-btn')?.addEventListener('click', () => {
+                    this.createFolder();
+                });
+            }
+            
+            showQuickForm() {
+                document.getElementById('quick-avatar-form').style.display = 'block';
+            }
+            
+            hideQuickForm() {
+                document.getElementById('quick-avatar-form').style.display = 'none';
+                this.clearQuickForm();
+            }
+            
+            clearQuickForm() {
+                document.getElementById('quick-name').value = '';
+                document.getElementById('quick-appearance').value = '';
+                document.getElementById('quick-clothing').value = '';
+                document.getElementById('quick-tags').value = '';
+                document.getElementById('quick-gender').value = 'neutro';
+                document.getElementById('quick-age').value = 'adulto';
+                document.getElementById('quick-folder').value = '0';
+            }
+            
+            async saveQuickAvatar() {
+                const data = {
+                    nome: document.getElementById('quick-name').value,
+                    genero: document.getElementById('quick-gender').value,
+                    idade_categoria: document.getElementById('quick-age').value,
+                    aparencia: document.getElementById('quick-appearance').value,
+                    vestuario: document.getElementById('quick-clothing').value,
+                    tags: document.getElementById('quick-tags').value,
+                    pasta_id: document.getElementById('quick-folder').value,
+                    publico: false
+                };
+                
+                if (!data.nome) {
+                    alert('Nome é obrigatório!');
+                    return;
+                }
+                
+                try {
+                    // Simular salvamento - você pode implementar a chamada AJAX real aqui
+                    const avatar = {
+                        id: Date.now(),
+                        ...data,
+                        criado_em: new Date().toISOString(),
+                        tags: data.tags ? data.tags.split(',').map(t => t.trim()) : []
+                    };
+                    
+                    this.avatars.push(avatar);
+                    this.renderAvatars();
+                    this.hideQuickForm();
+                    alert('Avatar criado com sucesso!');
+                    
+                } catch (error) {
+                    console.error('Erro ao salvar avatar:', error);
+                    alert('Erro ao salvar avatar. Tente novamente.');
+                }
+            }
+            
+            showFolderModal() {
+                document.getElementById('folder-modal').style.display = 'flex';
+                this.renderFolders();
+            }
+            
+            hideFolderModal() {
+                document.getElementById('folder-modal').style.display = 'none';
+            }
+            
+            async createFolder() {
+                const name = prompt('Nome da nova pasta:');
+                if (!name) return;
+                
+                const folder = {
+                    id: Date.now(),
+                    name: name,
+                    parent_id: 0,
+                    criado_em: new Date().toISOString()
+                };
+                
+                this.folders.push(folder);
+                this.updateFolderSelects();
+                this.renderFolders();
+            }
+            
+            loadFolders() {
+                // Simular carregamento de pastas - implementar chamada real aqui
+                this.updateFolderSelects();
+            }
+            
+            updateFolderSelects() {
+                const selects = ['folder-filter', 'quick-folder'];
+                
+                selects.forEach(selectId => {
+                    const select = document.getElementById(selectId);
+                    if (!select) return;
+                    
+                    // Manter opções padrão
+                    const options = select.innerHTML;
+                    
+                    this.folders.forEach(folder => {
+                        if (folder.id !== 0) {
+                            const option = document.createElement('option');
+                            option.value = folder.id;
+                            option.textContent = folder.name;
+                            select.appendChild(option);
+                        }
+                    });
+                });
+            }
+            
+            renderFolders() {
+                const container = document.getElementById('folder-list');
+                if (!container) return;
+                
+                container.innerHTML = '';
+                
+                this.folders.forEach(folder => {
+                    if (folder.id === 0) return; // Skip root
+                    
+                    const item = document.createElement('div');
+                    item.className = 'folder-item';
+                    item.innerHTML = `
+                        <div class="folder-info">
+                            <span class="emoji">📁</span>
+                            <span class="folder-name">${folder.name}</span>
+                        </div>
+                        <div class="folder-item-actions">
+                            <button class="action-btn edit-btn" onclick="window.avatarManager.renameFolder(${folder.id})" title="Renomear">
+                                <span class="emoji">✏️</span>
+                            </button>
+                            <button class="action-btn delete-btn" onclick="window.avatarManager.deleteFolder(${folder.id})" title="Excluir">
+                                <span class="emoji">🗑️</span>
+                            </button>
+                        </div>
+                    `;
+                    
+                    container.appendChild(item);
+                });
+            }
+            
+            async renameFolder(folderId) {
+                const folder = this.folders.find(f => f.id === folderId);
+                if (!folder) return;
+                
+                const newName = prompt('Novo nome da pasta:', folder.name);
+                if (!newName || newName === folder.name) return;
+                
+                folder.name = newName;
+                this.updateFolderSelects();
+                this.renderFolders();
+            }
+            
+            async deleteFolder(folderId) {
+                if (!confirm('Tem certeza que deseja excluir esta pasta? Os avatares dentro dela serão movidos para a raiz.')) return;
+                
+                // Mover avatares da pasta para a raiz
+                this.avatars.forEach(avatar => {
+                    if (avatar.pasta_id == folderId) {
+                        avatar.pasta_id = 0;
+                    }
+                });
+                
+                // Remover pasta
+                this.folders = this.folders.filter(f => f.id !== folderId);
+                this.updateFolderSelects();
+                this.renderFolders();
+                this.renderAvatars();
+            }
+            
+            loadAvatars() {
+                // Simular alguns avatares para demonstração
+                this.avatars = [
+                    {
+                        id: 1,
+                        nome: "Ana Silva",
+                        genero: "feminino",
+                        idade_categoria: "adulto",
+                        aparencia: "cabelo castanho, olhos verdes, altura média",
+                        vestuario: "blazer azul, calça social",
+                        tags: ["executiva", "formal", "profissional"],
+                        pasta_id: 0,
+                        criado_em: "2024-01-15T10:30:00Z"
+                    },
+                    {
+                        id: 2,
+                        nome: "João Santos",
+                        genero: "masculino",
+                        idade_categoria: "jovem",
+                        aparencia: "cabelo loiro, olhos azuis, atlético",
+                        vestuario: "camiseta casual, jeans",
+                        tags: ["jovem", "casual", "atleta"],
+                        pasta_id: 0,
+                        criado_em: "2024-01-14T15:45:00Z"
+                    }
+                ];
+                
+                this.renderAvatars();
+            }
+            
+            renderAvatars() {
+                const container = document.getElementById('avatar-grid');
+                const noAvatars = document.getElementById('no-avatars');
+                const template = document.querySelector('.avatar-card.template');
+                
+                if (!container || !template) return;
+                
+                // Limpar avatares existentes (exceto o template)
+                container.querySelectorAll('.avatar-card:not(.template)').forEach(card => card.remove());
+                
+                const filteredAvatars = this.getFilteredAvatars();
+                
+                if (filteredAvatars.length === 0) {
+                    noAvatars.style.display = 'block';
+                    return;
+                }
+                
+                noAvatars.style.display = 'none';
+                
+                filteredAvatars.forEach(avatar => {
+                    const card = template.cloneNode(true);
+                    card.classList.remove('template');
+                    card.style.display = 'block';
+                    card.dataset.avatarId = avatar.id;
+                    
+                    // Preencher dados
+                    card.querySelector('.avatar-name').textContent = avatar.nome;
+                    card.querySelector('.avatar-description').textContent = [
+                        avatar.aparencia,
+                        avatar.vestuario
+                    ].filter(Boolean).join(' - ') || 'Sem descrição';
+                    
+                    // Tags
+                    const tagsContainer = card.querySelector('.avatar-tags');
+                    tagsContainer.innerHTML = '';
+                    if (avatar.tags && avatar.tags.length > 0) {
+                        avatar.tags.forEach(tag => {
+                            const tagSpan = document.createElement('span');
+                            tagSpan.className = 'avatar-tag';
+                            tagSpan.textContent = tag;
+                            tagsContainer.appendChild(tagSpan);
+                        });
+                    }
+                    
+                    // Metadados
+                    const folderName = this.folders.find(f => f.id == avatar.pasta_id)?.name || 'Raiz';
+                    const date = new Date(avatar.criado_em).toLocaleDateString();
+                    card.querySelector('.folder-name').textContent = folderName;
+                    card.querySelector('.creation-date').textContent = date;
+                    
+                    // Ícone do avatar
+                    const icon = card.querySelector('.avatar-icon');
+                    icon.textContent = this.getAvatarIcon(avatar.genero);
+                    
+                    // Eventos dos botões
+                    card.querySelector('.select-btn').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        this.selectAvatar(avatar);
+                    });
+                    
+                    card.querySelector('.edit-btn').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        this.editAvatar(avatar);
+                    });
+                    
+                    card.querySelector('.delete-btn').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        this.deleteAvatar(avatar.id);
+                    });
+                    
+                    container.appendChild(card);
+                });
+            }
+            
+            getAvatarIcon(genero) {
+                switch (genero) {
+                    case 'masculino': return '👨';
+                    case 'feminino': return '👩';
+                    case 'neutro': return '👤';
+                    default: return '👤';
+                }
+            }
+            
+            getFilteredAvatars() {
+                let filtered = [...this.avatars];
+                
+                // Filtro por pasta
+                if (this.currentFolder !== null && this.currentFolder !== '') {
+                    filtered = filtered.filter(avatar => avatar.pasta_id == this.currentFolder);
+                }
+                
+                // Filtro por tipo
+                const typeFilter = document.getElementById('type-filter')?.value;
+                if (typeFilter) {
+                    // Implementar filtro por tipo se necessário
+                }
+                
+                // Filtro por gênero
+                const genderFilter = document.getElementById('gender-filter')?.value;
+                if (genderFilter) {
+                    filtered = filtered.filter(avatar => avatar.genero === genderFilter);
+                }
+                
+                // Filtro de busca
+                const searchFilter = document.getElementById('search-filter')?.value.toLowerCase();
+                if (searchFilter) {
+                    filtered = filtered.filter(avatar => 
+                        avatar.nome.toLowerCase().includes(searchFilter) ||
+                        (avatar.tags && avatar.tags.some(tag => tag.toLowerCase().includes(searchFilter)))
+                    );
+                }
+                
+                return filtered;
+            }
+            
+            filterAvatars() {
+                this.renderAvatars();
+            }
+            
+            selectAvatar(avatar) {
+                // Remover seleção anterior
+                document.querySelectorAll('.avatar-card.selected').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                
+                // Adicionar seleção
+                const card = document.querySelector(`[data-avatar-id="${avatar.id}"]`);
+                if (card) {
+                    card.classList.add('selected');
+                }
+                
+                this.selectedAvatar = avatar;
+                
+                // Atualizar o prompt generator com o avatar selecionado
+                if (window.promptGenerator) {
+                    const characterPrompt = this.generateAvatarPrompt(avatar);
+                    window.promptGenerator.selectedData.character = 'custom_avatar';
+                    window.promptGenerator.customAvatar = avatar;
+                    document.getElementById('selected_character').value = 'custom_avatar';
+                    window.promptGenerator.updatePreview();
+                }
+                
+                alert(`Avatar "${avatar.nome}" selecionado!`);
+            }
+            
+            generateAvatarPrompt(avatar) {
+                let prompt = avatar.nome;
+                
+                if (avatar.genero && avatar.genero !== 'neutro') {
+                    prompt += `, ${avatar.genero}`;
+                }
+                
+                if (avatar.idade_categoria) {
+                    prompt += `, ${avatar.idade_categoria}`;
+                }
+                
+                if (avatar.aparencia) {
+                    prompt += `, ${avatar.aparencia}`;
+                }
+                
+                if (avatar.vestuario) {
+                    prompt += `, wearing ${avatar.vestuario}`;
+                }
+                
+                return prompt;
+            }
+            
+            editAvatar(avatar) {
+                // Implementar edição completa - por enquanto apenas quick form
+                this.populateQuickForm(avatar);
+                this.showQuickForm();
+            }
+            
+            populateQuickForm(avatar) {
+                document.getElementById('quick-name').value = avatar.nome || '';
+                document.getElementById('quick-appearance').value = avatar.aparencia || '';
+                document.getElementById('quick-clothing').value = avatar.vestuario || '';
+                document.getElementById('quick-tags').value = avatar.tags ? avatar.tags.join(', ') : '';
+                document.getElementById('quick-gender').value = avatar.genero || 'neutro';
+                document.getElementById('quick-age').value = avatar.idade_categoria || 'adulto';
+                document.getElementById('quick-folder').value = avatar.pasta_id || '0';
+            }
+            
+            deleteAvatar(avatarId) {
+                const avatar = this.avatars.find(a => a.id === avatarId);
+                if (!avatar) return;
+                
+                if (!confirm(`Tem certeza que deseja excluir o avatar "${avatar.nome}"?`)) return;
+                
+                this.avatars = this.avatars.filter(a => a.id !== avatarId);
+                this.renderAvatars();
+            }
+            
+            changeView(viewMode) {
+                this.viewMode = viewMode;
+                
+                // Atualizar botões
+                document.querySelectorAll('.view-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[data-view="${viewMode}"]`).classList.add('active');
+                
+                // Implementar mudança de view se necessário
+                const grid = document.getElementById('avatar-grid');
+                if (viewMode === 'list') {
+                    grid.style.gridTemplateColumns = '1fr';
+                } else {
+                    grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(280px, 1fr))';
+                }
+            }
+        }
+        
         // Inicializar
         document.addEventListener('DOMContentLoaded', () => {
             window.promptGenerator = new PromptGeneratorTabs();
+            window.avatarManager = new AvatarManager();
         });
     </script>
 </body>
