@@ -2058,3 +2058,662 @@ function copiarPrompt(prompt) {
         alert('Prompt copiado para a área de transferência!');
     });
 }
+
+// ========================================
+// FUNCIONALIDADES PARA ABA AVATAR
+// ========================================
+
+// Variáveis globais para o sistema de avatares
+let currentAvatarStep = 1;
+let selectedAvatarType = null;
+let avatarFormData = {};
+
+// Função para mostrar o modal do criador de avatar
+function showAvatarCreator() {
+    const modal = document.getElementById('avatar-creator-modal');
+    if (modal) {
+        modal.style.display = 'flex';
+        resetAvatarCreation();
+    }
+}
+
+// Função para fechar o modal do criador de avatar
+function closeAvatarCreator() {
+    const modal = document.getElementById('avatar-creator-modal');
+    if (modal) {
+        modal.style.display = 'none';
+        resetAvatarCreation();
+    }
+}
+
+// Função para resetar a criação de avatar
+function resetAvatarCreation() {
+    currentAvatarStep = 1;
+    selectedAvatarType = null;
+    avatarFormData = {};
+    
+    // Resetar steps
+    updateAvatarSteps();
+    
+    // Limpar formulário
+    document.getElementById('avatar_name').value = '';
+    document.getElementById('avatar_type').value = '';
+    
+    // Limpar seleções de tipo
+    document.querySelectorAll('.type-option').forEach(option => {
+        option.classList.remove('selected');
+    });
+    
+    // Mostrar apenas o primeiro step
+    showAvatarStep(1);
+}
+
+// Função para atualizar os steps do avatar
+function updateAvatarSteps() {
+    const steps = document.querySelectorAll('.progress-steps .step');
+    steps.forEach((step, index) => {
+        const stepNumber = index + 1;
+        step.classList.remove('active', 'completed');
+        
+        if (stepNumber === currentAvatarStep) {
+            step.classList.add('active');
+        } else if (stepNumber < currentAvatarStep) {
+            step.classList.add('completed');
+        }
+    });
+}
+
+// Função para mostrar um step específico
+function showAvatarStep(stepNumber) {
+    // Esconder todos os steps
+    document.querySelectorAll('.creation-step').forEach(step => {
+        step.classList.remove('active');
+    });
+    
+    // Mostrar o step atual
+    const currentStep = document.getElementById(`step-${stepNumber}`);
+    if (currentStep) {
+        currentStep.classList.add('active');
+    }
+    
+    // Atualizar steps
+    updateAvatarSteps();
+}
+
+// Função para ir para o próximo step
+function nextAvatarStep() {
+    if (currentAvatarStep === 1) {
+        // Validar step 1
+        if (!validateAvatarStep1()) {
+            return;
+        }
+    } else if (currentAvatarStep === 2) {
+        // Validar step 2
+        if (!validateAvatarStep2()) {
+            return;
+        }
+    }
+    
+    if (currentAvatarStep < 3) {
+        currentAvatarStep++;
+        showAvatarStep(currentAvatarStep);
+        
+        // Se for o step 2, carregar características dinâmicas
+        if (currentAvatarStep === 2) {
+            loadDynamicCharacteristics();
+        }
+        
+        // Se for o step 3, atualizar resumo
+        if (currentAvatarStep === 3) {
+            updateAvatarSummary();
+        }
+    }
+}
+
+// Função para ir para o step anterior
+function prevAvatarStep() {
+    if (currentAvatarStep > 1) {
+        currentAvatarStep--;
+        showAvatarStep(currentAvatarStep);
+    }
+}
+
+// Função para validar o step 1
+function validateAvatarStep1() {
+    const avatarName = document.getElementById('avatar_name').value.trim();
+    const avatarType = document.getElementById('avatar_type').value;
+    
+    if (!avatarName) {
+        showAvatarError('Por favor, digite um nome para o avatar.');
+        return false;
+    }
+    
+    if (!avatarType) {
+        showAvatarError('Por favor, selecione um tipo de ser.');
+        return false;
+    }
+    
+    return true;
+}
+
+// Função para validar o step 2
+function validateAvatarStep2() {
+    // Aqui você pode adicionar validações específicas para cada tipo de ser
+    // Por enquanto, vamos apenas retornar true
+    return true;
+}
+
+// Função para mostrar erro no avatar
+function showAvatarError(message) {
+    // Criar ou atualizar mensagem de erro
+    let errorDiv = document.querySelector('.avatar-error-message');
+    if (!errorDiv) {
+        errorDiv = document.createElement('div');
+        errorDiv.className = 'avatar-error-message';
+        errorDiv.style.cssText = `
+            background: #ef4444;
+            color: white;
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin: 1rem 0;
+            text-align: center;
+        `;
+        
+        const modalBody = document.querySelector('.avatar-creator-modal .modal-body');
+        if (modalBody) {
+            modalBody.insertBefore(errorDiv, modalBody.firstChild);
+        }
+    }
+    
+    errorDiv.textContent = message;
+    
+    // Remover mensagem após 5 segundos
+    setTimeout(() => {
+        if (errorDiv) {
+            errorDiv.remove();
+        }
+    }, 5000);
+}
+
+// Função para carregar características dinâmicas
+function loadDynamicCharacteristics() {
+    const characteristicsContainer = document.getElementById('dynamic-characteristics');
+    if (!characteristicsContainer) return;
+    
+    const type = selectedAvatarType;
+    let characteristicsHTML = '';
+    
+    switch (type) {
+        case 'humano':
+            characteristicsHTML = generateHumanCharacteristics();
+            break;
+        case 'animal':
+            characteristicsHTML = generateAnimalCharacteristics();
+            break;
+        case 'fantasia':
+            characteristicsHTML = generateFantasyCharacteristics();
+            break;
+        case 'alien':
+            characteristicsHTML = generateAlienCharacteristics();
+            break;
+        case 'robo':
+            characteristicsHTML = generateRobotCharacteristics();
+            break;
+        case 'elemental':
+            characteristicsHTML = generateElementalCharacteristics();
+            break;
+        default:
+            characteristicsHTML = '<div class="loading-placeholder"><p>Tipo não reconhecido</p></div>';
+    }
+    
+    characteristicsContainer.innerHTML = characteristicsHTML;
+}
+
+// Função para gerar características humanas
+function generateHumanCharacteristics() {
+    return `
+        <div class="characteristics-grid">
+            <div class="form-group">
+                <label for="human_age">Idade</label>
+                <select id="human_age" name="human_age">
+                    <option value="">Selecione</option>
+                    <option value="crianca">Criança (5-12 anos)</option>
+                    <option value="adolescente">Adolescente (13-17 anos)</option>
+                    <option value="jovem">Jovem Adulto (18-30 anos)</option>
+                    <option value="adulto">Adulto (31-50 anos)</option>
+                    <option value="meia_idade">Meia-idade (51-65 anos)</option>
+                    <option value="idoso">Idoso (65+ anos)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="human_gender">Gênero</label>
+                <select id="human_gender" name="human_gender">
+                    <option value="">Selecione</option>
+                    <option value="masculino">Masculino</option>
+                    <option value="feminino">Feminino</option>
+                    <option value="nao_binario">Não-binário</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="human_ethnicity">Etnia</label>
+                <select id="human_ethnicity" name="human_ethnicity">
+                    <option value="">Selecione</option>
+                    <option value="brasileiro">Brasileiro</option>
+                    <option value="caucasiano">Caucasiano</option>
+                    <option value="afrodescendente">Afrodescendente</option>
+                    <option value="asiatico">Asiático</option>
+                    <option value="latino">Latino</option>
+                    <option value="indigena">Indígena</option>
+                    <option value="misto">Miscigenado</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="human_profession">Profissão</label>
+                <input type="text" id="human_profession" name="human_profession" placeholder="Ex: Médico, Artista, Estudante">
+            </div>
+            
+            <div class="form-group">
+                <label for="human_personality">Personalidade</label>
+                <textarea id="human_personality" name="human_personality" rows="3" placeholder="Descreva a personalidade do personagem"></textarea>
+            </div>
+        </div>
+    `;
+}
+
+// Função para gerar características de animais
+function generateAnimalCharacteristics() {
+    return `
+        <div class="characteristics-grid">
+            <div class="form-group">
+                <label for="animal_species">Espécie</label>
+                <select id="animal_species" name="animal_species">
+                    <option value="">Selecione</option>
+                    <option value="gato">Gato</option>
+                    <option value="cachorro">Cachorro</option>
+                    <option value="lobo">Lobo</option>
+                    <option value="leao">Leão</option>
+                    <option value="tigre">Tigre</option>
+                    <option value="aguia">Águia</option>
+                    <option value="coruja">Coruja</option>
+                    <option value="outro">Outro</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="animal_size">Tamanho</label>
+                <select id="animal_size" name="animal_size">
+                    <option value="">Selecione</option>
+                    <option value="miniatura">Miniatura</option>
+                    <option value="pequeno">Pequeno</option>
+                    <option value="medio">Médio</option>
+                    <option value="grande">Grande</option>
+                    <option value="gigante">Gigante</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="animal_behavior">Comportamento</label>
+                <textarea id="animal_behavior" name="animal_behavior" rows="3" placeholder="Descreva o comportamento do animal"></textarea>
+            </div>
+        </div>
+    `;
+}
+
+// Função para gerar características fantásticas
+function generateFantasyCharacteristics() {
+    return `
+        <div class="characteristics-grid">
+            <div class="form-group">
+                <label for="fantasy_race">Raça Fantástica</label>
+                <select id="fantasy_race" name="fantasy_race">
+                    <option value="">Selecione</option>
+                    <option value="elfo">Elfo</option>
+                    <option value="anao">Anão</option>
+                    <option value="orc">Orc</option>
+                    <option value="dragao">Dragão</option>
+                    <option value="vampiro">Vampiro</option>
+                    <option value="fada">Fada</option>
+                    <option value="outro">Outro</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="fantasy_magic">Habilidades Mágicas</label>
+                <textarea id="fantasy_magic" name="fantasy_magic" rows="3" placeholder="Descreva as habilidades mágicas"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="fantasy_origin">Origem</label>
+                <input type="text" id="fantasy_origin" name="fantasy_origin" placeholder="Ex: Reino dos Elfos, Montanhas dos Anões">
+            </div>
+        </div>
+    `;
+}
+
+// Função para gerar características alienígenas
+function generateAlienCharacteristics() {
+    return `
+        <div class="characteristics-grid">
+            <div class="form-group">
+                <label for="alien_planet">Planeta de Origem</label>
+                <input type="text" id="alien_planet" name="alien_planet" placeholder="Ex: Andrômeda, Zeta Reticuli">
+            </div>
+            
+            <div class="form-group">
+                <label for="alien_technology">Nível Tecnológico</label>
+                <select id="alien_technology" name="alien_technology">
+                    <option value="">Selecione</option>
+                    <option value="primitivo">Primitivo</option>
+                    <option value="medieval">Medieval</option>
+                    <option value="industrial">Industrial</option>
+                    <option value="futurista">Futurista</option>
+                    <option value="transcendental">Transcendental</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="alien_abilities">Habilidades Especiais</label>
+                <textarea id="alien_abilities" name="alien_abilities" rows="3" placeholder="Descreva habilidades especiais"></textarea>
+            </div>
+        </div>
+    `;
+}
+
+// Função para gerar características robóticas
+function generateRobotCharacteristics() {
+    return `
+        <div class="characteristics-grid">
+            <div class="form-group">
+                <label for="robot_type">Tipo de Robô</label>
+                <select id="robot_type" name="robot_type">
+                    <option value="">Selecione</option>
+                    <option value="android">Android Humanoide</option>
+                    <option value="cyborg">Cyborg</option>
+                    <option value="industrial">Robô Industrial</option>
+                    <option value="hologram">IA Holográfica</option>
+                    <option value="mecha">Mecha</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="robot_ai">Nível de IA</label>
+                <select id="robot_ai" name="robot_ai">
+                    <option value="">Selecione</option>
+                    <option value="basico">Básico</option>
+                    <option value="avancado">Avançado</option>
+                    <option value="superinteligente">Superinteligente</option>
+                    <option value="consciente">Consciente</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="robot_purpose">Propósito</label>
+                <textarea id="robot_purpose" name="robot_purpose" rows="3" placeholder="Descreva o propósito do robô"></textarea>
+            </div>
+        </div>
+    `;
+}
+
+// Função para gerar características elementais
+function generateElementalCharacteristics() {
+    return `
+        <div class="characteristics-grid">
+            <div class="form-group">
+                <label for="elemental_type">Tipo Elemental</label>
+                <select id="elemental_type" name="elemental_type">
+                    <option value="">Selecione</option>
+                    <option value="fogo">Fogo</option>
+                    <option value="agua">Água</option>
+                    <option value="terra">Terra</option>
+                    <option value="ar">Ar</option>
+                    <option value="luz">Luz</option>
+                    <option value="sombra">Sombra</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="elemental_power">Nível de Poder</label>
+                <select id="elemental_power" name="elemental_power">
+                    <option value="">Selecione</option>
+                    <option value="fraco">Fraco</option>
+                    <option value="moderado">Moderado</option>
+                    <option value="forte">Forte</option>
+                    <option value="lendario">Lendário</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="elemental_manifestation">Manifestação</label>
+                <textarea id="elemental_manifestation" name="elemental_manifestation" rows="3" placeholder="Descreva como o elemental se manifesta"></textarea>
+            </div>
+        </div>
+    `;
+}
+
+// Função para atualizar o resumo do avatar
+function updateAvatarSummary() {
+    const name = document.getElementById('avatar_name').value;
+    const type = selectedAvatarType;
+    
+    // Atualizar nome
+    const summaryName = document.getElementById('summary-name');
+    if (summaryName) summaryName.textContent = name || '-';
+    
+    // Atualizar tipo
+    const summaryType = document.getElementById('summary-type');
+    if (summaryType) summaryType.textContent = getTypeDisplayName(type) || '-';
+    
+    // Atualizar características
+    const summaryCharacteristics = document.getElementById('summary-characteristics');
+    if (summaryCharacteristics) {
+        const characteristics = collectAvatarCharacteristics();
+        summaryCharacteristics.textContent = characteristics || '-';
+    }
+    
+    // Atualizar ícone
+    const summaryIcon = document.getElementById('summary-avatar-icon');
+    if (summaryIcon) {
+        const iconElement = summaryIcon.querySelector('i');
+        if (iconElement) {
+            iconElement.className = `material-icons ${getTypeIcon(type)}`;
+        }
+    }
+}
+
+// Função para obter o nome de exibição do tipo
+function getTypeDisplayName(type) {
+    const typeNames = {
+        'humano': 'Humano',
+        'animal': 'Animal',
+        'fantasia': 'Fantasia',
+        'alien': 'Alienígena',
+        'robo': 'Robô/IA',
+        'elemental': 'Elemental'
+    };
+    return typeNames[type] || type;
+}
+
+// Função para obter o ícone do tipo
+function getTypeIcon(type) {
+    const typeIcons = {
+        'humano': 'person',
+        'animal': 'pets',
+        'fantasia': 'auto_fix_high',
+        'alien': 'emoji_nature',
+        'robo': 'smart_toy',
+        'elemental': 'whatshot'
+    };
+    return typeIcons[type] || 'person_outline';
+}
+
+// Função para coletar características do avatar
+function collectAvatarCharacteristics() {
+    const characteristics = [];
+    
+    // Coletar dados básicos
+    const name = document.getElementById('avatar_name').value;
+    if (name) characteristics.push(`Nome: ${name}`);
+    
+    // Coletar dados específicos do tipo
+    const type = selectedAvatarType;
+    if (type) {
+        const typeSpecificFields = document.querySelectorAll(`[name^="${type}_"]`);
+        typeSpecificFields.forEach(field => {
+            if (field.value) {
+                const label = field.previousElementSibling?.textContent || field.name;
+                characteristics.push(`${label}: ${field.value}`);
+            }
+        });
+    }
+    
+    return characteristics.join(', ');
+}
+
+// Função para criar o avatar
+function createAvatar() {
+    // Coletar todos os dados do formulário
+    const avatarData = {
+        name: document.getElementById('avatar_name').value,
+        type: selectedAvatarType,
+        characteristics: collectAvatarCharacteristics(),
+        timestamp: new Date().toISOString()
+    };
+    
+    // Aqui você pode implementar a lógica para salvar o avatar
+    // Por exemplo, enviar para o servidor ou salvar no localStorage
+    
+    console.log('Avatar criado:', avatarData);
+    
+    // Mostrar mensagem de sucesso
+    showAvatarSuccess('Avatar criado com sucesso!');
+    
+    // Fechar modal após 2 segundos
+    setTimeout(() => {
+        closeAvatarCreator();
+        // Aqui você pode recarregar a lista de avatares
+        loadAvatarsList();
+    }, 2000);
+}
+
+// Função para mostrar sucesso
+function showAvatarSuccess(message) {
+    // Criar mensagem de sucesso
+    const successDiv = document.createElement('div');
+    successDiv.className = 'avatar-success-message';
+    successDiv.style.cssText = `
+        background: #10b981;
+        color: white;
+        padding: 1rem;
+        border-radius: var(--radius);
+        margin: 1rem 0;
+        text-align: center;
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
+        min-width: 300px;
+    `;
+    
+    successDiv.innerHTML = `
+        <i class="material-icons" style="margin-right: 0.5rem;">check_circle</i>
+        ${message}
+    `;
+    
+    document.body.appendChild(successDiv);
+    
+    // Remover após 3 segundos
+    setTimeout(() => {
+        if (successDiv.parentNode) {
+            successDiv.parentNode.removeChild(successDiv);
+        }
+    }, 3000);
+}
+
+// Função para carregar lista de avatares
+function loadAvatarsList() {
+    // Aqui você pode implementar a lógica para carregar avatares do servidor
+    // Por enquanto, vamos apenas atualizar o contador
+    updateAvatarsCount();
+}
+
+// Função para atualizar contador de avatares
+function updateAvatarsCount() {
+    // Aqui você pode implementar a lógica para contar avatares
+    // Por enquanto, vamos apenas incrementar o contador
+    const countElement = document.getElementById('avatars-count');
+    if (countElement) {
+        const currentCount = parseInt(countElement.textContent) || 0;
+        countElement.textContent = currentCount + 1;
+    }
+}
+
+// Event Listeners para a aba Avatar
+document.addEventListener('DOMContentLoaded', function() {
+    // Seleção de tipo de ser
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.type-option')) {
+            const typeOption = e.target.closest('.type-option');
+            const type = typeOption.dataset.type;
+            
+            // Remover seleção anterior
+            document.querySelectorAll('.type-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Selecionar nova opção
+            typeOption.classList.add('selected');
+            selectedAvatarType = type;
+            document.getElementById('avatar_type').value = type;
+        }
+    });
+    
+    // Filtros de categoria
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.filter-btn')) {
+            const filterBtn = e.target.closest('.filter-btn');
+            const filter = filterBtn.dataset.filter;
+            
+            // Remover classe active de todos os botões
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Adicionar classe active ao botão clicado
+            filterBtn.classList.add('active');
+            
+            // Aqui você pode implementar a lógica de filtro
+            console.log('Filtro selecionado:', filter);
+        }
+    });
+    
+    // Campo de busca
+    const searchInput = document.getElementById('avatar-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            // Aqui você pode implementar a lógica de busca
+            console.log('Termo de busca:', searchTerm);
+        });
+    }
+    
+    // Select de ordenação
+    const sortSelect = document.getElementById('avatar-sort');
+    if (sortSelect) {
+        sortSelect.addEventListener('change', function(e) {
+            const sortValue = e.target.value;
+            // Aqui você pode implementar a lógica de ordenação
+            console.log('Ordenação selecionada:', sortValue);
+        });
+    }
+});
+
+// Fechar modal ao clicar fora dele
+document.addEventListener('click', function(e) {
+    const modal = document.getElementById('avatar-creator-modal');
+    if (modal && e.target === modal) {
+        closeAvatarCreator();
+    }
+});

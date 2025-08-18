@@ -666,179 +666,305 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     </div>
 
 
-                    <!-- ABA 7: AVATAR/PERSONAGEM - DESIGN COMPACTO -->
+                    <!-- ABA 7: AVATAR/PERSONAGEM - DESIGN MODERNO -->
                     <div class="tab-content" id="tab-avatar">
-                        <!-- Header Compacto -->
-                        <div class="avatar-header-compact">
-                            <div class="header-main">
-                                <div class="header-info">
-                                    <h2><i class="material-icons">auto_fix_high</i> Criador de Avatares</h2>
-                                    <div class="header-stats">
-                                        <span class="stat"><i class="material-icons">person</i> <span id="avatars-count">0</span> salvos</span>
-                                    </div>
+                        <!-- Header Principal -->
+                        <div class="avatar-header">
+                            <div class="header-content">
+                                <div class="header-left">
+                                    <h2><i class="material-icons">auto_fix_high</i> Gerenciador de Avatares</h2>
+                                    <p>Crie e gerencie personagens únicos para suas cenas</p>
                                 </div>
-                                <div class="progress-compact">
-                                    <div class="progress-bar-mini">
-                                        <div class="progress-fill-mini" id="creation-progress"></div>
+                                <div class="header-right">
+                                    <div class="stats-container">
+                                        <div class="stat-item">
+                                            <i class="material-icons">person</i>
+                                            <div class="stat-info">
+                                                <span class="stat-number" id="avatars-count">0</span>
+                                                <span class="stat-label">Avatares</span>
+                                            </div>
+                                        </div>
+                                        <div class="stat-item">
+                                            <i class="material-icons">favorite</i>
+                                            <div class="stat-info">
+                                                <span class="stat-number" id="favorites-count">0</span>
+                                                <span class="stat-label">Favoritos</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <span class="progress-text">Etapa <span id="current-step-text">1</span> de 4</span>
+                                    <button class="btn-create-avatar" onclick="showAvatarCreator()">
+                                        <i class="material-icons">add</i>
+                                        Novo Avatar
+                                    </button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Layout Compacto em Duas Colunas -->
-                        <div class="avatar-compact-container">
-                            <!-- Coluna Principal: Formulário -->
-                            <div class="main-form-panel">
-                                
-                                <!-- STEP 1: Informações Básicas -->
-                                <div class="creation-step active" id="step-1">
-                                    <div class="compact-card">
-                                        <div class="compact-header">
-                                            <h3><i class="material-icons">person_add</i> Informações Básicas</h3>
+                        <!-- Container Principal -->
+                        <div class="avatar-main-container">
+                            <!-- Sidebar de Navegação -->
+                            <div class="avatar-sidebar">
+                                <div class="sidebar-section">
+                                    <h3><i class="material-icons">category</i> Categorias</h3>
+                                    <div class="category-filters">
+                                        <button class="filter-btn active" data-filter="all">
+                                            <i class="material-icons">all_inclusive</i>
+                                            Todos
+                                        </button>
+                                        <button class="filter-btn" data-filter="humano">
+                                            <i class="material-icons">person</i>
+                                            Humanos
+                                        </button>
+                                        <button class="filter-btn" data-filter="animal">
+                                            <i class="material-icons">pets</i>
+                                            Animais
+                                        </button>
+                                        <button class="filter-btn" data-filter="fantasia">
+                                            <i class="material-icons">auto_fix_high</i>
+                                            Fantasia
+                                        </button>
+                                        <button class="filter-btn" data-filter="alien">
+                                            <i class="material-icons">emoji_nature</i>
+                                            Aliens
+                                        </button>
+                                        <button class="filter-btn" data-filter="robo">
+                                            <i class="material-icons">smart_toy</i>
+                                            Robôs
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="sidebar-section">
+                                    <h3><i class="material-icons">search</i> Buscar</h3>
+                                    <div class="search-container">
+                                        <input type="text" id="avatar-search" placeholder="Buscar avatar..." class="search-input">
+                                        <i class="material-icons search-icon">search</i>
+                                    </div>
+                                </div>
+
+                                <div class="sidebar-section">
+                                    <h3><i class="material-icons">sort</i> Ordenar</h3>
+                                    <select id="avatar-sort" class="sort-select">
+                                        <option value="recent">Mais Recentes</option>
+                                        <option value="name">Nome A-Z</option>
+                                        <option value="type">Tipo</option>
+                                        <option value="favorite">Favoritos</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Área Principal de Conteúdo -->
+                            <div class="avatar-content">
+                                <!-- Grid de Avatares -->
+                                <div class="avatars-grid" id="avatars-grid">
+                                    <!-- Avatar Placeholder -->
+                                    <div class="avatar-card placeholder">
+                                        <div class="avatar-preview">
+                                            <i class="material-icons">add_circle_outline</i>
                                         </div>
-                                        
-                                        <div class="compact-content">
-                                            <div class="form-row">
-                                                <div class="input-compact">
-                                                    <label for="avatar_name">Nome do Avatar</label>
-                                                    <input type="text" id="avatar_name" name="avatar_name" placeholder="Digite o nome do avatar">
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="form-row">
-                                                <label class="section-label">Tipo de Ser</label>
-                                                <div class="type-grid-compact">
-                                                    <div class="type-option-compact" data-type="humano">
-                                                        <i class="material-icons">person</i>
-                                                        <span>Humano</span>
-                                                    </div>
-                                                    <div class="type-option-compact" data-type="animal">
-                                                        <i class="material-icons">pets</i>
-                                                        <span>Animal</span>
-                                                    </div>
-                                                    <div class="type-option-compact" data-type="criatura_fantastica">
-                                                        <i class="material-icons">auto_fix_high</i>
-                                                        <span>Fantasia</span>
-                                                    </div>
-                                                    <div class="type-option-compact" data-type="alien">
-                                                        <i class="material-icons">emoji_nature</i>
-                                                        <span>Alien</span>
-                                                    </div>
-                                                    <div class="type-option-compact" data-type="robo_android">
-                                                        <i class="material-icons">smart_toy</i>
-                                                        <span>Robô</span>
-                                                    </div>
-                                                    <div class="type-option-compact" data-type="elemental">
-                                                        <i class="material-icons">whatshot</i>
-                                                        <span>Elemental</span>
-                                                    </div>
-                                                </div>
-                                                <input type="hidden" id="avatar_type" name="avatar_type">
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="compact-actions">
-                                            <button type="button" class="btn-compact btn-primary" onclick="nextCreationStep()">
-                                                Continuar <i class="material-icons">arrow_forward</i>
-                                            </button>
+                                        <div class="avatar-info">
+                                            <h4>Nenhum Avatar</h4>
+                                            <p>Clique em "Novo Avatar" para começar</p>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
 
                                 <!-- STEP 2: Características Específicas -->
                                 <div class="creation-step" id="step-2">
-                                    <div class="compact-card">
-                                        <div class="compact-header">
-                                            <h3><i class="material-icons">palette</i> Características</h3>
-                                        </div>
-                                        
-                                        <div class="compact-content">
-                                            <div id="dynamic-characteristics">
-                                                <div class="placeholder-content">
-                                                    <i class="material-icons">touch_app</i>
-                                                    <p>Selecione um tipo de ser na etapa anterior</p>
-                                                </div>
+                                    <div class="step-content">
+                                        <h4>Características Específicas</h4>
+                                        <div id="dynamic-characteristics">
+                                            <div class="loading-placeholder">
+                                                <i class="material-icons">hourglass_empty</i>
+                                                <p>Carregando características para o tipo selecionado...</p>
                                             </div>
                                         </div>
-                                        
-                                        <div class="compact-actions">
-                                            <button type="button" class="btn-compact btn-secondary" onclick="prevCreationStep()">
-                                                <i class="material-icons">arrow_back</i> Voltar
-                                            </button>
-                                            <button type="button" class="btn-compact btn-primary" onclick="nextCreationStep()">
-                                                Continuar <i class="material-icons">arrow_forward</i>
-                                            </button>
-                                        </div>
+                                    </div>
+
+                                    <div class="step-actions">
+                                        <button type="button" class="btn btn-secondary" onclick="prevAvatarStep()">
+                                            <i class="material-icons">arrow_back</i> Voltar
+                                        </button>
+                                        <button type="button" class="btn btn-primary" onclick="nextAvatarStep()">
+                                            Continuar <i class="material-icons">arrow_forward</i>
+                                        </button>
                                     </div>
                                 </div>
 
 
 
-                                <!-- STEP 4: Finalização -->
-                                <div class="creation-step" id="step-4">
-                                    <div class="compact-card">
-                                        <div class="compact-header">
-                                            <h3><i class="material-icons">auto_awesome</i> Avatar Criado!</h3>
-                                        </div>
-                                        
-                                        <div class="compact-content">
-                                            <div class="avatar-created-message">
-                                                <i class="material-icons">check_circle</i>
-                                                <p>Avatar criado com sucesso!</p>
+                                <!-- STEP 3: Finalização -->
+                                <div class="creation-step" id="step-3">
+                                    <div class="step-content">
+                                        <h4>Revisar e Finalizar</h4>
+                                        <div class="avatar-summary">
+                                            <div class="summary-preview">
+                                                <div class="avatar-icon-large" id="summary-avatar-icon">
+                                                    <i class="material-icons">person_outline</i>
+                                                </div>
+                                            </div>
+                                            <div class="summary-details" id="summary-details">
+                                                <h5>Resumo do Avatar</h5>
+                                                <div class="detail-item">
+                                                    <strong>Nome:</strong> <span id="summary-name">-</span>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <strong>Tipo:</strong> <span id="summary-type">-</span>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <strong>Características:</strong> <span id="summary-characteristics">-</span>
+                                                </div>
                                             </div>
                                         </div>
-                                        
-                                        <div class="compact-actions">
-                                            <button type="button" class="btn-compact btn-secondary" onclick="prevCreationStep()">
-                                                <i class="material-icons">arrow_back</i> Voltar
-                                            </button>
-                                            <button type="button" class="btn-compact btn-outline" onclick="resetCreation()">
-                                                <i class="material-icons">refresh</i> Novo
-                                            </button>
-                                        </div>
+                                    </div>
+
+                                    <div class="step-actions">
+                                        <button type="button" class="btn btn-secondary" onclick="prevAvatarStep()">
+                                            <i class="material-icons">arrow_back</i> Voltar
+                                        </button>
+                                        <button type="button" class="btn btn-success" onclick="createAvatar()">
+                                            <i class="material-icons">check</i> Criar Avatar
+                                        </button>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Sidebar Compacta -->
-                            <div class="sidebar-compact">
-                                <!-- Preview Compacto -->
-                                <div class="preview-compact">
-                                    <div class="preview-header-compact">
-                                        <h4><i class="material-icons">visibility</i> Preview</h4>
-                                    </div>
-                                    <div class="preview-info">
-                                        <div class="avatar-icon-display">
-                                            <i class="material-icons" id="avatar-icon-preview">person_outline</i>
-                                        </div>
-                                        <div class="avatar-info-compact">
-                                            <div class="info-item">
-                                                <strong>Nome:</strong> <span id="preview-name">-</span>
-                                            </div>
-                                            <div class="info-item">
-                                                <strong>Tipo:</strong> <span id="preview-type">-</span>
-                                            </div>
-                                        </div>
-                                    </div>
+                        </div>
+
+                        <!-- Modal do Criador de Avatar -->
+                        <div id="avatar-creator-modal" class="modal-overlay">
+                            <div class="modal-content avatar-creator-modal">
+                                <div class="modal-header">
+                                    <h3><i class="material-icons">auto_fix_high</i> Criar Novo Avatar</h3>
+                                    <button class="close-btn" onclick="closeAvatarCreator()">
+                                        <i class="material-icons">close</i>
+                                    </button>
                                 </div>
 
-                                <!-- Avatares Salvos Compacto -->
-                                <div class="saved-compact">
-                                    <div class="saved-header-compact">
-                                        <h4><i class="material-icons">folder</i> Salvos</h4>
-                                        <span class="count-badge" id="saved-count">0</span>
+                                <div class="modal-body">
+                                    <!-- Progress Steps -->
+                                    <div class="progress-steps">
+                                        <div class="step active" data-step="1">
+                                            <div class="step-number">1</div>
+                                            <span>Básico</span>
+                                        </div>
+                                        <div class="step" data-step="2">
+                                            <div class="step-number">2</div>
+                                            <span>Detalhes</span>
+                                        </div>
+                                        <div class="step" data-step="3">
+                                            <div class="step-number">3</div>
+                                            <span>Finalizar</span>
+                                        </div>
                                     </div>
-                                    <div class="saved-list-compact" id="saved-avatars-list">
-                                        <div class="avatar-item-compact placeholder">
-                                            <i class="material-icons">add</i>
-                                            <span>Nenhum avatar</span>
+
+                                    <!-- Step 1: Informações Básicas -->
+                                    <div class="creation-step active" id="step-1">
+                                        <div class="step-content">
+                                            <h4>Informações Básicas</h4>
+                                            
+                                            <div class="form-group">
+                                                <label for="avatar_name">Nome do Avatar</label>
+                                                <input type="text" id="avatar_name" name="avatar_name" placeholder="Digite um nome único para seu avatar">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Tipo de Ser</label>
+                                                <div class="type-selection-grid">
+                                                    <div class="type-option" data-type="humano">
+                                                        <div class="type-icon">
+                                                            <i class="material-icons">person</i>
+                                                        </div>
+                                                        <div class="type-info">
+                                                            <h5>Humano</h5>
+                                                            <p>Personagens humanos com características realistas</p>
+                                                        </div>
+                                                        <div class="type-check">
+                                                            <i class="material-icons">check_circle</i>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="type-option" data-type="animal">
+                                                        <div class="type-icon">
+                                                            <i class="material-icons">pets</i>
+                                                        </div>
+                                                        <div class="type-info">
+                                                            <h5>Animal</h5>
+                                                            <p>Criaturas animais de todos os tipos</p>
+                                                        </div>
+                                                        <div class="type-check">
+                                                            <i class="material-icons">check_circle</i>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="type-option" data-type="fantasia">
+                                                        <div class="type-icon">
+                                                            <i class="material-icons">auto_fix_high</i>
+                                                        </div>
+                                                        <div class="type-info">
+                                                            <h5>Fantasia</h5>
+                                                            <p>Seres mágicos e criaturas fantásticas</p>
+                                                        </div>
+                                                        <div class="type-check">
+                                                            <i class="material-icons">check_circle</i>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="type-option" data-type="alien">
+                                                        <div class="type-icon">
+                                                            <i class="material-icons">emoji_nature</i>
+                                                        </div>
+                                                        <div class="type-info">
+                                                            <h5>Alienígena</h5>
+                                                            <p>Seres de outros mundos e dimensões</p>
+                                                        </div>
+                                                        <div class="type-check">
+                                                            <i class="material-icons">check_circle</i>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="type-option" data-type="robo">
+                                                        <div class="type-icon">
+                                                            <i class="material-icons">smart_toy</i>
+                                                        </div>
+                                                        <div class="type-info">
+                                                            <h5>Robô/IA</h5>
+                                                            <p>Máquinas inteligentes e androides</p>
+                                                        </div>
+                                                        <div class="type-check">
+                                                            <i class="material-icons">check_circle</i>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="type-option" data-type="elemental">
+                                                        <div class="type-icon">
+                                                            <i class="material-icons">whatshot</i>
+                                                        </div>
+                                                        <div class="type-info">
+                                                            <h5>Elemental</h5>
+                                                            <p>Seres de fogo, água, terra e ar</p>
+                                                        </div>
+                                                        <div class="type-check">
+                                                            <i class="material-icons">check_circle</i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" id="avatar_type" name="avatar_type">
+                                            </div>
+                                        </div>
+
+                                        <div class="step-actions">
+                                            <button type="button" class="btn btn-primary" onclick="nextAvatarStep()">
+                                                Continuar <i class="material-icons">arrow_forward</i>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     </div>
 
                     <!-- ABA 8: CÂMERA -->
