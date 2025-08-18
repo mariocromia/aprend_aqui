@@ -307,17 +307,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
                             <!-- Coluna 2: Controles de navegação -->
                             <div class="tab-navigation">
-                                <button type="button" class="btn btn-secondary" onclick="goToFirstTab()" title="Início">
-                                    <i class="material-icons">home</i>
-                                </button>
-                                <button type="button" class="btn btn-secondary" onclick="prevTab()" title="Anterior">
-                                    <i class="material-icons">arrow_back</i>
-                                </button>
-                                <button type="button" class="btn btn-primary" onclick="nextTab()" title="Próxima">
-                                    <i class="material-icons">arrow_forward</i>
-                                </button>
-                                <button type="button" class="btn btn-secondary" onclick="goToLastTab()" title="Fim">
-                                    <i class="material-icons">flag</i>
+                                <div class="nav-buttons">
+                                    <button type="button" class="btn btn-secondary" onclick="goToFirstTab()" title="Início">
+                                        <i class="material-icons">home</i>
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="prevTab()" title="Anterior">
+                                        <i class="material-icons">arrow_back</i>
+                                    </button>
+                                    <button type="button" class="btn btn-primary" onclick="nextTab()" title="Próxima">
+                                        <i class="material-icons">arrow_forward</i>
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="goToLastTab()" title="Fim">
+                                        <i class="material-icons">flag</i>
+                                    </button>
+                                </div>
+                                <button type="button" class="btn-prompt" onclick="gerarPrompt()">
+                                    PROMPT
                                 </button>
                             </div>
 
@@ -366,20 +371,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                              </div>
 
                              <!-- Coluna 2: Controles de navegação -->
-                             <div class="tab-navigation">
-                                 <button type="button" class="btn btn-secondary" onclick="goToFirstTab()" title="Início">
-                                     <i class="material-icons">home</i>
-                                 </button>
-                                 <button type="button" class="btn btn-secondary" onclick="prevTab()" title="Anterior">
-                                     <i class="material-icons">arrow_back</i>
-                                 </button>
-                                 <button type="button" class="btn btn-primary" onclick="nextTab()" title="Próxima">
-                                     <i class="material-icons">arrow_forward</i>
-                                 </button>
-                                 <button type="button" class="btn btn-secondary" onclick="goToLastTab()" title="Fim">
-                                     <i class="material-icons">flag</i>
-                                 </button>
-                             </div>
+                            <div class="tab-navigation">
+                                <div class="nav-buttons">
+                                    <button type="button" class="btn btn-secondary" onclick="goToFirstTab()" title="Início">
+                                        <i class="material-icons">home</i>
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="prevTab()" title="Anterior">
+                                        <i class="material-icons">arrow_back</i>
+                                    </button>
+                                    <button type="button" class="btn btn-primary" onclick="nextTab()" title="Próxima">
+                                        <i class="material-icons">arrow_forward</i>
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="goToLastTab()" title="Fim">
+                                        <i class="material-icons">flag</i>
+                                    </button>
+                                </div>
+                                <button type="button" class="btn-prompt" onclick="gerarPrompt()">
+                                    PROMPT
+                                </button>
+                            </div>
 
 
                             <!-- Coluna 3: Espaço para propaganda -->
@@ -427,20 +437,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                              </div>
 
                              <!-- Coluna 2: Controles de navegação -->
-                             <div class="tab-navigation">
-                                 <button type="button" class="btn btn-secondary" onclick="goToFirstTab()" title="Início">
-                                     <i class="material-icons">home</i>
-                                 </button>
-                                 <button type="button" class="btn btn-secondary" onclick="prevTab()" title="Anterior">
-                                     <i class="material-icons">arrow_back</i>
-                                 </button>
-                                 <button type="button" class="btn btn-primary" onclick="nextTab()" title="Próxima">
-                                     <i class="material-icons">arrow_forward</i>
-                                 </button>
-                                 <button type="button" class="btn btn-secondary" onclick="goToLastTab()" title="Fim">
-                                     <i class="material-icons">flag</i>
-                                 </button>
-                             </div>
+                            <div class="tab-navigation">
+                                <div class="nav-buttons">
+                                    <button type="button" class="btn btn-secondary" onclick="goToFirstTab()" title="Início">
+                                        <i class="material-icons">home</i>
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="prevTab()" title="Anterior">
+                                        <i class="material-icons">arrow_back</i>
+                                    </button>
+                                    <button type="button" class="btn btn-primary" onclick="nextTab()" title="Próxima">
+                                        <i class="material-icons">arrow_forward</i>
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="goToLastTab()" title="Fim">
+                                        <i class="material-icons">flag</i>
+                                    </button>
+                                </div>
+                                <button type="button" class="btn-prompt" onclick="gerarPrompt()">
+                                    PROMPT
+                                </button>
+                            </div>
 
 
                             <!-- Coluna 3: Espaço para propaganda -->
@@ -473,7 +488,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         }
                         ?>
 
+                        <!-- Container de 3 colunas na base -->
                         <div class="bottom-controls-container">
+                            <!-- Coluna 1: Campo de descrição personalizada -->
                             <div class="custom-description">
                                 <label>
                                     <i class="material-icons">edit</i>
@@ -481,25 +498,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                 </label>
                                 <textarea 
                                     name="custom_technique" 
-                                    placeholder="Descreva técnicas específicas..."
+                                    placeholder="Descreva técnicas específicas que não estão nas opções abaixo..."
                                     rows="3"></textarea>
                             </div>
 
+                            <!-- Coluna 2: Controles de navegação -->
                             <div class="tab-navigation">
-                                <button type="button" class="btn btn-secondary" onclick="goToFirstTab()" title="Início">
-                                    <i class="material-icons">home</i>
-                                </button>
-                                <button type="button" class="btn btn-secondary" onclick="prevTab()" title="Anterior">
-                                    <i class="material-icons">arrow_back</i>
-                                </button>
-                                <button type="button" class="btn btn-primary" onclick="nextTab()" title="Próxima">
-                                    <i class="material-icons">arrow_forward</i>
-                                </button>
-                                <button type="button" class="btn btn-secondary" onclick="goToLastTab()" title="Fim">
-                                    <i class="material-icons">flag</i>
+                                <div class="nav-buttons">
+                                    <button type="button" class="btn btn-secondary" onclick="goToFirstTab()" title="Início">
+                                        <i class="material-icons">home</i>
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="prevTab()" title="Anterior">
+                                        <i class="material-icons">arrow_back</i>
+                                    </button>
+                                    <button type="button" class="btn btn-primary" onclick="nextTab()" title="Próxima">
+                                        <i class="material-icons">arrow_forward</i>
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="goToLastTab()" title="Fim">
+                                        <i class="material-icons">flag</i>
+                                    </button>
+                                </div>
+                                <button type="button" class="btn-prompt" onclick="gerarPrompt()">
+                                    PROMPT
                                 </button>
                             </div>
 
+                            <!-- Coluna 3: Espaço para propaganda -->
                             <div class="advertisement-container">
                                 <div class="advertisement-content">
                                     <i class="material-icons" style="font-size: 2rem; color: var(--text-muted);">campaign</i>
@@ -528,7 +552,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         }
                         ?>
 
+                        <!-- Container de 3 colunas na base -->
                         <div class="bottom-controls-container">
+                            <!-- Coluna 1: Campo de descrição personalizada -->
                             <div class="custom-description">
                                 <label>
                                     <i class="material-icons">edit</i>
@@ -536,25 +562,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                 </label>
                                 <textarea 
                                     name="custom_special_elements" 
-                                    placeholder="Descreva elementos especiais..."
+                                    placeholder="Descreva elementos especiais que não estão nas opções abaixo..."
                                     rows="3"></textarea>
                             </div>
 
+                            <!-- Coluna 2: Controles de navegação -->
                             <div class="tab-navigation">
-                                <button type="button" class="btn btn-secondary" onclick="goToFirstTab()" title="Início">
-                                    <i class="material-icons">home</i>
-                                </button>
-                                <button type="button" class="btn btn-secondary" onclick="prevTab()" title="Anterior">
-                                    <i class="material-icons">arrow_back</i>
-                                </button>
-                                <button type="button" class="btn btn-primary" onclick="nextTab()" title="Próxima">
-                                    <i class="material-icons">arrow_forward</i>
-                                </button>
-                                <button type="button" class="btn btn-secondary" onclick="goToLastTab()" title="Fim">
-                                    <i class="material-icons">flag</i>
+                                <div class="nav-buttons">
+                                    <button type="button" class="btn btn-secondary" onclick="goToFirstTab()" title="Início">
+                                        <i class="material-icons">home</i>
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="prevTab()" title="Anterior">
+                                        <i class="material-icons">arrow_back</i>
+                                    </button>
+                                    <button type="button" class="btn btn-primary" onclick="nextTab()" title="Próxima">
+                                        <i class="material-icons">arrow_forward</i>
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="goToLastTab()" title="Fim">
+                                        <i class="material-icons">flag</i>
+                                    </button>
+                                </div>
+                                <button type="button" class="btn-prompt" onclick="gerarPrompt()">
+                                    PROMPT
                                 </button>
                             </div>
 
+                            <!-- Coluna 3: Espaço para propaganda -->
                             <div class="advertisement-container">
                                 <div class="advertisement-content">
                                     <i class="material-icons" style="font-size: 2rem; color: var(--text-muted);">campaign</i>
@@ -583,7 +616,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         }
                         ?>
 
+                        <!-- Container de 3 colunas na base -->
                         <div class="bottom-controls-container">
+                            <!-- Coluna 1: Campo de descrição personalizada -->
                             <div class="custom-description">
                                 <label>
                                     <i class="material-icons">edit</i>
@@ -591,25 +626,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                 </label>
                                 <textarea 
                                     name="custom_quality" 
-                                    placeholder="Descreva configurações de qualidade..."
+                                    placeholder="Descreva configurações de qualidade que não estão nas opções abaixo..."
                                     rows="3"></textarea>
                             </div>
 
+                            <!-- Coluna 2: Controles de navegação -->
                             <div class="tab-navigation">
-                                <button type="button" class="btn btn-secondary" onclick="goToFirstTab()" title="Início">
-                                    <i class="material-icons">home</i>
-                                </button>
-                                <button type="button" class="btn btn-secondary" onclick="prevTab()" title="Anterior">
-                                    <i class="material-icons">arrow_back</i>
-                                </button>
-                                <button type="button" class="btn btn-primary" onclick="nextTab()" title="Próxima">
-                                    <i class="material-icons">arrow_forward</i>
-                                </button>
-                                <button type="button" class="btn btn-secondary" onclick="goToLastTab()" title="Fim">
-                                    <i class="material-icons">flag</i>
+                                <div class="nav-buttons">
+                                    <button type="button" class="btn btn-secondary" onclick="goToFirstTab()" title="Início">
+                                        <i class="material-icons">home</i>
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="prevTab()" title="Anterior">
+                                        <i class="material-icons">arrow_back</i>
+                                    </button>
+                                    <button type="button" class="btn btn-primary" onclick="nextTab()" title="Próxima">
+                                        <i class="material-icons">arrow_forward</i>
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="goToLastTab()" title="Fim">
+                                        <i class="material-icons">flag</i>
+                                    </button>
+                                </div>
+                                <button type="button" class="btn-prompt" onclick="gerarPrompt()">
+                                    PROMPT
                                 </button>
                             </div>
 
+                            <!-- Coluna 3: Espaço para propaganda -->
                             <div class="advertisement-container">
                                 <div class="advertisement-content">
                                     <i class="material-icons" style="font-size: 2rem; color: var(--text-muted);">campaign</i>
@@ -1209,20 +1251,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                              </div>
 
                              <!-- Coluna 2: Controles de navegação -->
-                             <div class="tab-navigation">
-                                 <button type="button" class="btn btn-secondary" onclick="goToFirstTab()" title="Início">
-                                     <i class="material-icons">home</i>
-                                 </button>
-                                 <button type="button" class="btn btn-secondary" onclick="prevTab()" title="Anterior">
-                                     <i class="material-icons">arrow_back</i>
-                                 </button>
-                                 <button type="button" class="btn btn-primary" onclick="nextTab()" title="Próxima">
-                                     <i class="material-icons">arrow_forward</i>
-                                 </button>
-                                 <button type="button" class="btn btn-secondary" onclick="goToLastTab()" title="Fim">
-                                     <i class="material-icons">flag</i>
-                                 </button>
-                             </div>
+                            <div class="tab-navigation">
+                                <div class="nav-buttons">
+                                    <button type="button" class="btn btn-secondary" onclick="goToFirstTab()" title="Início">
+                                        <i class="material-icons">home</i>
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="prevTab()" title="Anterior">
+                                        <i class="material-icons">arrow_back</i>
+                                    </button>
+                                    <button type="button" class="btn btn-primary" onclick="nextTab()" title="Próxima">
+                                        <i class="material-icons">arrow_forward</i>
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="goToLastTab()" title="Fim">
+                                        <i class="material-icons">flag</i>
+                                    </button>
+                                </div>
+                                <button type="button" class="btn-prompt" onclick="gerarPrompt()">
+                                    PROMPT
+                                </button>
+                            </div>
 
 
                             <!-- Coluna 3: Espaço para propaganda -->
@@ -1309,20 +1356,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                              </div>
 
                              <!-- Coluna 2: Controles de navegação -->
-                             <div class="tab-navigation">
-                                 <button type="button" class="btn btn-secondary" onclick="goToFirstTab()" title="Início">
-                                     <i class="material-icons">home</i>
-                                 </button>
-                                 <button type="button" class="btn btn-secondary" onclick="prevTab()" title="Anterior">
-                                     <i class="material-icons">arrow_back</i>
-                                 </button>
-                                 <button type="button" class="btn btn-primary" onclick="nextTab()" title="Próxima">
-                                     <i class="material-icons">arrow_forward</i>
-                                 </button>
-                                 <button type="button" class="btn btn-secondary" onclick="goToLastTab()" title="Fim">
-                                     <i class="material-icons">flag</i>
-                                 </button>
-                             </div>
+                            <div class="tab-navigation">
+                                <div class="nav-buttons">
+                                    <button type="button" class="btn btn-secondary" onclick="goToFirstTab()" title="Início">
+                                        <i class="material-icons">home</i>
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="prevTab()" title="Anterior">
+                                        <i class="material-icons">arrow_back</i>
+                                    </button>
+                                    <button type="button" class="btn btn-primary" onclick="nextTab()" title="Próxima">
+                                        <i class="material-icons">arrow_forward</i>
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="goToLastTab()" title="Fim">
+                                        <i class="material-icons">flag</i>
+                                    </button>
+                                </div>
+                                <button type="button" class="btn-prompt" onclick="gerarPrompt()">
+                                    PROMPT
+                                </button>
+                            </div>
 
 
                             <!-- Coluna 3: Espaço para propaganda -->
@@ -1552,11 +1604,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
                             <!-- Coluna 2: Controles de navegação -->
                             <div class="tab-navigation">
-                                <button type="button" class="btn btn-secondary" onclick="promptGenerator.previousTab()">
-                                    <i class="material-icons">arrow_back</i>
-                                </button>
-                                <button type="button" class="btn btn-primary" onclick="promptGenerator.nextTab()">
-                                    <i class="material-icons">arrow_forward</i>
+                                <div class="nav-buttons">
+                                    <button type="button" class="btn btn-secondary" onclick="goToFirstTab()" title="Início">
+                                        <i class="material-icons">home</i>
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="prevTab()" title="Anterior">
+                                        <i class="material-icons">arrow_back</i>
+                                    </button>
+                                    <button type="button" class="btn btn-primary" onclick="nextTab()" title="Próxima">
+                                        <i class="material-icons">arrow_forward</i>
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="goToLastTab()" title="Fim">
+                                        <i class="material-icons">flag</i>
+                                    </button>
+                                </div>
+                                <button type="button" class="btn-prompt" onclick="gerarPrompt()">
+                                    PROMPT
                                 </button>
                             </div>
 

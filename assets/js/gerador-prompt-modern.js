@@ -1856,3 +1856,205 @@ function debounce(func, wait) {
         timeout = setTimeout(later, wait);
     };
 }
+
+// Função para gerar o prompt final
+function gerarPrompt() {
+    try {
+        // Coletar todas as seleções das abas
+        const promptData = {
+            environment: getSelectedValue('environment'),
+            visual_style: getSelectedValue('visual_style'),
+            lighting: getSelectedValue('lighting'),
+            technique: getSelectedValue('technique'),
+            special_elements: getSelectedValue('special_elements'),
+            quality: getSelectedValue('quality'),
+            character: getSelectedValue('character'),
+            camera: getSelectedValue('camera'),
+            voice: getSelectedValue('voice'),
+            action: getSelectedValue('action'),
+            custom_descriptions: {
+                environment: document.querySelector('[name="custom_environment"]')?.value || '',
+                visual_style: document.querySelector('[name="custom_visual_style"]')?.value || '',
+                lighting: document.querySelector('[name="custom_lighting"]')?.value || '',
+                technique: document.querySelector('[name="custom_technique"]')?.value || '',
+                special_elements: document.querySelector('[name="custom_special_elements"]')?.value || '',
+                quality: document.querySelector('[name="custom_quality"]')?.value || '',
+                character: document.querySelector('[name="custom_character"]')?.value || '',
+                camera: document.querySelector('[name="custom_camera"]')?.value || '',
+                voice: document.querySelector('[name="custom_voice"]')?.value || '',
+                action: document.querySelector('[name="custom_action"]')?.value || ''
+            }
+        };
+
+        // Gerar o prompt final
+        const promptFinal = gerarPromptFinal(promptData);
+        
+        // Mostrar o prompt gerado
+        mostrarPromptGerado(promptFinal);
+        
+        // Scroll para o topo para mostrar o resultado
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+    } catch (error) {
+        console.error('Erro ao gerar prompt:', error);
+        alert('Erro ao gerar o prompt. Verifique o console para mais detalhes.');
+    }
+}
+
+// Função para obter o valor selecionado de um tipo específico
+function getSelectedValue(type) {
+    const selectedCard = document.querySelector(`.subcategory-card.selected[data-type="${type}"]`);
+    return selectedCard ? selectedCard.dataset.value : null;
+}
+
+// Função para gerar o prompt final baseado nas seleções
+function gerarPromptFinal(data) {
+    let prompt = '';
+    
+    // Adicionar ambiente
+    if (data.environment) {
+        prompt += `Ambiente: ${data.environment}\n`;
+    }
+    if (data.custom_descriptions.environment) {
+        prompt += `Descrição personalizada do ambiente: ${data.custom_descriptions.environment}\n`;
+    }
+    
+    // Adicionar estilo visual
+    if (data.visual_style) {
+        prompt += `Estilo visual: ${data.visual_style}\n`;
+    }
+    if (data.custom_descriptions.visual_style) {
+        prompt += `Descrição personalizada do estilo: ${data.custom_descriptions.visual_style}\n`;
+    }
+    
+    // Adicionar iluminação
+    if (data.lighting) {
+        prompt += `Iluminação: ${data.lighting}\n`;
+    }
+    if (data.custom_descriptions.lighting) {
+        prompt += `Descrição personalizada da iluminação: ${data.custom_descriptions.lighting}\n`;
+    }
+    
+    // Adicionar técnica
+    if (data.technique) {
+        prompt += `Técnica: ${data.technique}\n`;
+    }
+    if (data.custom_descriptions.technique) {
+        prompt += `Descrição personalizada da técnica: ${data.custom_descriptions.technique}\n`;
+    }
+    
+    // Adicionar elementos especiais
+    if (data.special_elements) {
+        prompt += `Elementos especiais: ${data.special_elements}\n`;
+    }
+    if (data.custom_descriptions.special_elements) {
+        prompt += `Descrição personalizada dos elementos: ${data.custom_descriptions.special_elements}\n`;
+    }
+    
+    // Adicionar qualidade
+    if (data.quality) {
+        prompt += `Qualidade: ${data.quality}\n`;
+    }
+    if (data.custom_descriptions.quality) {
+        prompt += `Descrição personalizada da qualidade: ${data.custom_descriptions.quality}\n`;
+    }
+    
+    // Adicionar personagem
+    if (data.character) {
+        prompt += `Personagem: ${data.character}\n`;
+    }
+    if (data.custom_descriptions.character) {
+        prompt += `Descrição personalizada do personagem: ${data.custom_descriptions.character}\n`;
+    }
+    
+    // Adicionar câmera
+    if (data.camera) {
+        prompt += `Câmera: ${data.camera}\n`;
+    }
+    if (data.custom_descriptions.camera) {
+        prompt += `Descrição personalizada da câmera: ${data.custom_descriptions.camera}\n`;
+    }
+    
+    // Adicionar voz
+    if (data.voice) {
+        prompt += `Voz: ${data.voice}\n`;
+    }
+    if (data.custom_descriptions.voice) {
+        prompt += `Descrição personalizada da voz: ${data.custom_descriptions.voice}\n`;
+    }
+    
+    // Adicionar ação
+    if (data.action) {
+        prompt += `Ação: ${data.action}\n`;
+    }
+    if (data.custom_descriptions.action) {
+        prompt += `Descrição personalizada da ação: ${data.action}\n`;
+    }
+    
+    return prompt.trim() || 'Nenhuma opção selecionada. Selecione pelo menos uma opção para gerar o prompt.';
+}
+
+// Função para mostrar o prompt gerado
+function mostrarPromptGerado(prompt) {
+    // Criar ou atualizar o modal de resultado
+    let modal = document.getElementById('prompt-result-modal');
+    
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'prompt-result-modal';
+        modal.className = 'prompt-result-modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>🎯 Prompt Gerado</h3>
+                    <button class="close-btn" onclick="fecharModalPrompt()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="prompt-content">
+                        <pre>${prompt}</pre>
+                    </div>
+                    <div class="prompt-actions">
+                        <button class="btn btn-primary" onclick="copiarPrompt('${prompt.replace(/'/g, "\\'")}')">
+                            <i class="material-icons">content_copy</i>
+                            Copiar Prompt
+                        </button>
+                        <button class="btn btn-secondary" onclick="fecharModalPrompt()">
+                            <i class="material-icons">close</i>
+                            Fechar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    } else {
+        modal.querySelector('.prompt-content pre').textContent = prompt;
+    }
+    
+    modal.style.display = 'flex';
+}
+
+// Função para fechar o modal
+function fecharModalPrompt() {
+    const modal = document.getElementById('prompt-result-modal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Função para copiar o prompt
+function copiarPrompt(prompt) {
+    navigator.clipboard.writeText(prompt).then(() => {
+        alert('Prompt copiado para a área de transferência!');
+    }).catch(err => {
+        console.error('Erro ao copiar:', err);
+        // Fallback para navegadores antigos
+        const textArea = document.createElement('textarea');
+        textArea.value = prompt;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        alert('Prompt copiado para a área de transferência!');
+    });
+}
