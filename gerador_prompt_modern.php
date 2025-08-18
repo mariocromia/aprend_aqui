@@ -1772,6 +1772,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
     <script src="assets/js/gerador-prompt-modern.js"></script>
     
+    <!-- Otimização de carregamento e remoção de preloader -->
+    <script>
+        // Remove preloader rapidamente após carregamento da página
+        document.addEventListener('DOMContentLoaded', function() {
+            const preloader = document.getElementById('pagePreloader');
+            
+            // Performance otimizada - remove preloader após 500ms
+            setTimeout(() => {
+                if (preloader) {
+                    preloader.classList.add('hidden');
+                    // Remove completamente do DOM após transição
+                    setTimeout(() => {
+                        if (preloader.parentNode) {
+                            preloader.parentNode.removeChild(preloader);
+                        }
+                    }, 300);
+                }
+            }, 500);
+            
+            // Força inicialização das abas estáticas
+            if (window.promptGenerator) {
+                window.promptGenerator.loadedTabs.add('qualidade');
+                window.promptGenerator.loadedTabs.add('avatar');
+                window.promptGenerator.loadedTabs.add('camera');
+                window.promptGenerator.loadedTabs.add('voz');
+                window.promptGenerator.loadedTabs.add('acao');
+                
+                // Inicializa funcionalidade das abas carregadas
+                ['qualidade', 'avatar', 'camera', 'voz', 'acao'].forEach(tabName => {
+                    window.promptGenerator.initializeTabContent(tabName);
+                });
+            }
+        });
+        
+        // Fallback para caso o script principal não carregue
+        window.addEventListener('load', function() {
+            const preloader = document.getElementById('pagePreloader');
+            if (preloader && !preloader.classList.contains('hidden')) {
+                preloader.classList.add('hidden');
+                setTimeout(() => {
+                    if (preloader.parentNode) {
+                        preloader.parentNode.removeChild(preloader);
+                    }
+                }, 300);
+            }
+        });
+    </script>
+    
     <?php
     // Adicionar JavaScript de integração com sistema dinâmico de cenas para ambiente, estilo visual e iluminação
     if ($cenaRenderer) {

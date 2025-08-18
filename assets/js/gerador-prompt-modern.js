@@ -7,7 +7,7 @@ class ModernPromptGenerator {
     constructor() {
         this.currentTab = 0;
         this.tabs = ['ambiente', 'estilo_visual', 'iluminacao', 'tecnica', 'elementos_especiais', 'qualidade', 'avatar', 'camera', 'voz', 'acao'];
-        this.loadedTabs = new Set(['ambiente']); // Primeira aba carregada por padrão
+        this.loadedTabs = new Set(['ambiente', 'qualidade', 'avatar', 'camera', 'voz', 'acao']); // Abas renderizadas no servidor
         this.lazyLoadEnabled = true;
         this.selections = {
             environment: null,
@@ -40,6 +40,17 @@ class ModernPromptGenerator {
     init() {
         this.bindEvents();
         this.updatePromptPreview();
+        
+        // Verificar se as abas estáticas existem e forçar carregamento se necessário
+        ['qualidade', 'avatar', 'camera', 'voz', 'acao'].forEach(tabName => {
+            const tab = document.querySelector(`#tab-${tabName}`);
+            if (tab && tabName === 'qualidade') {
+                const grid = tab.querySelector('.categories-grid');
+                if (grid && grid.innerHTML.trim() === '') {
+                    console.warn('Aba qualidade vazia - pode ser necessário recarregar dados');
+                }
+            }
+        });
     }
 
     bindEvents() {
@@ -99,7 +110,24 @@ class ModernPromptGenerator {
 
         // Update tab content
         document.querySelectorAll('.tab-content').forEach((content, index) => {
-            content.classList.toggle('active', index === tabIndex);
+            const isActive = index === tabIndex;
+            content.classList.toggle('active', isActive);
+            
+            // Otimização específica para aba qualidade
+            if (content.id === 'tab-qualidade' && isActive) {
+                // Garantir que a aba qualidade seja totalmente visível quando ativada
+                const grid = content.querySelector('.categories-grid');
+                if (grid) {
+                    const styles = window.getComputedStyle(grid);
+                    // Forçar visibilidade se necessário (correção de problemas de CSS)
+                    if (styles.visibility === 'hidden' || styles.display === 'none') {
+                        grid.style.visibility = 'visible';
+                        grid.style.display = 'block';
+                        grid.style.pointerEvents = 'auto';
+                        grid.style.opacity = '1';
+                    }
+                }
+            }
         });
 
         // Scroll to top of tab content
@@ -116,16 +144,23 @@ class ModernPromptGenerator {
         const tabContent = document.querySelector(`#tab-${tabName}`);
         if (!tabContent || this.loadedTabs.has(tabName)) return;
 
-        // Show skeleton loading
-        this.showSkeletonLoader(tabContent, tabName);
+        // Don't show skeleton for static tabs (already rendered server-side)
+        const isStaticTab = ['qualidade', 'avatar', 'camera', 'voz', 'acao'].includes(tabName);
+        
+        if (!isStaticTab) {
+            // Show skeleton loading only for dynamic tabs
+            this.showSkeletonLoader(tabContent, tabName);
+        }
 
         // Load content asynchronously
         this.loadDynamicContent(tabName).then(() => {
             // Mark tab as loaded
             this.loadedTabs.add(tabName);
             
-            // Remove skeleton and show real content
-            this.hideSkeletonLoader(tabContent);
+            // Remove skeleton and show real content (only for dynamic tabs)
+            if (!isStaticTab) {
+                this.hideSkeletonLoader(tabContent);
+            }
             
             // Initialize tab-specific functionality
             this.initializeTabContent(tabName);
@@ -139,7 +174,7 @@ class ModernPromptGenerator {
     async loadDynamicContent(tabName) {
         // For static tabs (already loaded), return immediately
         if (['qualidade', 'avatar', 'camera', 'voz', 'acao'].includes(tabName)) {
-            await new Promise(resolve => setTimeout(resolve, 300)); // Simulate loading
+            // No delay for static tabs - they're already rendered server-side
             return;
         }
 
