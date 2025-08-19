@@ -222,25 +222,62 @@ class PromptAvatarsManager {
             parts.push(avatar.gender);
         }
         
-        if (avatar.age && avatar.age !== 'adulto') {
-            parts.push(avatar.age);
+        // Handle numeric age or age ranges
+        if (avatar.age) {
+            if (typeof avatar.age === 'number') {
+                parts.push(`${avatar.age} anos`);
+            } else if (avatar.age !== 'adulto') {
+                parts.push(avatar.age);
+            }
         }
         
         // Tipo
         parts.push(avatar.type);
         
+        // Add physical characteristics for humans
+        if (avatar.type === 'humano' && avatar.characteristics) {
+            const physicalTraits = [];
+            
+            if (avatar.characteristics.cor_pele) {
+                physicalTraits.push(`pele ${avatar.characteristics.cor_pele}`);
+            }
+            if (avatar.characteristics.altura) {
+                physicalTraits.push(`altura ${avatar.characteristics.altura}`);
+            }
+            if (avatar.characteristics.peso) {
+                physicalTraits.push(`peso ${avatar.characteristics.peso}`);
+            }
+            if (avatar.characteristics.cor_cabelo) {
+                physicalTraits.push(`cabelo ${avatar.characteristics.cor_cabelo}`);
+            }
+            if (avatar.characteristics.tamanho_cabelo) {
+                physicalTraits.push(`cabelo ${avatar.characteristics.tamanho_cabelo}`);
+            }
+            if (avatar.characteristics.tipo_corte) {
+                physicalTraits.push(`corte ${avatar.characteristics.tipo_corte}`);
+            }
+            if (avatar.characteristics.cor_olhos) {
+                physicalTraits.push(`olhos ${avatar.characteristics.cor_olhos}`);
+            }
+            if (avatar.characteristics.detalhes_fisicos) {
+                physicalTraits.push(avatar.characteristics.detalhes_fisicos);
+            }
+            
+            parts.push(...physicalTraits);
+        } else {
+            // Add characteristics for other types
+            if (avatar.characteristics) {
+                Object.entries(avatar.characteristics).forEach(([key, value]) => {
+                    if (value) {
+                        parts.push(`${value}`);
+                    }
+                });
+            }
+        }
+        
         // Descrição
         if (avatar.description) {
             parts.push(avatar.description);
-        }
-        
-        // Características específicas
-        if (avatar.characteristics) {
-            Object.entries(avatar.characteristics).forEach(([key, value]) => {
-                if (value) {
-                    parts.push(`${value}`);
-                }
-            });
         }
         
         // Tags mais relevantes (máximo 3)

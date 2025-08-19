@@ -85,7 +85,7 @@ class AvatarManagerModern {
                 name: 'Elena Rodriguez',
                 type: 'humano',
                 gender: 'feminino',
-                age: 'adulto',
+                age: 28,
                 description: 'Jovem médica especialista em emergências médicas, sempre pronta para ajudar.',
                 tags: ['médica', 'emergência', 'jovem', 'profissional'],
                 visibility: 'privado',
@@ -93,9 +93,14 @@ class AvatarManagerModern {
                 created: '2024-01-15T10:30:00Z',
                 lastUsed: '2024-01-20T14:20:00Z',
                 characteristics: {
-                    profissao: 'Médica',
-                    especialidade: 'Emergências',
-                    personalidade: 'Determinada e empática'
+                    cor_pele: 'média',
+                    peso: '65kg',
+                    altura: '1.68m',
+                    cor_cabelo: 'castanho',
+                    tamanho_cabelo: 'médio',
+                    tipo_corte: 'Long bob',
+                    cor_olhos: 'castanhos',
+                    detalhes_fisicos: 'Óculos de grau, pequena cicatriz na mão esquerda'
                 }
             },
             {
@@ -120,8 +125,6 @@ class AvatarManagerModern {
                 id: 3,
                 name: 'Alpha Wolf',
                 type: 'animal',
-                gender: 'masculino',
-                age: 'adulto',
                 description: 'Lobo alfa líder de uma grande matilha, respeitado por sua sabedoria e força.',
                 tags: ['lobo', 'alfa', 'líder', 'selvagem'],
                 visibility: 'privado',
@@ -129,9 +132,10 @@ class AvatarManagerModern {
                 created: '2024-01-12T08:20:00Z',
                 lastUsed: '2024-01-19T17:30:00Z',
                 characteristics: {
-                    especie: 'Canis lupus',
-                    habitat: 'Floresta temperada',
-                    comportamento: 'Dominante e protetor'
+                    especie: 'lobo',
+                    raca: 'Lobo Cinzento',
+                    cor: 'Cinza com detalhes escuros',
+                    porte: 'grande'
                 }
             },
             {
@@ -402,14 +406,20 @@ class AvatarManagerModern {
     getFieldsForType(type) {
         const fieldsByType = {
             humano: [
-                { name: 'profissao', label: 'Profissão', type: 'text', placeholder: 'Ex: Médica, Engenheiro' },
-                { name: 'personalidade', label: 'Personalidade', type: 'text', placeholder: 'Ex: Carismático, Tímido' },
-                { name: 'vestuario', label: 'Vestuário', type: 'text', placeholder: 'Ex: Terno elegante, Roupas casuais' }
+                { name: 'cor_pele', label: 'Cor da Pele', type: 'select', options: ['Clara', 'Média', 'Morena', 'Negra', 'Asiática', 'Indígena', 'Outra'] },
+                { name: 'peso', label: 'Peso', type: 'text', placeholder: 'Ex: 70kg, Magro, Atlético' },
+                { name: 'altura', label: 'Altura', type: 'text', placeholder: 'Ex: 1.75m, Alto, Baixo' },
+                { name: 'cor_cabelo', label: 'Cor do Cabelo', type: 'select', options: ['Loiro', 'Castanho', 'Preto', 'Ruivo', 'Grisalho', 'Branco', 'Colorido'] },
+                { name: 'tamanho_cabelo', label: 'Tamanho do Cabelo', type: 'select', options: ['Careca', 'Muito Curto', 'Curto', 'Médio', 'Longo', 'Muito Longo'] },
+                { name: 'tipo_corte', label: 'Tipo de Corte', type: 'text', placeholder: 'Ex: Social, Moicano, Franja, Cacheado' },
+                { name: 'cor_olhos', label: 'Cor dos Olhos', type: 'select', options: ['Castanhos', 'Azuis', 'Verdes', 'Pretos', 'Mel', 'Avelã', 'Cinza'] },
+                { name: 'detalhes_fisicos', label: 'Detalhes Físicos', type: 'textarea', placeholder: 'Ex: Tatuagem no braço direito, cicatriz na testa, piercing no nariz...' }
             ],
             animal: [
-                { name: 'especie', label: 'Espécie', type: 'text', placeholder: 'Ex: Canis lupus, Felis catus' },
-                { name: 'habitat', label: 'Habitat', type: 'text', placeholder: 'Ex: Floresta, Savana' },
-                { name: 'comportamento', label: 'Comportamento', type: 'text', placeholder: 'Ex: Agressivo, Dócil' }
+                { name: 'especie', label: 'Espécie', type: 'select', options: ['Cão', 'Gato', 'Cavalo', 'Lobo', 'Leão', 'Tigre', 'Urso', 'Águia', 'Falcão', 'Serpente', 'Tubarão', 'Golfinho', 'Elefante', 'Girafa', 'Zebra', 'Macaco', 'Gorila', 'Panda', 'Raposa', 'Veado', 'Coelho', 'Esquilo', 'Rato', 'Morcego', 'Coruja', 'Papagaio', 'Peixe', 'Tartaruga', 'Lagarto', 'Crocodilo', 'Outra'] },
+                { name: 'raca', label: 'Raça', type: 'text', placeholder: 'Ex: Golden Retriever, Persa, Puro Sangue' },
+                { name: 'cor', label: 'Cor', type: 'text', placeholder: 'Ex: Dourado, Preto e Branco, Rajado' },
+                { name: 'porte', label: 'Porte', type: 'select', options: ['Pequeno', 'Médio', 'Grande', 'Gigante'] }
             ],
             fantastico: [
                 { name: 'elemento', label: 'Elemento', type: 'select', options: ['Fogo', 'Água', 'Terra', 'Ar', 'Luz', 'Trevas'] },
@@ -456,6 +466,11 @@ class AvatarManagerModern {
                 optionElement.textContent = option;
                 input.appendChild(optionElement);
             });
+        } else if (field.type === 'textarea') {
+            input = document.createElement('textarea');
+            input.className = 'form-textarea';
+            input.placeholder = field.placeholder || '';
+            input.rows = 3;
         } else {
             input = document.createElement('input');
             input.type = field.type;
@@ -662,25 +677,80 @@ class AvatarManagerModern {
             parts.push(avatar.gender);
         }
         
-        if (avatar.age && avatar.age !== 'adulto') {
-            parts.push(avatar.age);
+        // Handle numeric age or age ranges
+        if (avatar.age) {
+            if (typeof avatar.age === 'number') {
+                parts.push(`${avatar.age} anos`);
+            } else if (avatar.age !== 'adulto') {
+                parts.push(avatar.age);
+            }
         }
         
         parts.push(avatar.type);
+        
+        // Add physical characteristics for humans
+        if (avatar.type === 'humano' && avatar.characteristics) {
+            const physicalTraits = [];
+            
+            if (avatar.characteristics.cor_pele) {
+                physicalTraits.push(`pele ${avatar.characteristics.cor_pele}`);
+            }
+            if (avatar.characteristics.altura) {
+                physicalTraits.push(`altura ${avatar.characteristics.altura}`);
+            }
+            if (avatar.characteristics.peso) {
+                physicalTraits.push(`peso ${avatar.characteristics.peso}`);
+            }
+            if (avatar.characteristics.cor_cabelo) {
+                physicalTraits.push(`cabelo ${avatar.characteristics.cor_cabelo}`);
+            }
+            if (avatar.characteristics.tamanho_cabelo) {
+                physicalTraits.push(`cabelo ${avatar.characteristics.tamanho_cabelo}`);
+            }
+            if (avatar.characteristics.tipo_corte) {
+                physicalTraits.push(`corte ${avatar.characteristics.tipo_corte}`);
+            }
+            if (avatar.characteristics.cor_olhos) {
+                physicalTraits.push(`olhos ${avatar.characteristics.cor_olhos}`);
+            }
+            if (avatar.characteristics.detalhes_fisicos) {
+                physicalTraits.push(avatar.characteristics.detalhes_fisicos);
+            }
+            
+            parts.push(...physicalTraits);
+        } else if (avatar.type === 'animal' && avatar.characteristics) {
+            // Add animal characteristics
+            const animalTraits = [];
+            
+            if (avatar.characteristics.especie) {
+                animalTraits.push(avatar.characteristics.especie);
+            }
+            if (avatar.characteristics.raca) {
+                animalTraits.push(`raça ${avatar.characteristics.raca}`);
+            }
+            if (avatar.characteristics.cor) {
+                animalTraits.push(`cor ${avatar.characteristics.cor}`);
+            }
+            if (avatar.characteristics.porte) {
+                animalTraits.push(`porte ${avatar.characteristics.porte}`);
+            }
+            
+            parts.push(...animalTraits);
+        } else {
+            // Add characteristics for other types
+            Object.entries(avatar.characteristics || {}).forEach(([key, value]) => {
+                if (value) {
+                    parts.push(`${value}`);
+                }
+            });
+        }
         
         if (avatar.description) {
             parts.push(avatar.description);
         }
         
-        // Add characteristics
-        Object.entries(avatar.characteristics || {}).forEach(([key, value]) => {
-            if (value) {
-                parts.push(`${key}: ${value}`);
-            }
-        });
-        
-        if (avatar.tags.length > 0) {
-            parts.push(`tags: ${avatar.tags.join(', ')}`);
+        if (avatar.tags && avatar.tags.length > 0) {
+            parts.push(...avatar.tags);
         }
         
         return parts.join(', ');
