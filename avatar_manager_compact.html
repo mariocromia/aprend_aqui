@@ -1,0 +1,398 @@
+<!-- GERENCIADOR COMPACTO DE AVATARES -->
+<div class="avatar-manager-compact">
+    <!-- Toolbar Principal -->
+    <div class="avatar-toolbar">
+        <div class="toolbar-left">
+            <button class="btn-icon active" id="view-grid" title="Visualização em Grade">
+                <i class="material-icons">grid_view</i>
+            </button>
+            <button class="btn-icon" id="view-list" title="Visualização em Lista">
+                <i class="material-icons">view_list</i>
+            </button>
+            <div class="separator"></div>
+            <button class="btn-icon" id="new-folder" title="Nova Pasta">
+                <i class="material-icons">create_new_folder</i>
+            </button>
+            <button class="btn-primary btn-small" id="new-avatar">
+                <i class="material-icons">add</i>
+                Novo Avatar
+            </button>
+        </div>
+        
+        <div class="toolbar-center">
+            <div class="search-container">
+                <i class="material-icons">search</i>
+                <input type="text" id="avatar-search" placeholder="Buscar avatares, tags, categorias...">
+                <button class="btn-icon btn-clear" id="clear-search">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="toolbar-right">
+            <div class="filter-dropdown">
+                <button class="btn-outline btn-small" id="filter-btn">
+                    <i class="material-icons">filter_list</i>
+                    Filtros
+                </button>
+                <div class="dropdown-menu" id="filter-menu">
+                    <div class="filter-section">
+                        <h4>Tipo</h4>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="humano" checked>
+                            <span>Humanos</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="animal" checked>
+                            <span>Animais</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="fantastico" checked>
+                            <span>Fantásticos</span>
+                        </label>
+                    </div>
+                    <div class="filter-section">
+                        <h4>Visibilidade</h4>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="meus" checked>
+                            <span>Meus avatares</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="publicos">
+                            <span>Públicos</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn-icon" id="sort-btn" title="Ordenar">
+                <i class="material-icons">sort</i>
+            </button>
+            
+            <button class="btn-icon" id="settings-btn" title="Configurações">
+                <i class="material-icons">settings</i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Breadcrumb de Navegação -->
+    <div class="breadcrumb-nav">
+        <div class="breadcrumb-path">
+            <button class="breadcrumb-item active" data-path="">
+                <i class="material-icons">home</i>
+                Avatares
+            </button>
+        </div>
+        
+        <div class="view-options">
+            <span class="item-count">0 itens</span>
+            <div class="size-slider">
+                <i class="material-icons">photo_size_select_small</i>
+                <input type="range" id="icon-size" min="60" max="160" value="100">
+                <i class="material-icons">photo_size_select_large</i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Área Principal com Painel Lateral -->
+    <div class="manager-main">
+        <!-- Painel Lateral -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3>Biblioteca</h3>
+                <button class="btn-icon btn-collapse" id="toggle-sidebar">
+                    <i class="material-icons">chevron_left</i>
+                </button>
+            </div>
+            
+            <div class="sidebar-content">
+                <!-- Pastas de Sistema -->
+                <div class="folder-tree">
+                    <div class="tree-item active" data-folder="all">
+                        <i class="material-icons">folder_special</i>
+                        <span>Todos os Avatares</span>
+                        <span class="item-count">0</span>
+                    </div>
+                    
+                    <div class="tree-item" data-folder="recent">
+                        <i class="material-icons">schedule</i>
+                        <span>Recentes</span>
+                        <span class="item-count">0</span>
+                    </div>
+                    
+                    <div class="tree-item" data-folder="favorites">
+                        <i class="material-icons">star</i>
+                        <span>Favoritos</span>
+                        <span class="item-count">0</span>
+                    </div>
+                    
+                    <div class="tree-item" data-folder="templates">
+                        <i class="material-icons">bookmark</i>
+                        <span>Templates</span>
+                        <span class="item-count">0</span>
+                    </div>
+                </div>
+                
+                <div class="separator"></div>
+                
+                <!-- Pastas Personalizadas -->
+                <div class="custom-folders">
+                    <div class="section-header">
+                        <h4>Minhas Pastas</h4>
+                        <button class="btn-icon btn-tiny" id="add-custom-folder">
+                            <i class="material-icons">add</i>
+                        </button>
+                    </div>
+                    
+                    <div class="folder-tree" id="custom-folder-tree">
+                        <!-- Pastas personalizadas serão carregadas aqui -->
+                    </div>
+                </div>
+                
+                <div class="separator"></div>
+                
+                <!-- Tags Populares -->
+                <div class="popular-tags">
+                    <h4>Tags Populares</h4>
+                    <div class="tag-cloud">
+                        <!-- Tags serão carregadas dinamicamente -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Área de Conteúdo Principal -->
+        <div class="content-area">
+            <!-- Grid/Lista de Avatares -->
+            <div class="avatar-grid" id="avatar-grid">
+                <!-- Avatares serão carregados aqui dinamicamente -->
+                <div class="loading-placeholder">
+                    <i class="material-icons spinning">sync</i>
+                    <p>Carregando avatares...</p>
+                </div>
+            </div>
+            
+            <!-- Mensagem vazia -->
+            <div class="empty-state" id="empty-state" style="display: none;">
+                <div class="empty-icon">
+                    <i class="material-icons">person_add</i>
+                </div>
+                <h3>Nenhum avatar encontrado</h3>
+                <p>Crie seu primeiro avatar ou ajuste os filtros de busca</p>
+                <button class="btn-primary" id="create-first-avatar">
+                    <i class="material-icons">add</i>
+                    Criar Primeiro Avatar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Painel de Informações (slide-out) -->
+    <div class="info-panel" id="info-panel">
+        <div class="info-header">
+            <h3>Informações do Avatar</h3>
+            <button class="btn-icon" id="close-info">
+                <i class="material-icons">close</i>
+            </button>
+        </div>
+        
+        <div class="info-content">
+            <!-- Detalhes do avatar selecionado -->
+            <div class="avatar-preview-large">
+                <div class="avatar-image-placeholder">
+                    <i class="material-icons">person</i>
+                </div>
+                <div class="avatar-actions">
+                    <button class="btn-icon" title="Favoritar">
+                        <i class="material-icons">star_border</i>
+                    </button>
+                    <button class="btn-icon" title="Compartilhar">
+                        <i class="material-icons">share</i>
+                    </button>
+                    <button class="btn-icon" title="Duplicar">
+                        <i class="material-icons">content_copy</i>
+                    </button>
+                    <button class="btn-icon" title="Excluir">
+                        <i class="material-icons">delete</i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="info-details">
+                <h4 id="info-name">Nome do Avatar</h4>
+                <p id="info-description">Descrição...</p>
+                
+                <div class="info-metadata">
+                    <div class="meta-item">
+                        <span class="meta-label">Tipo:</span>
+                        <span class="meta-value" id="info-type">-</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Categoria:</span>
+                        <span class="meta-value" id="info-category">-</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Criado:</span>
+                        <span class="meta-value" id="info-created">-</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Usado:</span>
+                        <span class="meta-value" id="info-used">-</span>
+                    </div>
+                </div>
+                
+                <div class="info-tags">
+                    <h5>Tags</h5>
+                    <div class="tag-list" id="info-tag-list">
+                        <!-- Tags do avatar -->
+                    </div>
+                </div>
+                
+                <div class="info-actions">
+                    <button class="btn-primary btn-full">
+                        <i class="material-icons">edit</i>
+                        Editar Avatar
+                    </button>
+                    <button class="btn-outline btn-full">
+                        <i class="material-icons">auto_awesome</i>
+                        Gerar Prompt
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Criação Rápida -->
+    <div class="modal-overlay" id="quick-create-modal">
+        <div class="modal-content modal-compact">
+            <div class="modal-header">
+                <h3>
+                    <i class="material-icons">person_add</i>
+                    Criação Rápida de Avatar
+                </h3>
+                <button class="btn-icon" id="close-quick-create">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <form id="quick-create-form" class="compact-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nome</label>
+                            <input type="text" id="quick-name" placeholder="Nome do avatar" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo</label>
+                            <select id="quick-type" required>
+                                <option value="">Selecione...</option>
+                                <option value="humano">Humano</option>
+                                <option value="animal">Animal</option>
+                                <option value="fantastico">Fantástico</option>
+                                <option value="extraterrestre">Extraterrestre</option>
+                                <option value="robotico">Robótico/IA</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Gênero</label>
+                            <select id="quick-gender">
+                                <option value="neutro">Neutro</option>
+                                <option value="masculino">Masculino</option>
+                                <option value="feminino">Feminino</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Idade</label>
+                            <select id="quick-age">
+                                <option value="adulto">Adulto</option>
+                                <option value="crianca">Criança</option>
+                                <option value="adolescente">Adolescente</option>
+                                <option value="jovem">Jovem</option>
+                                <option value="idoso">Idoso</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Descrição Rápida</label>
+                        <textarea id="quick-description" placeholder="Descreva as características principais..." rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Pasta</label>
+                            <select id="quick-folder">
+                                <option value="">Pasta principal</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Visibilidade</label>
+                            <select id="quick-visibility">
+                                <option value="privado">Privado</option>
+                                <option value="publico">Público</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn-outline" id="cancel-quick-create">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn-primary">
+                            <i class="material-icons">check</i>
+                            Criar Avatar
+                        </button>
+                        <button type="button" class="btn-secondary" id="advanced-create">
+                            <i class="material-icons">tune</i>
+                            Avançado
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Nova Pasta -->
+    <div class="modal-overlay" id="new-folder-modal">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h3>
+                    <i class="material-icons">create_new_folder</i>
+                    Nova Pasta
+                </h3>
+                <button class="btn-icon" id="close-new-folder">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <form id="new-folder-form">
+                    <div class="form-group">
+                        <label>Nome da Pasta</label>
+                        <input type="text" id="folder-name" placeholder="Digite o nome da pasta" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Pasta Pai</label>
+                        <select id="parent-folder">
+                            <option value="">Pasta raiz</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn-outline" id="cancel-new-folder">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn-primary">
+                            <i class="material-icons">create_new_folder</i>
+                            Criar Pasta
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
