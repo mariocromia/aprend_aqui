@@ -1,6 +1,6 @@
 /**
- * GERENCIADOR MODERNO DE AVATARES
- * Sistema completo sem modais, com campos de seleção avançados
+ * GERENCIADOR MODERNO DE AVATARES V2
+ * Sistema redesenhado com interface compacta e funcionalidades aprimoradas
  */
 
 class AvatarManagerModern {
@@ -8,7 +8,7 @@ class AvatarManagerModern {
         this.avatars = [];
         this.selectedAvatars = [];
         this.currentView = 'grid';
-        this.currentSort = 'created';
+        this.currentAvatar = null;
         this.filters = {
             search: '',
             category: '',
@@ -25,59 +25,791 @@ class AvatarManagerModern {
         this.updateStats();
         this.renderAvatars();
         this.setupDynamicFields();
+        console.log('🎨 Avatar Manager Modern V2 inicializado');
     }
     
     // ===== EVENT BINDING =====
     bindEvents() {
-        // View controls
-        document.querySelectorAll('.btn-view').forEach(btn => {
+        // Header controls
+        this.bindHeaderControls();
+        
+        // Filter and search
+        this.bindFilterControls();
+        
+        // Modal controls
+        this.bindModalControls();
+        
+        // Avatar interactions
+        this.bindAvatarControls();
+        
+        // Details panel
+        this.bindDetailsControls();
+    }
+    
+    bindHeaderControls() {
+        // View toggle
+        document.querySelectorAll('.view-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const target = e.target.closest('.btn-view');
+                const target = e.target.closest('.view-btn');
                 if (target && target.dataset.view) {
                     this.setView(target.dataset.view);
                 }
             });
         });
         
+        // Main search
+        const mainSearch = document.getElementById('avatar-search-main');
+        if (mainSearch) {
+            mainSearch.addEventListener('input', this.handleMainSearch.bind(this));
+        }
         
-        // Search
-        document.getElementById('avatar-search')?.addEventListener('input', this.handleSearch.bind(this));
-        document.getElementById('clear-search')?.addEventListener('click', this.clearSearch.bind(this));
+        // Create button
+        const createBtn = document.getElementById('toggle-create-form');
+        if (createBtn) {
+            createBtn.addEventListener('click', this.showCreateModal.bind(this));
+        }
         
-        // Filters
-        document.getElementById('filter-category')?.addEventListener('change', this.handleFilterChange.bind(this));
-        document.getElementById('sort-by')?.addEventListener('change', this.handleSortChange.bind(this));
-        
-        // Filter checkboxes
-        document.querySelectorAll('.checkbox-item input[type="checkbox"]').forEach(cb => {
-            cb.addEventListener('change', this.handleStatusFilter.bind(this));
-        });
-        
-        // Avatar type selection for dynamic fields
-        document.getElementById('avatar-type')?.addEventListener('change', this.handleTypeChange.bind(this));
-        
-        // Form submission
-        document.getElementById('avatar-creation-form')?.addEventListener('submit', this.handleCreateAvatar.bind(this));
-        document.getElementById('clear-form')?.addEventListener('click', this.clearForm.bind(this));
-        
-        // Details panel
-        document.getElementById('close-details')?.addEventListener('click', this.hideDetails.bind(this));
-        
-        // Detail actions
-        document.getElementById('add-to-prompt')?.addEventListener('click', this.addCurrentToPrompt.bind(this));
-        document.getElementById('quick-add-to-prompt')?.addEventListener('click', this.addCurrentToPrompt.bind(this));
-        document.getElementById('toggle-favorite')?.addEventListener('click', this.toggleCurrentFavorite.bind(this));
-        document.getElementById('duplicate-avatar')?.addEventListener('click', this.duplicateCurrentAvatar.bind(this));
-        document.getElementById('generate-prompt')?.addEventListener('click', this.generateCurrentPrompt.bind(this));
-        document.getElementById('copy-prompt')?.addEventListener('click', this.copyCurrentPrompt.bind(this));
-        document.getElementById('edit-avatar')?.addEventListener('click', this.editCurrentAvatar.bind(this));
-        document.getElementById('delete-avatar')?.addEventListener('click', this.deleteCurrentAvatar.bind(this));
-        
-        // Refresh
-        document.getElementById('refresh-avatars')?.addEventListener('click', this.refreshAvatars.bind(this));
+        // Create first avatar
+        const createFirstBtn = document.getElementById('create-first-avatar');
+        if (createFirstBtn) {
+            createFirstBtn.addEventListener('click', this.showCreateModal.bind(this));
+        }
     }
     
-    // ===== DATA MANAGEMENT =====
+    bindFilterControls() {
+        // Filter toggle
+        const filterToggle = document.getElementById('toggle-filters');
+        if (filterToggle) {
+            filterToggle.addEventListener('click', this.toggleFilters.bind(this));
+        }
+        
+        // Close filters
+        const closeFilters = document.getElementById('close-filters');
+        if (closeFilters) {
+            closeFilters.addEventListener('click', this.hideFilters.bind(this));
+        }
+        
+        // Filter chips
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', this.handleFilterChip.bind(this));
+        });
+        
+        // Sort select
+        const sortSelect = document.getElementById('sort-by-modern');
+        if (sortSelect) {
+            sortSelect.addEventListener('change', this.handleSortChange.bind(this));
+        }
+        
+        // Refresh button
+        const refreshBtn = document.getElementById('refresh-avatars');
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', this.refreshAvatars.bind(this));
+        }
+    }
+    
+    bindModalControls() {
+        // Close modal buttons
+        document.querySelectorAll('.close-modal, .btn-cancel').forEach(btn => {
+            btn.addEventListener('click', this.hideCreateModal.bind(this));
+        });
+        
+        // Visibility toggle
+        document.querySelectorAll('.visibility-btn').forEach(btn => {
+            btn.addEventListener('click', this.handleVisibilityToggle.bind(this));
+        });
+        
+        // Form submission
+        const form = document.getElementById('avatar-creation-form-modern');
+        if (form) {
+            form.addEventListener('submit', this.handleCreateAvatar.bind(this));
+        }
+        
+        // Clear form
+        const clearBtn = document.getElementById('clear-form');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', this.clearForm.bind(this));
+        }
+        
+        // Avatar type change for dynamic fields
+        const typeSelect = document.getElementById('avatar-type');
+        if (typeSelect) {
+            typeSelect.addEventListener('change', this.handleTypeChange.bind(this));
+        }
+    }
+    
+    bindAvatarControls() {
+        // This will be called after rendering avatars
+        this.bindAvatarCards();
+    }
+    
+    bindDetailsControls() {
+        // Close details
+        const closeDetails = document.getElementById('close-details');
+        if (closeDetails) {
+            closeDetails.addEventListener('click', this.hideDetails.bind(this));
+        }
+        
+        // Quick actions
+        const addToPromptQuick = document.getElementById('add-to-prompt-quick');
+        if (addToPromptQuick) {
+            addToPromptQuick.addEventListener('click', this.addCurrentToPrompt.bind(this));
+        }
+        
+        const toggleFavorite = document.getElementById('toggle-favorite');
+        if (toggleFavorite) {
+            toggleFavorite.addEventListener('click', this.toggleCurrentFavorite.bind(this));
+        }
+        
+        const duplicateAvatar = document.getElementById('duplicate-avatar');
+        if (duplicateAvatar) {
+            duplicateAvatar.addEventListener('click', this.duplicateCurrentAvatar.bind(this));
+        }
+        
+        const shareAvatar = document.getElementById('share-avatar');
+        if (shareAvatar) {
+            shareAvatar.addEventListener('click', this.shareCurrentAvatar.bind(this));
+        }
+        
+        // Main actions
+        const addToPrompt = document.getElementById('add-to-prompt');
+        if (addToPrompt) {
+            addToPrompt.addEventListener('click', this.addCurrentToPrompt.bind(this));
+        }
+        
+        const editAvatar = document.getElementById('edit-avatar');
+        if (editAvatar) {
+            editAvatar.addEventListener('click', this.editCurrentAvatar.bind(this));
+        }
+        
+        const deleteAvatar = document.getElementById('delete-avatar');
+        if (deleteAvatar) {
+            deleteAvatar.addEventListener('click', this.deleteCurrentAvatar.bind(this));
+        }
+        
+        // Prompt actions
+        const generatePrompt = document.getElementById('generate-prompt');
+        if (generatePrompt) {
+            generatePrompt.addEventListener('click', this.generateCurrentPrompt.bind(this));
+        }
+        
+        const copyPrompt = document.getElementById('copy-prompt');
+        if (copyPrompt) {
+            copyPrompt.addEventListener('click', this.copyCurrentPrompt.bind(this));
+        }
+    }
+    
+    // ===== HEADER CONTROLS =====
+    setView(view) {
+        this.currentView = view;
+        
+        // Update active button
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.view === view);
+        });
+        
+        // Update grid class
+        const grid = document.getElementById('avatars-grid');
+        if (grid) {
+            grid.className = view === 'list' ? 'avatars-grid-modern list-view' : 'avatars-grid-modern';
+        }
+        
+        console.log(`📋 Vista alterada para: ${view}`);
+    }
+    
+    handleMainSearch(e) {
+        this.filters.search = e.target.value.toLowerCase();
+        this.debounceSearch();
+    }
+    
+    debounceSearch() {
+        clearTimeout(this.searchTimeout);
+        this.searchTimeout = setTimeout(() => {
+            this.renderAvatars();
+            console.log(`🔍 Busca: "${this.filters.search}"`);
+        }, 300);
+    }
+    
+    // ===== FILTER CONTROLS =====
+    toggleFilters() {
+        const filtersPanel = document.getElementById('filters-panel');
+        if (filtersPanel) {
+            filtersPanel.classList.toggle('active');
+        }
+    }
+    
+    hideFilters() {
+        const filtersPanel = document.getElementById('filters-panel');
+        if (filtersPanel) {
+            filtersPanel.classList.remove('active');
+        }
+    }
+    
+    handleFilterChip(e) {
+        const chip = e.target.closest('.filter-chip');
+        if (!chip) return;
+        
+        const category = chip.dataset.category;
+        const status = chip.dataset.status;
+        
+        if (category !== undefined) {
+            // Category filter
+            document.querySelectorAll('.filter-chip[data-category]').forEach(c => {
+                c.classList.remove('active');
+            });
+            chip.classList.add('active');
+            this.filters.category = category;
+        } else if (status !== undefined) {
+            // Status filter (toggle)
+            chip.classList.toggle('active');
+            if (chip.classList.contains('active')) {
+                if (!this.filters.status.includes(status)) {
+                    this.filters.status.push(status);
+                }
+            } else {
+                this.filters.status = this.filters.status.filter(s => s !== status);
+            }
+        }
+        
+        this.renderAvatars();
+    }
+    
+    handleSortChange(e) {
+        this.filters.sortBy = e.target.value;
+        this.renderAvatars();
+    }
+    
+    // ===== MODAL CONTROLS =====
+    showCreateModal() {
+        const modal = document.getElementById('creation-modal');
+        if (modal) {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+    
+    hideCreateModal() {
+        const modal = document.getElementById('creation-modal');
+        if (modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+    
+    handleVisibilityToggle(e) {
+        const btn = e.target.closest('.visibility-btn');
+        if (!btn) return;
+        
+        document.querySelectorAll('.visibility-btn').forEach(b => {
+            b.classList.remove('active');
+        });
+        btn.classList.add('active');
+        
+        const hiddenInput = document.getElementById('avatar-visibility');
+        if (hiddenInput) {
+            hiddenInput.value = btn.dataset.value;
+        }
+    }
+    
+    handleCreateAvatar(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(e.target);
+        const avatarData = {
+            id: Date.now(),
+            name: formData.get('name'),
+            type: formData.get('type'),
+            gender: formData.get('gender'),
+            age: parseInt(formData.get('age')) || 25,
+            description: formData.get('description'),
+            tags: formData.get('tags')?.split(',').map(t => t.trim()).filter(t => t) || [],
+            visibility: formData.get('visibility'),
+            favorite: false,
+            created: new Date().toISOString(),
+            lastUsed: null
+        };
+        
+        this.avatars.unshift(avatarData);
+        this.updateStats();
+        this.renderAvatars();
+        this.hideCreateModal();
+        this.clearForm();
+        
+        console.log('✅ Avatar criado:', avatarData.name);
+        this.showNotification(`Avatar "${avatarData.name}" criado com sucesso!`, 'success');
+    }
+    
+    clearForm() {
+        const form = document.getElementById('avatar-creation-form-modern');
+        if (form) {
+            form.reset();
+            
+            // Reset visibility toggle
+            document.querySelectorAll('.visibility-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.value === 'privado');
+            });
+            
+            const hiddenInput = document.getElementById('avatar-visibility');
+            if (hiddenInput) {
+                hiddenInput.value = 'privado';
+            }
+        }
+    }
+    
+    handleTypeChange(e) {
+        const type = e.target.value;
+        this.updateDynamicFields(type);
+    }
+    
+    updateDynamicFields(type) {
+        const container = document.getElementById('dynamic-fields-modern');
+        if (!container) return;
+        
+        container.innerHTML = '';
+        
+        if (!type) return;
+        
+        const fields = this.getDynamicFieldsForType(type);
+        fields.forEach(field => {
+            const fieldHtml = this.createDynamicField(field);
+            container.insertAdjacentHTML('beforeend', fieldHtml);
+        });
+    }
+    
+    getDynamicFieldsForType(type) {
+        const fieldsByType = {
+            humano: [
+                { name: 'cor_pele', label: 'Cor da Pele', type: 'select', options: ['clara', 'média', 'escura'] },
+                { name: 'altura', label: 'Altura', type: 'text', placeholder: 'Ex: 1.75m' },
+                { name: 'peso', label: 'Peso', type: 'text', placeholder: 'Ex: 70kg' },
+                { name: 'cor_cabelo', label: 'Cor do Cabelo', type: 'select', options: ['loiro', 'castanho', 'preto', 'ruivo', 'grisalho'] }
+            ],
+            animal: [
+                { name: 'especie', label: 'Espécie', type: 'text', placeholder: 'Ex: Gato, Cão, Lobo' },
+                { name: 'cor_pelo', label: 'Cor do Pelo', type: 'text', placeholder: 'Ex: Marrom, Preto' },
+                { name: 'tamanho', label: 'Tamanho', type: 'select', options: ['pequeno', 'médio', 'grande'] }
+            ],
+            fantastico: [
+                { name: 'criatura', label: 'Tipo de Criatura', type: 'text', placeholder: 'Ex: Elfo, Anão, Dragão' },
+                { name: 'poderes', label: 'Poderes', type: 'text', placeholder: 'Ex: Magia, Força' },
+                { name: 'mundo_origem', label: 'Mundo de Origem', type: 'text', placeholder: 'Ex: Terra Média' }
+            ],
+            extraterrestre: [
+                { name: 'planeta_origem', label: 'Planeta de Origem', type: 'text', placeholder: 'Ex: Vulcano, Krypton' },
+                { name: 'tecnologia', label: 'Nível Tecnológico', type: 'select', options: ['primitivo', 'avançado', 'super-avançado'] },
+                { name: 'aparencia', label: 'Aparência', type: 'text', placeholder: 'Descreva características únicas' }
+            ],
+            robotico: [
+                { name: 'modelo', label: 'Modelo/Versão', type: 'text', placeholder: 'Ex: T-800, HAL 9000' },
+                { name: 'funcao_primaria', label: 'Função Primária', type: 'text', placeholder: 'Ex: Assistente, Combate' },
+                { name: 'nivel_ia', label: 'Nível de IA', type: 'select', options: ['básico', 'intermediário', 'avançado', 'senciente'] }
+            ]
+        };
+        
+        return fieldsByType[type] || [];
+    }
+    
+    createDynamicField(field) {
+        if (field.type === 'select') {
+            const options = field.options.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+            return `
+                <div class="form-field-modern">
+                    <label class="field-label">${field.label}</label>
+                    <div class="select-wrapper">
+                        <select name="${field.name}" class="select-modern">
+                            <option value="">Selecione...</option>
+                            ${options}
+                        </select>
+                    </div>
+                </div>
+            `;
+        } else {
+            return `
+                <div class="form-field-modern">
+                    <label class="field-label">${field.label}</label>
+                    <div class="input-wrapper">
+                        <input type="text" name="${field.name}" placeholder="${field.placeholder}" class="input-modern">
+                    </div>
+                </div>
+            `;
+        }
+    }
+    
+    // ===== AVATAR RENDERING =====
+    renderAvatars() {
+        const container = document.getElementById('avatars-grid');
+        const loadingState = document.getElementById('loading-state');
+        const emptyState = document.getElementById('empty-state');
+        
+        if (!container) return;
+        
+        // Show loading
+        if (loadingState) loadingState.style.display = 'flex';
+        if (emptyState) emptyState.style.display = 'none';
+        container.innerHTML = '';
+        
+        setTimeout(() => {
+            const filteredAvatars = this.getFilteredAvatars();
+            
+            if (loadingState) loadingState.style.display = 'none';
+            
+            if (filteredAvatars.length === 0) {
+                if (emptyState) emptyState.style.display = 'flex';
+                return;
+            }
+            
+            filteredAvatars.forEach(avatar => {
+                const avatarCard = this.createAvatarCard(avatar);
+                container.insertAdjacentHTML('beforeend', avatarCard);
+            });
+            
+            this.bindAvatarCards();
+            this.updateCounts(filteredAvatars.length);
+        }, 500);
+    }
+    
+    getFilteredAvatars() {
+        let filtered = [...this.avatars];
+        
+        // Search filter
+        if (this.filters.search) {
+            filtered = filtered.filter(avatar => 
+                avatar.name.toLowerCase().includes(this.filters.search) ||
+                avatar.description.toLowerCase().includes(this.filters.search) ||
+                avatar.tags.some(tag => tag.toLowerCase().includes(this.filters.search))
+            );
+        }
+        
+        // Category filter
+        if (this.filters.category) {
+            filtered = filtered.filter(avatar => avatar.type === this.filters.category);
+        }
+        
+        // Status filter
+        if (this.filters.status.length > 0) {
+            filtered = filtered.filter(avatar => {
+                return this.filters.status.some(status => {
+                    switch(status) {
+                        case 'meus': return avatar.visibility === 'privado';
+                        case 'publicos': return avatar.visibility === 'publico';
+                        case 'favoritos': return avatar.favorite;
+                        default: return false;
+                    }
+                });
+            });
+        }
+        
+        // Sort
+        filtered.sort((a, b) => {
+            switch(this.filters.sortBy) {
+                case 'name': return a.name.localeCompare(b.name);
+                case 'type': return a.type.localeCompare(b.type);
+                case 'used': return new Date(b.lastUsed || 0) - new Date(a.lastUsed || 0);
+                case 'created':
+                default: return new Date(b.created) - new Date(a.created);
+            }
+        });
+        
+        return filtered;
+    }
+    
+    createAvatarCard(avatar) {
+        const typeIcons = {
+            humano: 'person',
+            animal: 'pets',
+            fantastico: 'auto_awesome',
+            extraterrestre: 'rocket_launch',
+            robotico: 'smart_toy'
+        };
+        
+        const icon = typeIcons[avatar.type] || 'person';
+        const favoriteClass = avatar.favorite ? 'favorite' : '';
+        
+        return `
+            <div class="avatar-card-modern ${favoriteClass}" data-avatar-id="${avatar.id}">
+                <div class="avatar-icon-display">
+                    <i class="material-icons">${icon}</i>
+                </div>
+                <div class="avatar-card-info">
+                    <div class="avatar-card-name">${avatar.name}</div>
+                    <div class="avatar-card-type">${avatar.type}</div>
+                </div>
+                ${avatar.favorite ? '<div class="favorite-indicator">⭐</div>' : ''}
+            </div>
+        `;
+    }
+    
+    bindAvatarCards() {
+        document.querySelectorAll('.avatar-card-modern').forEach(card => {
+            card.addEventListener('click', (e) => {
+                const avatarId = parseInt(card.dataset.avatarId);
+                const avatar = this.avatars.find(a => a.id === avatarId);
+                if (avatar) {
+                    this.showAvatarDetails(avatar);
+                }
+            });
+        });
+    }
+    
+    // ===== DETAILS PANEL =====
+    showAvatarDetails(avatar) {
+        this.currentAvatar = avatar;
+        const panel = document.getElementById('details-panel');
+        if (!panel) return;
+        
+        this.updateDetailsPanel(avatar);
+        panel.classList.add('active');
+        
+        console.log('📋 Detalhes do avatar:', avatar.name);
+    }
+    
+    hideDetails() {
+        const panel = document.getElementById('details-panel');
+        if (panel) {
+            panel.classList.remove('active');
+        }
+        this.currentAvatar = null;
+    }
+    
+    updateDetailsPanel(avatar) {
+        // Update subtitle
+        const subtitle = document.getElementById('details-subtitle');
+        if (subtitle) {
+            subtitle.textContent = avatar.name;
+        }
+        
+        // Update avatar name
+        const nameDisplay = document.getElementById('avatar-name-display');
+        if (nameDisplay) {
+            nameDisplay.textContent = avatar.name;
+        }
+        
+        // Update type badge
+        const typeBadge = document.getElementById('avatar-type-badge');
+        if (typeBadge) {
+            typeBadge.textContent = avatar.type;
+        }
+        
+        // Update status badge
+        const statusBadge = document.getElementById('avatar-status-badge');
+        if (statusBadge) {
+            statusBadge.textContent = avatar.visibility;
+        }
+        
+        // Update description
+        const description = document.getElementById('avatar-description-display');
+        if (description) {
+            description.textContent = avatar.description || 'Sem descrição';
+        }
+        
+        // Update metadata
+        const createdDate = document.getElementById('created-date');
+        if (createdDate) {
+            createdDate.textContent = new Date(avatar.created).toLocaleDateString('pt-BR');
+        }
+        
+        const lastUsed = document.getElementById('last-used');
+        if (lastUsed) {
+            lastUsed.textContent = avatar.lastUsed ? 
+                new Date(avatar.lastUsed).toLocaleDateString('pt-BR') : 'Nunca';
+        }
+        
+        // Update favorite button
+        const favoriteBtn = document.getElementById('toggle-favorite');
+        if (favoriteBtn) {
+            const icon = favoriteBtn.querySelector('i');
+            if (icon) {
+                icon.textContent = avatar.favorite ? 'star' : 'star_border';
+            }
+        }
+        
+        // Update tags
+        this.updateTagsDisplay(avatar.tags);
+    }
+    
+    updateTagsDisplay(tags) {
+        const container = document.getElementById('tags-display');
+        if (!container) return;
+        
+        container.innerHTML = '';
+        
+        if (!tags || tags.length === 0) {
+            container.innerHTML = '<span class="tag-modern">Sem tags</span>';
+            return;
+        }
+        
+        tags.forEach(tag => {
+            const tagElement = document.createElement('span');
+            tagElement.className = 'tag-modern';
+            tagElement.textContent = tag;
+            container.appendChild(tagElement);
+        });
+    }
+    
+    // ===== AVATAR ACTIONS =====
+    addCurrentToPrompt() {
+        if (!this.currentAvatar) return;
+        
+        const prompt = this.generatePromptText(this.currentAvatar);
+        console.log('➕ Adicionando ao prompt:', this.currentAvatar.name);
+        console.log('📝 Prompt gerado:', prompt);
+        
+        // Update last used
+        this.currentAvatar.lastUsed = new Date().toISOString();
+        this.updateDetailsPanel(this.currentAvatar);
+        
+        this.showNotification(`Avatar "${this.currentAvatar.name}" adicionado ao prompt!`, 'success');
+    }
+    
+    toggleCurrentFavorite() {
+        if (!this.currentAvatar) return;
+        
+        this.currentAvatar.favorite = !this.currentAvatar.favorite;
+        this.updateDetailsPanel(this.currentAvatar);
+        this.updateStats();
+        this.renderAvatars();
+        
+        const action = this.currentAvatar.favorite ? 'adicionado aos' : 'removido dos';
+        this.showNotification(`Avatar ${action} favoritos!`, 'info');
+    }
+    
+    duplicateCurrentAvatar() {
+        if (!this.currentAvatar) return;
+        
+        const duplicate = {
+            ...this.currentAvatar,
+            id: Date.now(),
+            name: `${this.currentAvatar.name} (Cópia)`,
+            created: new Date().toISOString(),
+            lastUsed: null
+        };
+        
+        this.avatars.unshift(duplicate);
+        this.updateStats();
+        this.renderAvatars();
+        
+        this.showNotification('Avatar duplicado com sucesso!', 'success');
+    }
+    
+    shareCurrentAvatar() {
+        if (!this.currentAvatar) return;
+        
+        // Simulate sharing functionality
+        const shareData = {
+            title: `Avatar: ${this.currentAvatar.name}`,
+            text: this.currentAvatar.description,
+            url: window.location.href
+        };
+        
+        if (navigator.share) {
+            navigator.share(shareData);
+        } else {
+            // Fallback - copy to clipboard
+            navigator.clipboard.writeText(JSON.stringify(this.currentAvatar, null, 2));
+            this.showNotification('Dados do avatar copiados para a área de transferência!', 'info');
+        }
+    }
+    
+    editCurrentAvatar() {
+        if (!this.currentAvatar) return;
+        
+        console.log('✏️ Editando avatar:', this.currentAvatar.name);
+        this.showNotification('Funcionalidade de edição em desenvolvimento...', 'info');
+    }
+    
+    deleteCurrentAvatar() {
+        if (!this.currentAvatar) return;
+        
+        if (confirm(`Tem certeza que deseja excluir o avatar "${this.currentAvatar.name}"?`)) {
+            const index = this.avatars.findIndex(a => a.id === this.currentAvatar.id);
+            if (index !== -1) {
+                this.avatars.splice(index, 1);
+                this.updateStats();
+                this.renderAvatars();
+                this.hideDetails();
+                
+                this.showNotification('Avatar excluído com sucesso!', 'success');
+            }
+        }
+    }
+    
+    generateCurrentPrompt() {
+        if (!this.currentAvatar) return;
+        
+        const prompt = this.generatePromptText(this.currentAvatar);
+        const promptDisplay = document.querySelector('.prompt-text-modern');
+        if (promptDisplay) {
+            promptDisplay.textContent = prompt;
+        }
+        
+        console.log('🤖 Prompt gerado:', prompt);
+        this.showNotification('Prompt gerado com sucesso!', 'success');
+    }
+    
+    copyCurrentPrompt() {
+        const promptText = document.querySelector('.prompt-text-modern');
+        if (promptText && promptText.textContent) {
+            navigator.clipboard.writeText(promptText.textContent);
+            this.showNotification('Prompt copiado para a área de transferência!', 'success');
+        } else {
+            this.showNotification('Gere um prompt primeiro!', 'warning');
+        }
+    }
+    
+    generatePromptText(avatar) {
+        const characteristics = [];
+        
+        characteristics.push(`Nome: ${avatar.name}`);
+        characteristics.push(`Tipo: ${avatar.type}`);
+        characteristics.push(`Gênero: ${avatar.gender}`);
+        characteristics.push(`Idade: ${avatar.age} anos`);
+        
+        if (avatar.description) {
+            characteristics.push(`Descrição: ${avatar.description}`);
+        }
+        
+        if (avatar.tags && avatar.tags.length > 0) {
+            characteristics.push(`Tags: ${avatar.tags.join(', ')}`);
+        }
+        
+        return `Crie um personagem com as seguintes características:\n\n${characteristics.join('\n')}`;
+    }
+    
+    // ===== UTILITY METHODS =====
+    updateStats() {
+        const total = this.avatars.length;
+        const publicCount = this.avatars.filter(a => a.visibility === 'publico').length;
+        const favoriteCount = this.avatars.filter(a => a.favorite).length;
+        
+        // Update header stats
+        const totalEl = document.getElementById('total-avatars');
+        if (totalEl) totalEl.textContent = total;
+        
+        const publicEl = document.getElementById('public-avatars');
+        if (publicEl) publicEl.textContent = publicCount;
+        
+        const favoriteEl = document.getElementById('favorite-avatars');
+        if (favoriteEl) favoriteEl.textContent = favoriteCount;
+    }
+    
+    updateCounts(filteredCount) {
+        const filteredEl = document.getElementById('filtered-count');
+        if (filteredEl) filteredEl.textContent = filteredCount;
+        
+        const totalEl = document.getElementById('total-count');
+        if (totalEl) totalEl.textContent = this.avatars.length;
+    }
+    
+    refreshAvatars() {
+        console.log('🔄 Atualizando avatares...');
+        this.renderAvatars();
+        this.showNotification('Lista de avatares atualizada!', 'info');
+    }
+    
+    setupDynamicFields() {
+        // Initialize dynamic fields for form
+        this.updateDynamicFields('');
+    }
+    
     loadSampleData() {
         this.avatars = [
             {
@@ -91,904 +823,78 @@ class AvatarManagerModern {
                 visibility: 'privado',
                 favorite: true,
                 created: '2024-01-15T10:30:00Z',
-                lastUsed: '2024-01-20T14:20:00Z',
-                characteristics: {
-                    cor_pele: 'média',
-                    peso: '65kg',
-                    altura: '1.68m',
-                    cor_cabelo: 'castanho',
-                    tamanho_cabelo: 'médio',
-                    tipo_corte: 'Long bob',
-                    cor_olhos: 'castanhos',
-                    detalhes_fisicos: 'Óculos de grau, pequena cicatriz na mão esquerda'
-                }
+                lastUsed: '2024-01-20T14:20:00Z'
             },
             {
                 id: 2,
-                name: 'Dragão Místico Azul',
-                type: 'fantastico',
+                name: 'Capitão Sparks',
+                type: 'robotico',
                 gender: 'neutro',
-                age: 'adulto',
-                description: 'Antigo dragão guardião das montanhas cristalinas, protetor dos tesouros ancestrais.',
-                tags: ['dragão', 'guardião', 'místico', 'azul'],
+                age: 5,
+                description: 'Robô militar avançado com personalidade desenvolvida e senso de humor.',
+                tags: ['robô', 'militar', 'humor', 'tecnologia'],
                 visibility: 'publico',
                 favorite: false,
-                created: '2024-01-10T16:45:00Z',
-                lastUsed: '2024-01-18T09:15:00Z',
-                characteristics: {
-                    elemento: 'Gelo',
-                    poder: 'Sopro congelante',
-                    origem: 'Montanhas Cristalinas'
-                }
+                created: '2024-01-10T08:15:00Z',
+                lastUsed: null
             },
             {
                 id: 3,
-                name: 'Alpha Wolf',
-                type: 'animal',
-                description: 'Lobo alfa líder de uma grande matilha, respeitado por sua sabedoria e força.',
-                tags: ['lobo', 'alfa', 'líder', 'selvagem'],
-                visibility: 'privado',
-                favorite: true,
-                created: '2024-01-12T08:20:00Z',
-                lastUsed: '2024-01-19T17:30:00Z',
-                characteristics: {
-                    especie: 'lobo',
-                    raca: 'Lobo Cinzento',
-                    cor: 'Cinza com detalhes escuros',
-                    porte: 'grande'
-                }
-            },
-            {
-                id: 4,
-                name: 'Capitão Zephyr',
-                type: 'extraterrestre',
-                gender: 'masculino',
-                age: 'adulto',
-                description: 'Comandante experiente de uma frota intergaláctica, conhecido por sua diplomacia.',
-                tags: ['comandante', 'espaço', 'diplomata', 'galáctico'],
-                visibility: 'publico',
-                favorite: false,
-                created: '2024-01-08T12:10:00Z',
-                lastUsed: '2024-01-16T11:45:00Z',
-                characteristics: {
-                    planeta: 'Kepler-442b',
-                    tecnologia: 'Propulsão quântica',
-                    missao: 'Exploração pacífica'
-                }
-            },
-            {
-                id: 5,
-                name: 'ARIA-9000',
-                type: 'robotico',
+                name: 'Luna Silvermoon',
+                type: 'fantastico',
                 gender: 'feminino',
-                age: 'adulto',
-                description: 'Androide assistente pessoal com IA avançada e personalidade carinhosa.',
-                tags: ['android', 'assistente', 'ia', 'carinhosa'],
+                age: 150,
+                description: 'Elfa ancestral com poderes de cura e conexão profunda com a natureza.',
+                tags: ['elfa', 'magia', 'natureza', 'cura'],
                 visibility: 'privado',
                 favorite: true,
-                created: '2024-01-05T14:25:00Z',
-                lastUsed: '2024-01-17T16:40:00Z',
-                characteristics: {
-                    processador: 'Quantum Core X1',
-                    funcoes: 'Assistência doméstica',
-                    emocoes: 'Protocolo empático ativo'
-                }
+                created: '2024-01-12T16:45:00Z',
+                lastUsed: '2024-01-18T11:30:00Z'
             }
         ];
     }
     
-    // ===== VIEW CONTROLS =====
-    setView(view) {
-        this.currentView = view;
-        
-        // Update buttons
-        document.querySelectorAll('.btn-view').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.view === view);
-        });
-        
-        // Update grid class
-        const grid = document.getElementById('avatars-grid');
-        if (grid) {
-            if (view === 'list') {
-                grid.classList.add('list-view');
-            } else {
-                grid.classList.remove('list-view');
-            }
-        }
-    }
-    
-    
-    // ===== FILTERING AND SEARCH =====
-    handleSearch(e) {
-        this.filters.search = e.target.value.toLowerCase();
-        this.renderAvatars();
-        
-        // Show/hide clear button
-        const clearBtn = document.getElementById('clear-search');
-        if (clearBtn) {
-            clearBtn.style.display = e.target.value ? 'block' : 'none';
-        }
-    }
-    
-    clearSearch() {
-        const searchInput = document.getElementById('avatar-search');
-        if (searchInput) {
-            searchInput.value = '';
-            this.filters.search = '';
-            this.renderAvatars();
-            
-            const clearBtn = document.getElementById('clear-search');
-            if (clearBtn) clearBtn.style.display = 'none';
-        }
-    }
-    
-    handleFilterChange(e) {
-        this.filters.category = e.target.value;
-        this.renderAvatars();
-    }
-    
-    handleSortChange(e) {
-        this.filters.sortBy = e.target.value;
-        this.renderAvatars();
-    }
-    
-    handleStatusFilter() {
-        const checkboxes = document.querySelectorAll('.checkbox-item input[type="checkbox"]');
-        this.filters.status = Array.from(checkboxes)
-            .filter(cb => cb.checked)
-            .map(cb => cb.value);
-        this.renderAvatars();
-    }
-    
-    getFilteredAvatars() {
-        let filtered = [...this.avatars];
-        
-        // Search filter
-        if (this.filters.search) {
-            filtered = filtered.filter(avatar => {
-                const searchText = [
-                    avatar.name,
-                    avatar.description,
-                    avatar.type,
-                    ...avatar.tags
-                ].join(' ').toLowerCase();
-                return searchText.includes(this.filters.search);
-            });
-        }
-        
-        // Category filter
-        if (this.filters.category) {
-            filtered = filtered.filter(avatar => avatar.type === this.filters.category);
-        }
-        
-        // Status filter
-        filtered = filtered.filter(avatar => {
-            if (this.filters.status.includes('meus') && avatar.visibility === 'privado') return true;
-            if (this.filters.status.includes('publicos') && avatar.visibility === 'publico') return true;
-            if (this.filters.status.includes('favoritos') && avatar.favorite) return true;
-            return false;
-        });
-        
-        // Sort
-        filtered.sort((a, b) => {
-            switch (this.filters.sortBy) {
-                case 'name':
-                    return a.name.localeCompare(b.name);
-                case 'created':
-                    return new Date(b.created) - new Date(a.created);
-                case 'used':
-                    if (!a.lastUsed && !b.lastUsed) return 0;
-                    if (!a.lastUsed) return 1;
-                    if (!b.lastUsed) return -1;
-                    return new Date(b.lastUsed) - new Date(a.lastUsed);
-                case 'type':
-                    return a.type.localeCompare(b.type);
-                default:
-                    return 0;
-            }
-        });
-        
-        return filtered;
-    }
-    
-    // ===== RENDERING =====
-    renderAvatars() {
-        const grid = document.getElementById('avatars-grid');
-        const loadingState = document.getElementById('loading-state');
-        const emptyState = document.getElementById('empty-state');
-        
-        if (!grid) return;
-        
-        const filteredAvatars = this.getFilteredAvatars();
-        
-        // Hide loading state
-        if (loadingState) loadingState.style.display = 'none';
-        
-        if (filteredAvatars.length === 0) {
-            grid.innerHTML = '';
-            if (emptyState) emptyState.style.display = 'flex';
-            this.updateResultsInfo(0, this.avatars.length);
-            return;
-        }
-        
-        if (emptyState) emptyState.style.display = 'none';
-        
-        grid.innerHTML = '';
-        
-        filteredAvatars.forEach(avatar => {
-            const card = this.createAvatarCard(avatar);
-            grid.appendChild(card);
-        });
-        
-        this.updateResultsInfo(filteredAvatars.length, this.avatars.length);
-    }
-    
-    createAvatarCard(avatar) {
-        const card = document.createElement('div');
-        card.className = `avatar-card ${avatar.favorite ? 'favorite' : ''}`;
-        card.dataset.id = avatar.id;
-        
-        const typeIcons = {
-            humano: 'person',
-            animal: 'pets',
-            fantastico: 'auto_fix_high',
-            extraterrestre: 'rocket_launch',
-            robotico: 'smart_toy'
-        };
-        
-        card.innerHTML = `
-            <div class="avatar-card-actions">
-                <button class="card-action-btn" data-action="add-to-prompt" title="Adicionar ao Prompt">
-                    <i class="material-icons">add_circle</i>
-                </button>
-                <button class="card-action-btn" data-action="select" title="Selecionar">
-                    <i class="material-icons">check_box_outline_blank</i>
-                </button>
-            </div>
-            <div class="avatar-icon-display">
-                <i class="material-icons">${typeIcons[avatar.type] || 'person'}</i>
-            </div>
-            <div class="avatar-card-info">
-                <div class="avatar-card-name">${this.escapeHtml(avatar.name)}</div>
-                <div class="avatar-card-type">${this.capitalize(avatar.type)}</div>
-            </div>
-        `;
-        
-        // Event listeners
-        card.addEventListener('click', (e) => {
-            if (!e.target.closest('.avatar-card-actions')) {
-                this.showAvatarDetails(avatar);
-            }
-        });
-        
-        // Action buttons
-        const addToPromptBtn = card.querySelector('[data-action="add-to-prompt"]');
-        addToPromptBtn?.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.addAvatarToPrompt(avatar.id);
-        });
-        
-        const selectBtn = card.querySelector('[data-action="select"]');
-        selectBtn?.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.toggleAvatarSelection(avatar.id);
-        });
-        
-        return card;
-    }
-    
-    // ===== DYNAMIC FIELDS =====
-    setupDynamicFields() {
-        const typeSelect = document.getElementById('avatar-type');
-        if (typeSelect) {
-            typeSelect.addEventListener('change', this.handleTypeChange.bind(this));
-        }
-    }
-    
-    handleTypeChange(e) {
-        const type = e.target.value;
-        const container = document.getElementById('dynamic-fields');
-        
-        if (!container) return;
-        
-        container.innerHTML = '';
-        
-        if (!type) return;
-        
-        const fields = this.getFieldsForType(type);
-        
-        fields.forEach(field => {
-            const fieldElement = this.createFormField(field);
-            container.appendChild(fieldElement);
-        });
-    }
-    
-    getFieldsForType(type) {
-        const fieldsByType = {
-            humano: [
-                { name: 'cor_pele', label: 'Cor da Pele', type: 'select', options: ['Clara', 'Média', 'Morena', 'Negra', 'Asiática', 'Indígena', 'Outra'] },
-                { name: 'peso', label: 'Peso', type: 'text', placeholder: 'Ex: 70kg, Magro, Atlético' },
-                { name: 'altura', label: 'Altura', type: 'text', placeholder: 'Ex: 1.75m, Alto, Baixo' },
-                { name: 'cor_cabelo', label: 'Cor do Cabelo', type: 'select', options: ['Loiro', 'Castanho', 'Preto', 'Ruivo', 'Grisalho', 'Branco', 'Colorido'] },
-                { name: 'tamanho_cabelo', label: 'Tamanho do Cabelo', type: 'select', options: ['Careca', 'Muito Curto', 'Curto', 'Médio', 'Longo', 'Muito Longo'] },
-                { name: 'tipo_corte', label: 'Tipo de Corte', type: 'text', placeholder: 'Ex: Social, Moicano, Franja, Cacheado' },
-                { name: 'cor_olhos', label: 'Cor dos Olhos', type: 'select', options: ['Castanhos', 'Azuis', 'Verdes', 'Pretos', 'Mel', 'Avelã', 'Cinza'] },
-                { name: 'detalhes_fisicos', label: 'Detalhes Físicos', type: 'textarea', placeholder: 'Ex: Tatuagem no braço direito, cicatriz na testa, piercing no nariz...' }
-            ],
-            animal: [
-                { name: 'especie', label: 'Espécie', type: 'select', options: ['Cão', 'Gato', 'Cavalo', 'Lobo', 'Leão', 'Tigre', 'Urso', 'Águia', 'Falcão', 'Serpente', 'Tubarão', 'Golfinho', 'Elefante', 'Girafa', 'Zebra', 'Macaco', 'Gorila', 'Panda', 'Raposa', 'Veado', 'Coelho', 'Esquilo', 'Rato', 'Morcego', 'Coruja', 'Papagaio', 'Peixe', 'Tartaruga', 'Lagarto', 'Crocodilo', 'Outra'] },
-                { name: 'raca', label: 'Raça', type: 'text', placeholder: 'Ex: Golden Retriever, Persa, Puro Sangue' },
-                { name: 'cor', label: 'Cor', type: 'text', placeholder: 'Ex: Dourado, Preto e Branco, Rajado' },
-                { name: 'porte', label: 'Porte', type: 'select', options: ['Pequeno', 'Médio', 'Grande', 'Gigante'] }
-            ],
-            fantastico: [
-                { name: 'elemento', label: 'Elemento', type: 'select', options: ['Fogo', 'Água', 'Terra', 'Ar', 'Luz', 'Trevas'] },
-                { name: 'poder', label: 'Poder Principal', type: 'text', placeholder: 'Ex: Sopro de fogo, Telepatia' },
-                { name: 'origem', label: 'Origem', type: 'text', placeholder: 'Ex: Reino Élfico, Dimensão Sombria' }
-            ],
-            extraterrestre: [
-                { name: 'planeta', label: 'Planeta de Origem', type: 'text', placeholder: 'Ex: Kepler-442b, Proxima Centauri' },
-                { name: 'tecnologia', label: 'Tecnologia', type: 'text', placeholder: 'Ex: Propulsão quântica, Teletransporte' },
-                { name: 'missao', label: 'Missão', type: 'text', placeholder: 'Ex: Exploração, Conquista' }
-            ],
-            robotico: [
-                { name: 'processador', label: 'Processador', type: 'text', placeholder: 'Ex: Quantum Core X1, Neural Matrix' },
-                { name: 'funcoes', label: 'Funções Principais', type: 'text', placeholder: 'Ex: Assistência, Combate' },
-                { name: 'emocoes', label: 'Sistema Emocional', type: 'select', options: ['Desativado', 'Básico', 'Avançado', 'Humanoide'] }
-            ]
-        };
-        
-        return fieldsByType[type] || [];
-    }
-    
-    createFormField(field) {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'form-group';
-        
-        const label = document.createElement('label');
-        label.className = 'form-label';
-        label.textContent = field.label;
-        
-        let input;
-        
-        if (field.type === 'select') {
-            input = document.createElement('select');
-            input.className = 'form-select';
-            
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = 'Selecione...';
-            input.appendChild(defaultOption);
-            
-            field.options.forEach(option => {
-                const optionElement = document.createElement('option');
-                optionElement.value = option.toLowerCase();
-                optionElement.textContent = option;
-                input.appendChild(optionElement);
-            });
-        } else if (field.type === 'textarea') {
-            input = document.createElement('textarea');
-            input.className = 'form-textarea';
-            input.placeholder = field.placeholder || '';
-            input.rows = 3;
-        } else {
-            input = document.createElement('input');
-            input.type = field.type;
-            input.className = 'form-input';
-            input.placeholder = field.placeholder || '';
-        }
-        
-        input.name = field.name;
-        input.id = `field-${field.name}`;
-        
-        wrapper.appendChild(label);
-        wrapper.appendChild(input);
-        
-        return wrapper;
-    }
-    
-    // ===== AVATAR CREATION =====
-    handleCreateAvatar(e) {
-        e.preventDefault();
-        
-        const formData = new FormData(e.target);
-        const avatarData = this.collectFormData(formData);
-        
-        // Validation
-        if (!avatarData.name || !avatarData.type) {
-            this.showNotification('Nome e tipo são obrigatórios', 'error');
-            return;
-        }
-        
-        // Create avatar
-        const newAvatar = this.createNewAvatar(avatarData);
-        this.avatars.unshift(newAvatar);
-        
-        // Update UI
-        this.renderAvatars();
-        this.updateStats();
-        this.clearForm();
-        
-        this.showNotification('Avatar criado com sucesso!', 'success');
-    }
-    
-    collectFormData(formData) {
-        const data = {
-            name: formData.get('name'),
-            type: formData.get('type'),
-            gender: formData.get('gender'),
-            age: formData.get('age'),
-            description: formData.get('description'),
-            tags: formData.get('tags')?.split(',').map(t => t.trim()).filter(t => t) || [],
-            visibility: formData.get('visibility'),
-            characteristics: {}
-        };
-        
-        // Collect dynamic fields
-        const dynamicFields = document.querySelectorAll('#dynamic-fields input, #dynamic-fields select');
-        dynamicFields.forEach(field => {
-            if (field.value) {
-                data.characteristics[field.name] = field.value;
-            }
-        });
-        
-        return data;
-    }
-    
-    createNewAvatar(data) {
-        return {
-            id: Date.now(),
-            name: data.name,
-            type: data.type,
-            gender: data.gender,
-            age: data.age,
-            description: data.description,
-            tags: data.tags,
-            visibility: data.visibility,
-            favorite: false,
-            created: new Date().toISOString(),
-            lastUsed: null,
-            characteristics: data.characteristics
-        };
-    }
-    
-    clearForm() {
-        const form = document.getElementById('avatar-creation-form');
-        if (form) {
-            form.reset();
-            document.getElementById('dynamic-fields').innerHTML = '';
-        }
-    }
-    
-    // ===== AVATAR DETAILS =====
-    showAvatarDetails(avatar) {
-        const detailsPanel = document.getElementById('avatar-details');
-        if (!detailsPanel) return;
-        
-        this.currentAvatar = avatar;
-        
-        // Populate details
-        document.getElementById('avatar-name-display').textContent = avatar.name;
-        document.getElementById('avatar-type-badge').textContent = this.capitalize(avatar.type);
-        document.getElementById('created-date').textContent = this.formatDate(avatar.created);
-        document.getElementById('last-used').textContent = avatar.lastUsed ? this.formatDate(avatar.lastUsed) : 'Nunca';
-        document.getElementById('avatar-status').textContent = avatar.visibility === 'publico' ? 'Público' : 'Privado';
-        document.getElementById('avatar-description-display').textContent = avatar.description;
-        
-        // Update favorite button
-        const favoriteBtn = document.getElementById('toggle-favorite');
-        if (favoriteBtn) {
-            const icon = favoriteBtn.querySelector('i');
-            icon.textContent = avatar.favorite ? 'star' : 'star_border';
-        }
-        
-        // Update tags
-        const tagsContainer = document.getElementById('tags-display');
-        if (tagsContainer) {
-            tagsContainer.innerHTML = avatar.tags.map(tag => 
-                `<span class="tag-item">${this.escapeHtml(tag)}</span>`
-            ).join('');
-        }
-        
-        // Update avatar icon
-        const avatarImage = document.getElementById('avatar-image');
-        if (avatarImage) {
-            const typeIcons = {
-                humano: 'person',
-                animal: 'pets',
-                fantastico: 'auto_fix_high',
-                extraterrestre: 'rocket_launch',
-                robotico: 'smart_toy'
-            };
-            avatarImage.innerHTML = `<i class="material-icons">${typeIcons[avatar.type] || 'person'}</i>`;
-        }
-        
-        // Show panel
-        detailsPanel.classList.add('active');
-    }
-    
-    hideDetails() {
-        const detailsPanel = document.getElementById('avatar-details');
-        if (detailsPanel) {
-            detailsPanel.classList.remove('active');
-        }
-        this.currentAvatar = null;
-    }
-    
-    // ===== AVATAR ACTIONS =====
-    toggleCurrentFavorite() {
-        if (!this.currentAvatar) return;
-        
-        this.currentAvatar.favorite = !this.currentAvatar.favorite;
-        
-        // Update avatar in array
-        const index = this.avatars.findIndex(a => a.id === this.currentAvatar.id);
-        if (index !== -1) {
-            this.avatars[index] = this.currentAvatar;
-        }
-        
-        // Update UI
-        this.renderAvatars();
-        this.updateStats();
-        this.showAvatarDetails(this.currentAvatar); // Refresh details
-        
-        this.showNotification(
-            this.currentAvatar.favorite ? 'Adicionado aos favoritos' : 'Removido dos favoritos',
-            'success'
-        );
-    }
-    
-    duplicateCurrentAvatar() {
-        if (!this.currentAvatar) return;
-        
-        const duplicate = {
-            ...this.currentAvatar,
-            id: Date.now(),
-            name: `${this.currentAvatar.name} (Cópia)`,
-            created: new Date().toISOString(),
-            lastUsed: null,
-            favorite: false
-        };
-        
-        this.avatars.unshift(duplicate);
-        this.renderAvatars();
-        this.updateStats();
-        
-        this.showNotification('Avatar duplicado com sucesso!', 'success');
-    }
-    
-    generateCurrentPrompt() {
-        if (!this.currentAvatar) return;
-        
-        const prompt = this.generatePromptForAvatar(this.currentAvatar);
-        
-        const promptDisplay = document.querySelector('.prompt-text');
-        if (promptDisplay) {
-            promptDisplay.textContent = prompt;
-        }
-        
-        this.showNotification('Prompt gerado!', 'success');
-    }
-    
-    generatePromptForAvatar(avatar) {
-        const parts = [avatar.name];
-        
-        if (avatar.gender && avatar.gender !== 'neutro') {
-            parts.push(avatar.gender);
-        }
-        
-        // Handle numeric age or age ranges
-        if (avatar.age) {
-            if (typeof avatar.age === 'number') {
-                parts.push(`${avatar.age} anos`);
-            } else if (avatar.age !== 'adulto') {
-                parts.push(avatar.age);
-            }
-        }
-        
-        parts.push(avatar.type);
-        
-        // Add physical characteristics for humans
-        if (avatar.type === 'humano' && avatar.characteristics) {
-            const physicalTraits = [];
-            
-            if (avatar.characteristics.cor_pele) {
-                physicalTraits.push(`pele ${avatar.characteristics.cor_pele}`);
-            }
-            if (avatar.characteristics.altura) {
-                physicalTraits.push(`altura ${avatar.characteristics.altura}`);
-            }
-            if (avatar.characteristics.peso) {
-                physicalTraits.push(`peso ${avatar.characteristics.peso}`);
-            }
-            if (avatar.characteristics.cor_cabelo) {
-                physicalTraits.push(`cabelo ${avatar.characteristics.cor_cabelo}`);
-            }
-            if (avatar.characteristics.tamanho_cabelo) {
-                physicalTraits.push(`cabelo ${avatar.characteristics.tamanho_cabelo}`);
-            }
-            if (avatar.characteristics.tipo_corte) {
-                physicalTraits.push(`corte ${avatar.characteristics.tipo_corte}`);
-            }
-            if (avatar.characteristics.cor_olhos) {
-                physicalTraits.push(`olhos ${avatar.characteristics.cor_olhos}`);
-            }
-            if (avatar.characteristics.detalhes_fisicos) {
-                physicalTraits.push(avatar.characteristics.detalhes_fisicos);
-            }
-            
-            parts.push(...physicalTraits);
-        } else if (avatar.type === 'animal' && avatar.characteristics) {
-            // Add animal characteristics
-            const animalTraits = [];
-            
-            if (avatar.characteristics.especie) {
-                animalTraits.push(avatar.characteristics.especie);
-            }
-            if (avatar.characteristics.raca) {
-                animalTraits.push(`raça ${avatar.characteristics.raca}`);
-            }
-            if (avatar.characteristics.cor) {
-                animalTraits.push(`cor ${avatar.characteristics.cor}`);
-            }
-            if (avatar.characteristics.porte) {
-                animalTraits.push(`porte ${avatar.characteristics.porte}`);
-            }
-            
-            parts.push(...animalTraits);
-        } else {
-            // Add characteristics for other types
-            Object.entries(avatar.characteristics || {}).forEach(([key, value]) => {
-                if (value) {
-                    parts.push(`${value}`);
-                }
-            });
-        }
-        
-        if (avatar.description) {
-            parts.push(avatar.description);
-        }
-        
-        if (avatar.tags && avatar.tags.length > 0) {
-            parts.push(...avatar.tags);
-        }
-        
-        return parts.join(', ');
-    }
-    
-    copyCurrentPrompt() {
-        const promptText = document.querySelector('.prompt-text');
-        if (promptText && promptText.textContent) {
-            navigator.clipboard.writeText(promptText.textContent).then(() => {
-                this.showNotification('Prompt copiado!', 'success');
-            }).catch(() => {
-                this.showNotification('Erro ao copiar prompt', 'error');
-            });
-        }
-    }
-    
-    editCurrentAvatar() {
-        if (!this.currentAvatar) return;
-        
-        // Populate form with current avatar data
-        this.populateFormWithAvatar(this.currentAvatar);
-        this.hideDetails();
-        
-        this.showNotification('Avatar carregado no formulário para edição', 'info');
-    }
-    
-    populateFormWithAvatar(avatar) {
-        const form = document.getElementById('avatar-creation-form');
-        if (!form) return;
-        
-        // Basic fields
-        form.name.value = avatar.name;
-        form.type.value = avatar.type;
-        form.gender.value = avatar.gender;
-        form.age.value = avatar.age;
-        form.description.value = avatar.description;
-        form.tags.value = avatar.tags.join(', ');
-        form.visibility.value = avatar.visibility;
-        
-        // Trigger type change to load dynamic fields
-        this.handleTypeChange({ target: { value: avatar.type } });
-        
-        // Populate dynamic fields
-        setTimeout(() => {
-            Object.entries(avatar.characteristics || {}).forEach(([key, value]) => {
-                const field = document.querySelector(`[name="${key}"]`);
-                if (field) {
-                    field.value = value;
-                }
-            });
-        }, 100);
-    }
-    
-    deleteCurrentAvatar() {
-        if (!this.currentAvatar) return;
-        
-        if (confirm(`Tem certeza que deseja excluir "${this.currentAvatar.name}"?`)) {
-            const index = this.avatars.findIndex(a => a.id === this.currentAvatar.id);
-            if (index !== -1) {
-                this.avatars.splice(index, 1);
-                this.renderAvatars();
-                this.updateStats();
-                this.hideDetails();
-                
-                this.showNotification('Avatar excluído com sucesso!', 'success');
-            }
-        }
-    }
-    
-    // ===== PROMPT INTEGRATION =====
-    addCurrentToPrompt() {
-        if (!this.currentAvatar) {
-            this.showNotification('Nenhum avatar selecionado', 'error');
-            return;
-        }
-        
-        // Check if prompt avatars manager is available
-        if (window.promptAvatarsManager) {
-            const success = window.promptAvatarsManager.addAvatar(this.currentAvatar);
-            if (success) {
-                // Update avatar's last used time
-                this.currentAvatar.lastUsed = new Date().toISOString();
-                
-                // Update avatar in the list
-                const index = this.avatars.findIndex(a => a.id === this.currentAvatar.id);
-                if (index !== -1) {
-                    this.avatars[index] = this.currentAvatar;
-                }
-                
-                this.renderAvatars();
-                this.showAvatarDetails(this.currentAvatar); // Refresh details
-            }
-        } else {
-            // Fallback for when prompt manager is not available
-            this.showNotification('Sistema de prompt não encontrado', 'error');
-            console.warn('promptAvatarsManager not found. Make sure to include prompt-avatars-manager.js');
-        }
-    }
-    
-    addAvatarToPrompt(avatarId) {
-        const avatar = this.avatars.find(a => a.id === avatarId);
-        if (!avatar) {
-            this.showNotification('Avatar não encontrado', 'error');
-            return;
-        }
-        
-        if (window.promptAvatarsManager) {
-            const success = window.promptAvatarsManager.addAvatar(avatar);
-            if (success) {
-                // Update avatar's last used time
-                avatar.lastUsed = new Date().toISOString();
-                this.renderAvatars();
-                
-                // If this avatar is currently shown in details, refresh
-                if (this.currentAvatar && this.currentAvatar.id === avatarId) {
-                    this.showAvatarDetails(avatar);
-                }
-            }
-        } else {
-            this.showNotification('Sistema de prompt não encontrado', 'error');
-        }
-    }
-    
-    // Check if an avatar is in the current prompt
-    isAvatarInPrompt(avatarId) {
-        if (window.promptAvatarsManager) {
-            return window.promptAvatarsManager.hasAvatar(avatarId);
-        }
-        return false;
-    }
-    
-    // Get all avatars currently in prompt
-    getPromptAvatars() {
-        if (window.promptAvatarsManager) {
-            return window.promptAvatarsManager.getAvatarIds();
-        }
-        return [];
-    }
-    
-    // ===== SELECTION =====
-    toggleAvatarSelection(avatarId) {
-        const index = this.selectedAvatars.indexOf(avatarId);
-        
-        if (index === -1) {
-            this.selectedAvatars.push(avatarId);
-        } else {
-            this.selectedAvatars.splice(index, 1);
-        }
-        
-        this.updateSelectionUI();
-        this.updateBulkActions();
-    }
-    
-    updateSelectionUI() {
-        const cards = document.querySelectorAll('.avatar-card');
-        cards.forEach(card => {
-            const id = parseInt(card.dataset.id);
-            const isSelected = this.selectedAvatars.includes(id);
-            
-            card.classList.toggle('selected', isSelected);
-            
-            const selectBtn = card.querySelector('[data-action="select"] i');
-            if (selectBtn) {
-                selectBtn.textContent = isSelected ? 'check_box' : 'check_box_outline_blank';
-            }
-        });
-    }
-    
-    updateBulkActions() {
-        const bulkActions = document.getElementById('bulk-actions');
-        if (!bulkActions) return;
-        
-        if (this.selectedAvatars.length > 0) {
-            bulkActions.style.display = 'flex';
-            bulkActions.querySelector('.selected-count').textContent = `${this.selectedAvatars.length} selecionados`;
-        } else {
-            bulkActions.style.display = 'none';
-        }
-    }
-    
-    // ===== UTILITIES =====
-    updateStats() {
-        const totalAvatars = this.avatars.length;
-        const publicAvatars = this.avatars.filter(a => a.visibility === 'publico').length;
-        const favoriteAvatars = this.avatars.filter(a => a.favorite).length;
-        
-        document.getElementById('total-avatars').textContent = totalAvatars;
-        document.getElementById('public-avatars').textContent = publicAvatars;
-        document.getElementById('favorite-avatars').textContent = favoriteAvatars;
-    }
-    
-    updateResultsInfo(filtered, total) {
-        document.getElementById('filtered-count').textContent = filtered;
-        document.getElementById('total-count').textContent = total;
-    }
-    
-    refreshAvatars() {
-        this.showNotification('Atualizando avatares...', 'info');
-        
-        // Simulate refresh
-        setTimeout(() => {
-            this.renderAvatars();
-            this.updateStats();
-            this.showNotification('Avatares atualizados!', 'success');
-        }, 500);
-    }
-    
     showNotification(message, type = 'info') {
-        // Simple notification - can be enhanced with a proper toast system
-        const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
-        console.log(`${icon} ${message}`);
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            background: ${type === 'success' ? '#10b981' : type === 'warning' ? '#f59e0b' : '#3b82f6'};
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            font-weight: 500;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        `;
+        notification.textContent = message;
         
-        // You can implement a more sophisticated notification system here
-        if (type === 'error') {
-            alert(message);
-        }
-    }
-    
-    escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-    
-    capitalize(text) {
-        return text.charAt(0).toUpperCase() + text.slice(1);
-    }
-    
-    formatDate(dateString) {
-        return new Date(dateString).toLocaleDateString('pt-BR', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-        });
+        document.body.appendChild(notification);
+        
+        // Animate in
+        setTimeout(() => {
+            notification.style.transform = 'translateX(0)';
+        }, 100);
+        
+        // Auto remove
+        setTimeout(() => {
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 300);
+        }, 3000);
     }
 }
 
-// Initialize when DOM is ready
+// Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     window.avatarManagerModern = new AvatarManagerModern();
 });
+
+// Export for global access
+window.AvatarManagerModern = AvatarManagerModern;

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Cores das Abas</title>
+    <link rel="stylesheet" href="assets/css/gerador-prompt-modern.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="main-container">
+        <div class="content-container">
+            <h1>Teste de Cores das Abas</h1>
+            
+            <div class="tabs-container">
+                <div class="tabs-nav">
+                    <button class="tab-button active" data-tab="teste1">
+                        <i class="material-icons">landscape</i>
+                        <span>Aba Teste 1</span>
+                    </button>
+                    <button class="tab-button" data-tab="teste2">
+                        <i class="material-icons">palette</i>
+                        <span>Aba Teste 2</span>
+                    </button>
+                    <button class="tab-button" data-tab="teste3">
+                        <i class="material-icons">wb_sunny</i>
+                        <span>Aba Teste 3</span>
+                    </button>
+                </div>
+                
+                <div class="tab-content active" id="tab-teste1">
+                    <h2>Conteúdo da Aba 1</h2>
+                    <p>Esta é uma aba de teste para verificar as cores.</p>
+                </div>
+                
+                <div class="tab-content" id="tab-teste2">
+                    <h2>Conteúdo da Aba 2</h2>
+                    <p>Esta é outra aba de teste.</p>
+                </div>
+                
+                <div class="tab-content" id="tab-teste3">
+                    <h2>Conteúdo da Aba 3</h2>
+                    <p>Esta é a terceira aba de teste.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const tabName = e.currentTarget.dataset.tab;
+                
+                // Remove active de todos os botões
+                document.querySelectorAll('.tab-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Remove active de todo conteúdo
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // Adiciona active ao botão clicado
+                e.currentTarget.classList.add('active');
+                
+                // Mostra o conteúdo correspondente
+                document.getElementById(`tab-${tabName}`).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
