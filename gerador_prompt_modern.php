@@ -134,13 +134,611 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         
         /* Otimizações para integração com as abas */
         .tab-content#tab-avatar {
-            padding: 0;
+            padding: 2rem;
+        }
+        
+        .tab-content#tab-avatar .avatars-content-area {
+            margin: 0;
         }
         
         .tab-content#tab-avatar .bottom-controls-container {
             margin-top: 2rem;
             padding-top: 2rem;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Estilos da toolbar de avatares */
+        .avatars-toolbar-modern {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            margin: 2rem 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Barra de pesquisa (1/3 da largura) */
+        .search-container {
+            flex: 1;
+            max-width: 33.333%;
+            min-width: 280px;
+        }
+        
+        .search-input-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            color: var(--text-muted, #64748b);
+            font-size: 20px;
+            z-index: 1;
+        }
+        
+        .search-input-modern {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
+            color: var(--text-primary, #e2e8f0);
+            font-size: 14px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .search-input-modern::placeholder {
+            color: var(--text-muted, #64748b);
+        }
+        
+        .search-input-modern:focus {
+            outline: none;
+            border-color: var(--primary, #3b82f6);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            background: rgba(255, 255, 255, 0.12);
+        }
+        
+        .clear-search {
+            position: absolute;
+            right: 8px;
+            background: none;
+            border: none;
+            color: var(--text-muted, #64748b);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .clear-search:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary, #e2e8f0);
+        }
+        
+        /* Container de controles */
+        .controls-container {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            flex: 1;
+            justify-content: flex-end;
+        }
+        
+        /* Grupos de filtros */
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .filter-label {
+            font-size: 14px;
+            color: var(--text-secondary, #94a3b8);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .filter-select-modern {
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 6px;
+            color: var(--text-primary, #e2e8f0);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .filter-select-modern:focus {
+            outline: none;
+            border-color: var(--primary, #3b82f6);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+        
+        /* Toggle de visualização */
+        .view-toggle-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .view-toggle-buttons {
+            display: flex;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 6px;
+            padding: 2px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .view-btn-modern {
+            background: none;
+            border: none;
+            padding: 6px 8px;
+            color: var(--text-muted, #64748b);
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .view-btn-modern:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary, #e2e8f0);
+        }
+        
+        .view-btn-modern.active {
+            background: var(--primary, #3b82f6);
+            color: white;
+        }
+        
+        /* Botão Criar */
+        .btn-create-avatar-modern {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 10px 16px;
+            background: linear-gradient(135deg, var(--primary, #3b82f6), #1d4ed8);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-create-avatar-modern:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
+        }
+        
+        .btn-create-avatar-modern:active {
+            transform: translateY(0);
+        }
+        
+        /* Área de exibição dos avatares */
+        .avatars-display-area {
+            min-height: 500px;
+            padding: 0;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            margin: 2rem 0;
+        }
+        
+        /* Layout principal dividido */
+        .avatars-main-layout {
+            display: flex;
+            height: 100%;
+            min-height: 500px;
+        }
+        
+        /* Seção dos cards de avatares (lado esquerdo) */
+        .avatars-grid-section {
+            flex: 1;
+            width: 50%;
+            padding: 1.5rem;
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        /* Seção do formulário (lado direito) */
+        .avatar-form-section {
+            flex: 1;
+            width: 50%;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+        
+        /* Headers das seções */
+        .section-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .section-header h4 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0 0 0.5rem 0;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary, #e2e8f0);
+        }
+        
+        .section-header h4 .material-icons {
+            font-size: 1.25rem;
+            color: var(--primary, #3b82f6);
+        }
+        
+        .section-header p {
+            margin: 0;
+            font-size: 14px;
+            color: var(--text-secondary, #94a3b8);
+        }
+        
+        .avatar-count {
+            font-size: 13px;
+            color: var(--text-muted, #64748b);
+            font-weight: 400;
+        }
+        
+        /* Grid de avatares */
+        .avatars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+            min-height: 300px;
+        }
+        
+        /* Estado vazio do grid */
+        .empty-grid-state {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted, #64748b);
+        }
+        
+        .empty-grid-icon {
+            margin-bottom: 1rem;
+        }
+        
+        .empty-grid-icon .material-icons {
+            font-size: 3rem;
+            color: var(--text-muted, #64748b);
+            opacity: 0.6;
+        }
+        
+        .empty-grid-state p {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-secondary, #94a3b8);
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .empty-grid-state small {
+            font-size: 14px;
+            color: var(--text-muted, #64748b);
+        }
+        
+        /* Estilos do formulário */
+        .avatar-creation-form {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-grid {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .form-group label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary, #e2e8f0);
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 6px;
+            color: var(--text-primary, #e2e8f0);
+            font-size: 14px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: var(--text-muted, #64748b);
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary, #3b82f6);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+            background: rgba(255, 255, 255, 0.12);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        /* Ações do formulário */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            margin-top: auto;
+        }
+        
+        .btn-primary,
+        .btn-secondary {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary, #3b82f6), #1d4ed8);
+            color: white;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-secondary, #94a3b8);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: var(--text-primary, #e2e8f0);
+        }
+        
+        /* Responsividade */
+        @media (max-width: 1200px) {
+            .avatars-toolbar-modern {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+            
+            .search-container {
+                max-width: 100%;
+            }
+            
+            .controls-container {
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+            
+            .avatars-main-layout {
+                flex-direction: column;
+            }
+            
+            .avatars-grid-section,
+            .avatar-form-section {
+                width: 100%;
+                border-right: none;
+            }
+            
+            .avatars-grid-section {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            }
+            
+            .avatars-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .avatars-toolbar-modern {
+                padding: 1rem;
+            }
+            
+            .controls-container {
+                gap: 0.75rem;
+            }
+            
+            .filter-group {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.25rem;
+            }
+            
+            .btn-create-avatar-modern span {
+                display: none;
+            }
+            
+            .avatars-grid-section,
+            .avatar-form-section {
+                padding: 1rem;
+            }
+            
+            .avatars-main-layout {
+                min-height: auto;
+            }
+            
+            .avatars-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 0.75rem;
+                min-height: 250px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+        
+        /* Estilos para nova seção com dois blocos */
+        .avatar-split-section {
+            display: flex;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .split-block {
+            flex: 1;
+            width: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .split-block:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        
+        .block-header {
+            padding: 1.5rem 1.5rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .block-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0 0 0.5rem 0;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary, #e2e8f0);
+        }
+        
+        .block-header h3 .material-icons {
+            font-size: 1.25rem;
+            color: var(--primary, #3b82f6);
+        }
+        
+        .block-header p {
+            margin: 0;
+            font-size: 14px;
+            color: var(--text-secondary, #94a3b8);
+        }
+        
+        .block-content {
+            padding: 1.5rem;
+            min-height: 200px;
+        }
+        
+        .content-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            height: 100%;
+            min-height: 150px;
+            color: var(--text-muted, #64748b);
+            padding: 2rem;
+        }
+        
+        .content-placeholder p {
+            margin: 0.5rem 0;
+            font-size: 14px;
+        }
+        
+        .content-placeholder p:first-child {
+            font-weight: 500;
+            color: var(--text-secondary, #94a3b8);
+        }
+        
+        /* Diferenciação visual dos blocos */
+        .left-block .block-header h3 .material-icons {
+            color: #10b981; /* Verde */
+        }
+        
+        .right-block .block-header h3 .material-icons {
+            color: #f59e0b; /* Amarelo/Laranja */
+        }
+        
+        /* Responsividade para a seção split */
+        @media (max-width: 768px) {
+            .avatar-split-section {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .split-block {
+                width: 100%;
+            }
+            
+            .block-header {
+                padding: 1rem 1rem 0.75rem;
+            }
+            
+            .block-content {
+                padding: 1rem;
+                min-height: 150px;
+            }
+            
+            .content-placeholder {
+                min-height: 100px;
+                padding: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -698,9 +1296,215 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                             <p>Configure as características do seu personagem</p>
                         </div>
 
-                        <!-- Área principal vazia para conteúdo dos avatares -->
-                        <div class="avatars-content-area">
-                            <!-- Conteúdo dos cards de avatar será adicionado aqui -->
+                        <!-- Área principal para conteúdo dos avatares -->
+                        <div class="avatars-content-area" style="margin: 0;">
+                            <!-- Barra de controles superior -->
+                            <div class="avatars-toolbar-modern">
+                                <!-- Barra de pesquisa (1/3 da largura) -->
+                                <div class="search-container">
+                                    <div class="search-input-group">
+                                        <i class="material-icons search-icon">search</i>
+                                        <input type="text" id="avatar-search" placeholder="Buscar avatares por nome..." class="search-input-modern">
+                                        <button class="clear-search" id="clear-search" style="display: none;">
+                                            <i class="material-icons">clear</i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Filtros e controles -->
+                                <div class="controls-container">
+                                    <!-- Filtro por tipo -->
+                                    <div class="filter-group">
+                                        <label class="filter-label">Tipo:</label>
+                                        <select id="avatar-type-filter" class="filter-select-modern">
+                                            <option value="meus" selected>Meus</option>
+                                            <option value="publicos">Públicos</option>
+                                            <option value="favoritos">Favoritos</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Ordenação -->
+                                    <div class="filter-group">
+                                        <label class="filter-label">Ordenar:</label>
+                                        <select id="avatar-sort" class="filter-select-modern">
+                                            <option value="recentes" selected>Recentes</option>
+                                            <option value="nome_az">Nomes A-Z</option>
+                                            <option value="ultimos_usados">Últimos usados</option>
+                                            <option value="tipos">Tipos</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Visualização -->
+                                    <div class="view-toggle-group">
+                                        <label class="filter-label">Exibir:</label>
+                                        <div class="view-toggle-buttons">
+                                            <button class="view-btn-modern active" data-view="cards" title="Cards">
+                                                <i class="material-icons">grid_view</i>
+                                            </button>
+                                            <button class="view-btn-modern" data-view="list" title="Lista">
+                                                <i class="material-icons">view_list</i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Botão Criar -->
+                                    <button class="btn-create-avatar-modern" id="btn-create-avatar">
+                                        <i class="material-icons">add</i>
+                                        <span>Criar</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Área dos avatares -->
+                            <div class="avatars-display-area" id="avatars-display">
+                                <!-- Layout dividido horizontalmente -->
+                                <div class="avatars-main-layout">
+                                    <!-- Bloco esquerdo - Cards de avatares -->
+                                    <div class="avatars-grid-section">
+                                        <div class="section-header">
+                                            <h4>
+                                                <i class="material-icons">people</i>
+                                                Meus Avatares
+                                            </h4>
+                                            <span class="avatar-count" id="avatar-count-display">0 avatares</span>
+                                        </div>
+                                        
+                                        <!-- Grid de avatares -->
+                                        <div class="avatars-grid" id="avatars-grid">
+                                            <!-- Estado vazio inicial -->
+                                            <div class="empty-grid-state" id="empty-grid-state">
+                                                <div class="empty-grid-icon">
+                                                    <i class="material-icons">person_add_alt</i>
+                                                </div>
+                                                <p>Nenhum avatar criado ainda</p>
+                                                <small>Use o formulário ao lado para criar seu primeiro avatar</small>
+                                            </div>
+                                            
+                                            <!-- Cards de avatares serão inseridos aqui dinamicamente -->
+                                        </div>
+                                    </div>
+
+                                    <!-- Bloco direito - Formulário de cadastro -->
+                                    <div class="avatar-form-section">
+                                        <div class="section-header">
+                                            <h4>
+                                                <i class="material-icons">add_circle</i>
+                                                Criar Novo Avatar
+                                            </h4>
+                                            <p>Preencha os campos para criar seu avatar</p>
+                                        </div>
+                                        
+                                        <!-- Formulário de criação -->
+                                        <form class="avatar-creation-form" id="avatar-creation-form">
+                                            <div class="form-grid">
+                                                <div class="form-group">
+                                                    <label for="avatar-name">Nome do Avatar</label>
+                                                    <input type="text" id="avatar-name" name="name" placeholder="Ex: Elena Rodriguez" required>
+                                                </div>
+                                                
+                                                <div class="form-row">
+                                                    <div class="form-group">
+                                                        <label for="avatar-type">Tipo</label>
+                                                        <select id="avatar-type" name="type" required>
+                                                            <option value="">Selecione...</option>
+                                                            <option value="humano">Humano</option>
+                                                            <option value="animal">Animal</option>
+                                                            <option value="fantastico">Fantástico</option>
+                                                            <option value="extraterrestre">Extraterrestre</option>
+                                                            <option value="robotico">Robótico/IA</option>
+                                                        </select>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <label for="avatar-gender">Gênero</label>
+                                                        <select id="avatar-gender" name="gender">
+                                                            <option value="neutro">Neutro</option>
+                                                            <option value="masculino">Masculino</option>
+                                                            <option value="feminino">Feminino</option>
+                                                            <option value="outro">Outro</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="form-row">
+                                                    <div class="form-group">
+                                                        <label for="avatar-age">Idade</label>
+                                                        <input type="number" id="avatar-age" name="age" placeholder="25" min="1" max="120" value="25">
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <label for="avatar-visibility">Visibilidade</label>
+                                                        <select id="avatar-visibility" name="visibility">
+                                                            <option value="privado" selected>Privado</option>
+                                                            <option value="publico">Público</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <label for="avatar-description">Descrição</label>
+                                                    <textarea id="avatar-description" name="description" placeholder="Descreva as características principais..." rows="3"></textarea>
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <label for="avatar-tags">Tags</label>
+                                                    <input type="text" id="avatar-tags" name="tags" placeholder="médica, jovem, profissional">
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="form-actions">
+                                                <button type="button" class="btn-secondary" id="clear-form">
+                                                    <i class="material-icons">clear</i>
+                                                    Limpar
+                                                </button>
+                                                <button type="submit" class="btn-primary">
+                                                    <i class="material-icons">save</i>
+                                                    Criar Avatar
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Nova seção com dois blocos de 50% -->
+                            <div class="avatar-split-section">
+                                <!-- Bloco esquerdo -->
+                                <div class="split-block left-block">
+                                    <div class="block-header">
+                                        <h3>
+                                            <i class="material-icons">add_circle</i>
+                                            Bloco Esquerdo
+                                        </h3>
+                                        <p>Conteúdo do primeiro bloco</p>
+                                    </div>
+                                    <div class="block-content">
+                                        <!-- Conteúdo personalizado aqui -->
+                                        <div class="content-placeholder">
+                                            <p>Este é o bloco esquerdo (50% da largura)</p>
+                                            <p>Adicione aqui o conteúdo desejado</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Bloco direito -->
+                                <div class="split-block right-block">
+                                    <div class="block-header">
+                                        <h3>
+                                            <i class="material-icons">info</i>
+                                            Bloco Direito
+                                        </h3>
+                                        <p>Conteúdo do segundo bloco</p>
+                                    </div>
+                                    <div class="block-content">
+                                        <!-- Conteúdo personalizado aqui -->
+                                        <div class="content-placeholder">
+                                            <p>Este é o bloco direito (50% da largura)</p>
+                                            <p>Adicione aqui o conteúdo desejado</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- Container de 3 colunas na base -->
