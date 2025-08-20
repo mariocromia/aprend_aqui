@@ -74,6 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     
     <link rel="stylesheet" href="assets/css/gerador-prompt-modern.css">
     <link rel="stylesheet" href="assets/css/avatar-compact-styles.css">
+    <link rel="stylesheet" href="assets/css/avatar-manager-compact-modern.css">
     
     <!-- Preloader para carregamento inicial -->
     <style>
@@ -117,6 +118,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         .page-preloader.hidden {
             opacity: 0;
             pointer-events: none;
+        }
+        
+        /* Estilos específicos do Avatar Manager Compacto Moderno integrado */
+        .tab-content .avatar-manager-compact-modern {
+            height: auto;
+            min-height: 600px;
+            margin: 0;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Otimizações para integração com as abas */
+        .tab-content#tab-avatar {
+            padding: 0;
+        }
+        
+        .tab-content#tab-avatar .bottom-controls-container {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
     </style>
 </head>
@@ -667,10 +691,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     </div>
 
 
-                    <!-- ABA 7: AVATAR/PERSONAGEM - SISTEMA COMPLETO DO DEMO_AVATAR_MODERN -->
+                    <!-- ABA 7: AVATAR/PERSONAGEM -->
                     <div class="tab-content" id="tab-avatar">
-                        <!-- Incluir o gerenciador moderno completo -->
-                        <?php include 'avatar_manager_modern.html'; ?>
+                        <div class="tab-header">
+                            <h2><i class="material-icons">groups</i> Avatar/Personagem</h2>
+                            <p>Configure as características do seu personagem</p>
+                        </div>
+
+                        <!-- Área principal vazia para conteúdo dos avatares -->
+                        <div class="avatars-content-area">
+                            <!-- Conteúdo dos cards de avatar será adicionado aqui -->
+                        </div>
                         
                         <!-- Container de 3 colunas na base -->
                         <div class="bottom-controls-container">
@@ -1524,7 +1555,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
     <script src="assets/js/gerador-prompt-modern.js"></script>
     <script src="assets/js/avatar-compact.js"></script>
-<script src="assets/js/avatar-compact-extended.js"></script>
+    <script src="assets/js/avatar-compact-extended.js"></script>
+    <script src="assets/js/avatar-manager-compact-modern.js"></script>
     
     <!-- Otimização de carregamento e remoção de preloader -->
     <script>
@@ -1557,6 +1589,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 ['qualidade', 'avatar', 'camera', 'voz', 'acao'].forEach(tabName => {
                     window.promptGenerator.initializeTabContent(tabName);
                 });
+            }
+            
+            // Inicializar sistema de avatar compacto moderno
+            if (window.avatarManager) {
+                window.avatarManager.init();
+                console.log('✅ Sistema de Avatar Compacto Moderno inicializado');
+            } else {
+                // Aguardar carregamento do script
+                setTimeout(() => {
+                    if (window.avatarManager) {
+                        window.avatarManager.init();
+                        console.log('✅ Sistema de Avatar Compacto Moderno inicializado (atrasado)');
+                    }
+                }, 1000);
             }
         });
         
