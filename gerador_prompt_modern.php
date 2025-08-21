@@ -558,12 +558,136 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             gap: 1rem;
         }
         
-        /* Layout específico para aba avatar - 3 colunas e 2 linhas */
+        /* Layout específico para aba avatar - 2 colunas e 3 linhas para cards */
         #tab-avatar .type-cards-grid {
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(2, 1fr);
-            gap: 1.5rem;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 1rem;
             max-width: 100%;
+        }
+        
+        /* Layout de 3 blocos para aba avatar */
+        .three-blocks-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .bloco-esquerdo, .bloco-meio, .bloco-direito {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            min-height: 500px;
+        }
+        
+        /* Responsividade para 3 blocos */
+        @media (max-width: 1200px) {
+            .three-blocks-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .bloco-esquerdo, .bloco-meio, .bloco-direito {
+                min-height: auto;
+            }
+        }
+        
+        /* Estilos para o gerenciador de avatares */
+        .avatar-card {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .avatar-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary, #3b82f6);
+            transform: translateY(-2px);
+        }
+        
+        .avatar-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .avatar-card-title {
+            font-weight: 600;
+            color: var(--text-primary, #e2e8f0);
+            margin: 0;
+        }
+        
+        .avatar-card-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .avatar-action-btn {
+            padding: 0.25rem;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            color: var(--text-secondary, #94a3b8);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .avatar-action-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary, #e2e8f0);
+        }
+        
+        .avatar-action-btn.favorite.active {
+            color: #fbbf24;
+            border-color: #fbbf24;
+        }
+        
+        .avatar-action-btn.add-prompt {
+            color: #10b981;
+        }
+        
+        .avatar-action-btn.add-prompt:hover {
+            color: #34d399;
+            border-color: #10b981;
+        }
+        
+        .avatar-card-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted, #64748b);
+            margin-bottom: 0.5rem;
+        }
+        
+        .avatar-card-preview {
+            font-size: 0.8rem;
+            color: var(--text-secondary, #94a3b8);
+            line-height: 1.4;
+            max-height: 60px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .no-avatars-placeholder {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted, #64748b);
+        }
+        
+        .no-avatars-placeholder i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
         }
         
         .type-card {
@@ -1506,13 +1630,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                             </div>
                         </div>
                         
-                        <!-- Dois blocos lado a lado -->
-                        <div class="two-blocks-container">
-                            <!-- Bloco esquerdo -->
+                        <!-- Três blocos lado a lado -->
+                        <div class="three-blocks-container">
+                            <!-- Bloco esquerdo - Tipos de Avatar -->
                             <div class="bloco-esquerdo">
                                 <div class="bloco-header">
-                                    <h3><i class="material-icons">west</i> Tipos de Avatar</h3>
-                                    <p>Selecione o tipo de avatar desejado</p>
+                                    <h3><i class="material-icons">category</i> Tipos de Avatar</h3>
+                                    <p>Selecione o tipo desejado</p>
                                 </div>
                                 <div class="bloco-content">
                                                                         <!-- Seleção de Tipo - Cards -->
@@ -1570,16 +1694,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                 </div>
                             </div>
                             
-                            <!-- Bloco direito -->
-                            <div class="bloco-direito">
+                            <!-- Bloco do meio - Formulário do Avatar -->
+                            <div class="bloco-meio">
                                 <div class="bloco-header">
-                                    <h3><i class="material-icons">east</i> Formulário do Avatar</h3>
-                                    <p>Preencha os campos específicos do tipo selecionado</p>
+                                    <h3><i class="material-icons">edit</i> Formulário do Avatar</h3>
+                                    <p>Preencha os campos específicos</p>
                                 </div>
                                 <div class="bloco-content">
                                     <!-- Formulário Humano -->
                                     <div class="avatar-form" id="form-humano" style="display: none;">
                                         <h4><i class="material-icons">face</i> Formulário Humano</h4>
+                                        <div class="form-group">
+                                            <label>Nome do Avatar:</label>
+                                            <input type="text" name="nome_humano" placeholder="Ex: João, Maria, Alex..." required>
+                                        </div>
                                         <div class="form-group">
                                             <label>Gênero:</label>
                                             <select name="genero_humano">
@@ -1627,11 +1755,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                                 <option value="pretos">Pretos</option>
                                             </select>
                                         </div>
+                                        <div class="form-actions">
+                                            <button type="button" class="btn-secondary" onclick="clearAvatarSelection()">
+                                                <i class="material-icons">clear</i>
+                                                Limpar
+                                            </button>
+                                            <button type="button" class="btn-primary" onclick="createAvatar('humano')">
+                                                <i class="material-icons">save</i>
+                                                Criar Avatar
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <!-- Formulário Animal -->
                                     <div class="avatar-form" id="form-animal" style="display: none;">
                                         <h4><i class="material-icons">pets</i> Formulário Animal</h4>
+                                        <div class="form-group">
+                                            <label>Nome do Avatar:</label>
+                                            <input type="text" name="nome_animal" placeholder="Ex: Rex, Fluffy, Lobo..." required>
+                                        </div>
                                         <div class="form-group">
                                             <label>Espécie:</label>
                                             <select name="especie_animal">
@@ -1666,11 +1808,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                                 <option value="amigavel">Amigável</option>
                                             </select>
                                         </div>
+                                        <div class="form-actions">
+                                            <button type="button" class="btn-secondary" onclick="clearAvatarSelection()">
+                                                <i class="material-icons">clear</i>
+                                                Limpar
+                                            </button>
+                                            <button type="button" class="btn-primary" onclick="createAvatar('animal')">
+                                                <i class="material-icons">save</i>
+                                                Criar Avatar
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <!-- Formulário Fantástico -->
                                     <div class="avatar-form" id="form-fantastico" style="display: none;">
                                         <h4><i class="material-icons">auto_awesome</i> Formulário Fantástico</h4>
+                                        <div class="form-group">
+                                            <label>Nome do Avatar:</label>
+                                            <input type="text" name="nome_fantastico" placeholder="Ex: Aragorn, Galadriel, Thorin..." required>
+                                        </div>
                                         <div class="form-group">
                                             <label>Tipo de Criatura:</label>
                                             <select name="tipo_fantastico">
@@ -1719,6 +1875,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                     <div class="avatar-form" id="form-extraterrestres" style="display: none;">
                                         <h4><i class="material-icons">rocket_launch</i> Formulário Extraterrestres</h4>
                                         <div class="form-group">
+                                            <label>Nome do Avatar:</label>
+                                            <input type="text" name="nome_extraterrestres" placeholder="Ex: Zoltan, X'ara, Keplerian..." required>
+                                        </div>
+                                        <div class="form-group">
                                             <label>Planeta de Origem:</label>
                                             <input type="text" name="planeta_extraterrestres" placeholder="Ex: Marte, Alpha Centauri">
                                         </div>
@@ -1753,6 +1913,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                     <!-- Formulário Robôs -->
                                     <div class="avatar-form" id="form-robos" style="display: none;">
                                         <h4><i class="material-icons">smart_toy</i> Formulário Robôs</h4>
+                                        <div class="form-group">
+                                            <label>Nome do Avatar:</label>
+                                            <input type="text" name="nome_robos" placeholder="Ex: R2-D2, WALL-E, Optimus..." required>
+                                        </div>
                                         <div class="form-group">
                                             <label>Tipo de Robô:</label>
                                             <select name="tipo_robos">
@@ -1797,6 +1961,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                     <div class="avatar-form" id="form-outros" style="display: none;">
                                         <h4><i class="material-icons">more_horiz</i> Formulário Outros</h4>
                                         <div class="form-group">
+                                            <label>Nome do Avatar:</label>
+                                            <input type="text" name="nome_outros" placeholder="Ex: Phoenix, Ethereal, Cosmos..." required>
+                                        </div>
+                                        <div class="form-group">
                                             <label>Categoria:</label>
                                             <select name="categoria_outros">
                                                 <option value="">Selecione...</option>
@@ -1834,6 +2002,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                     <div class="content-placeholder" id="placeholder-inicial">
                                         <i class="material-icons">touch_app</i>
                                         <p>Selecione um tipo de avatar no bloco esquerdo para ver o formulário específico</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Bloco direito - Gerenciador de Avatares -->
+                            <div class="bloco-direito">
+                                <div class="bloco-header">
+                                    <h3><i class="material-icons">group</i> Meus Avatares</h3>
+                                    <p>Gerencie seus avatares criados</p>
+                                </div>
+                                <div class="bloco-content">
+                                    <!-- Lista de avatares será carregada aqui -->
+                                    <div id="avatars-list">
+                                        <!-- Placeholder quando não há avatares -->
+                                        <div class="no-avatars-placeholder" id="no-avatares">
+                                            <i class="material-icons">person_add</i>
+                                            <p>Nenhum avatar criado ainda</p>
+                                            <p>Crie seu primeiro avatar selecionando um tipo no bloco esquerdo</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -3490,9 +3677,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             });
         }
         
-        // Função para mostrar formulário no bloco direito
+        // Função para mostrar formulário no bloco do meio
         function showAvatarForm(type, typeName) {
-            console.log(`🎯 Exibindo formulário ${type} no bloco direito`);
+            console.log(`🎯 Exibindo formulário ${type} no bloco do meio`);
             
             // Ocultar placeholder
             const placeholder = document.getElementById('placeholder-inicial');
@@ -3540,6 +3727,185 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             }
             
             console.log('🧹 Seleção de avatar limpa');
+        }
+        
+        // Funções do gerenciador de avatares
+        let createdAvatars = []; // Array para armazenar avatares criados
+        
+        function createAvatar(type) {
+            console.log(`🎨 Criando avatar do tipo: ${type}`);
+            
+            // Coletar dados do formulário
+            const form = document.getElementById('form-' + type);
+            if (!form) {
+                console.error('Formulário não encontrado');
+                return;
+            }
+            
+            const formData = new FormData();
+            const inputs = form.querySelectorAll('input, select, textarea');
+            let avatarData = {
+                id: Date.now(),
+                type: type,
+                typeName: getTypeName(type),
+                created: new Date().toLocaleDateString(),
+                favorite: false
+            };
+            
+            inputs.forEach(input => {
+                if (input.value.trim()) {
+                    avatarData[input.name] = input.value;
+                }
+            });
+            
+            // Gerar descrição prévia
+            avatarData.preview = generateAvatarPreview(avatarData);
+            
+            // Adicionar aos avatares criados
+            createdAvatars.push(avatarData);
+            
+            // Atualizar interface
+            renderAvatarsList();
+            
+            // Limpar formulário
+            form.reset();
+            clearAvatarSelection();
+            
+            console.log('✅ Avatar criado com sucesso:', avatarData);
+        }
+        
+        function getTypeName(type) {
+            const typeNames = {
+                'humano': 'Humano',
+                'animal': 'Animal',
+                'fantastico': 'Fantástico',
+                'extraterrestres': 'Extraterrestres',
+                'robos': 'Robôs',
+                'outros': 'Outros'
+            };
+            return typeNames[type] || type;
+        }
+        
+        function generateAvatarPreview(data) {
+            const parts = [];
+            Object.keys(data).forEach(key => {
+                if (!['id', 'type', 'typeName', 'created', 'favorite', 'preview'].includes(key) && data[key]) {
+                    parts.push(data[key]);
+                }
+            });
+            return parts.slice(0, 3).join(', ');
+        }
+        
+        function renderAvatarsList() {
+            const container = document.getElementById('avatars-list');
+            const noAvatars = document.getElementById('no-avatares');
+            
+            if (createdAvatars.length === 0) {
+                noAvatars.style.display = 'block';
+                return;
+            }
+            
+            noAvatars.style.display = 'none';
+            
+            const avatarsHtml = createdAvatars.map(avatar => {
+                const avatarName = getAvatarName(avatar);
+                return `
+                <div class="avatar-card" data-id="${avatar.id}">
+                    <div class="avatar-card-header">
+                        <h4 class="avatar-card-title">${avatarName}</h4>
+                        <div class="avatar-card-actions">
+                            <button class="avatar-action-btn favorite ${avatar.favorite ? 'active' : ''}" 
+                                    onclick="toggleFavorite(${avatar.id})" title="Favoritar">
+                                <i class="material-icons">star</i>
+                            </button>
+                            <button class="avatar-action-btn add-prompt" 
+                                    onclick="addToPrompt(${avatar.id})" title="Adicionar ao Prompt">
+                                <i class="material-icons">add</i>
+                            </button>
+                            <button class="avatar-action-btn" 
+                                    onclick="editAvatar(${avatar.id})" title="Editar">
+                                <i class="material-icons">edit</i>
+                            </button>
+                            <button class="avatar-action-btn" 
+                                    onclick="deleteAvatar(${avatar.id})" title="Excluir">
+                                <i class="material-icons">delete</i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="avatar-card-meta">
+                        ${avatar.typeName} • Criado em: ${avatar.created}
+                    </div>
+                    <div class="avatar-card-preview">
+                        ${avatar.preview}
+                    </div>
+                </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = avatarsHtml;
+        }
+        
+        function getAvatarName(avatar) {
+            // Buscar o campo nome específico do tipo
+            const nameFields = ['nome_humano', 'nome_animal', 'nome_fantastico', 'nome_extraterrestres', 'nome_robos', 'nome_outros'];
+            for (let field of nameFields) {
+                if (avatar[field]) {
+                    return avatar[field];
+                }
+            }
+            // Fallback para o tipo se não houver nome
+            return avatar.typeName;
+        }
+        
+        function toggleFavorite(id) {
+            const avatar = createdAvatars.find(a => a.id === id);
+            if (avatar) {
+                avatar.favorite = !avatar.favorite;
+                renderAvatarsList();
+                console.log(`⭐ Avatar ${avatar.favorite ? 'favoritado' : 'desfavoritado'}`);
+            }
+        }
+        
+        function addToPrompt(id) {
+            const avatar = createdAvatars.find(a => a.id === id);
+            if (avatar) {
+                // Aqui você pode implementar a lógica para adicionar ao prompt
+                console.log('➕ Adicionando avatar ao prompt:', avatar);
+                alert(`Avatar "${avatar.typeName}" adicionado ao prompt!`);
+            }
+        }
+        
+        function editAvatar(id) {
+            const avatar = createdAvatars.find(a => a.id === id);
+            if (avatar) {
+                // Selecionar o tipo e popular o formulário
+                const typeCard = document.querySelector(`[data-type="${avatar.type}"]`);
+                if (typeCard) {
+                    typeCard.click();
+                    
+                    // Aguardar o formulário ser exibido e popular campos
+                    setTimeout(() => {
+                        const form = document.getElementById('form-' + avatar.type);
+                        if (form) {
+                            Object.keys(avatar).forEach(key => {
+                                const input = form.querySelector(`[name="${key}"]`);
+                                if (input && avatar[key]) {
+                                    input.value = avatar[key];
+                                }
+                            });
+                        }
+                    }, 100);
+                }
+                console.log('✏️ Editando avatar:', avatar);
+            }
+        }
+        
+        function deleteAvatar(id) {
+            if (confirm('Tem certeza que deseja excluir este avatar?')) {
+                createdAvatars = createdAvatars.filter(a => a.id !== id);
+                renderAvatarsList();
+                console.log('🗑️ Avatar excluído');
+            }
         }
         
         // Sistema de seleção de tipos de câmera
