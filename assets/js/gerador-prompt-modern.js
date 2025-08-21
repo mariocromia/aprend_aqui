@@ -6,8 +6,8 @@
 class ModernPromptGenerator {
     constructor() {
         this.currentTab = 0;
-        this.tabs = ['ambiente', 'estilo_visual', 'iluminacao', 'tecnica', 'elementos_especiais', 'qualidade', 'avatar', 'camera', 'voz', 'acao'];
-        this.loadedTabs = new Set(['ambiente', 'qualidade', 'avatar', 'camera', 'voz', 'acao']); // Abas renderizadas no servidor
+        this.tabs = ['ambiente', 'estilo_visual', 'iluminacao', 'tecnica', 'elementos_especiais', 'qualidade', 'avatar', 'camera', 'camera2', 'voz', 'acao'];
+        this.loadedTabs = new Set(['ambiente', 'qualidade', 'avatar', 'camera', 'camera2', 'voz', 'acao']); // Abas renderizadas no servidor
         this.lazyLoadEnabled = true;
         this.selections = {
             environment: null,
@@ -42,7 +42,7 @@ class ModernPromptGenerator {
         this.updatePromptPreview();
         
         // Verificar se as abas estáticas existem e forçar carregamento se necessário
-        ['qualidade', 'avatar', 'camera', 'voz', 'acao'].forEach(tabName => {
+        ['qualidade', 'avatar', 'camera', 'camera2', 'voz', 'acao'].forEach(tabName => {
             const tab = document.querySelector(`#tab-${tabName}`);
             if (tab && tabName === 'qualidade') {
                 const grid = tab.querySelector('.categories-grid');
@@ -145,7 +145,7 @@ class ModernPromptGenerator {
         if (!tabContent || this.loadedTabs.has(tabName)) return;
 
         // Don't show skeleton for static tabs (already rendered server-side)
-        const isStaticTab = ['qualidade', 'avatar', 'camera', 'voz', 'acao'].includes(tabName);
+        const isStaticTab = ['qualidade', 'avatar', 'camera', 'camera2', 'voz', 'acao'].includes(tabName);
         
         if (!isStaticTab) {
             // Show skeleton loading only for dynamic tabs
@@ -173,7 +173,7 @@ class ModernPromptGenerator {
 
     async loadDynamicContent(tabName) {
         // For static tabs (already loaded), return immediately
-        if (['qualidade', 'avatar', 'camera', 'voz', 'acao'].includes(tabName)) {
+        if (['qualidade', 'avatar', 'camera', 'camera2', 'voz', 'acao'].includes(tabName)) {
             // No delay for static tabs - they're already rendered server-side
             return;
         }

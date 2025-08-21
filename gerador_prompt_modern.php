@@ -1228,6 +1228,244 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 padding: 1.5rem;
             }
         }
+
+        /* Estilos para a nova implementação de câmera baseada no camera.html */
+        #camera-app-container {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: 600px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+
+        #camera-canvas-container {
+            flex-grow: 1;
+            position: relative;
+            background: #2a2a2a;
+        }
+
+        #camera-canvas {
+            background-color: #2a2a2a;
+            border-radius: 10px;
+            width: 100%;
+            height: 100%;
+        }
+
+        .camera-controls-panel {
+            width: 320px;
+            background-color: #2a2a2a;
+            padding: 15px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .camera-controls-panel h3 {
+            color: #ffffff;
+            margin: 0 0 15px 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .camera-controls-panel h4 {
+            color: #ffffff;
+            margin: 15px 0 5px 0;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .camera-info-text {
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            color: #cbd5e1;
+            background: rgba(59, 130, 246, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 3px solid #3b82f6;
+        }
+
+        .camera-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .camera-input-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .camera-input-row label {
+            flex-grow: 1;
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+
+        .camera-input-row input {
+            width: 80px;
+            padding: 6px 8px;
+            background-color: #1a1a1a;
+            color: #fff;
+            border: 1px solid #555;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .camera-input-row input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        .camera-button-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .camera-button-group button {
+            padding: 8px 12px;
+            background-color: #4a4a4a;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+        }
+
+        .camera-button-group button:hover {
+            background-color: #6a6a6a;
+            transform: translateY(-1px);
+        }
+
+        .camera-button-group button:active {
+            transform: translateY(0);
+        }
+        
+        .camera-section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #4a4a4a;
+            padding-bottom: 5px;
+            color: #ffffff;
+        }
+
+        .camera-keyframe-list {
+            height: 180px;
+            overflow-y: auto;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+            background: #1a1a1a;
+        }
+
+        .camera-keyframe-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 8px;
+            border-bottom: 1px solid #3a3a3a;
+            font-size: 12px;
+            color: #cbd5e1;
+        }
+        
+        .camera-keyframe-item:last-child {
+            border-bottom: none;
+        }
+
+        .camera-keyframe-item .coords {
+            display: flex;
+            gap: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        #camera-output-area {
+            width: 100%;
+            height: 250px;
+            background-color: #111;
+            border: 1px solid #4a4a4a;
+            border-radius: 8px;
+            padding: 12px;
+            box-sizing: border-box;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+            overflow-y: auto;
+            font-size: 11px;
+            color: #cbd5e1;
+            resize: vertical;
+            margin-bottom: 15px;
+        }
+
+        #camera-output-area:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        #camera-generate {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            transition: all 0.2s;
+        }
+
+        #camera-generate:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        #camera-add-to-prompt {
+            background: linear-gradient(135deg, #059669, #047857);
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        #camera-add-to-prompt:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+        }
+
+        .camera-keyframe-list:empty::before {
+            content: "Adicione pontos para começar...";
+            display: block;
+            text-align: center;
+            color: #6b7280;
+            font-style: italic;
+            padding: 20px;
+        }
+        }
     </style>
 </head>
 <body>
@@ -1357,6 +1595,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     <button class="tab-button" data-tab="camera">
                         <i class="material-icons">photo_camera</i>
                         <span>Câmera</span>
+                    </button>
+                    <button class="tab-button" data-tab="camera2">
+                        <i class="material-icons">videocam</i>
+                        <span>Câmera 2</span>
                     </button>
                     <button class="tab-button" data-tab="voz">
                         <i class="material-icons">mic</i>
@@ -2351,444 +2593,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 
 
-                    <!-- ABA 8: CÂMERA -->
+                    <!-- ABA 8: CÂMERA - BASEADO NO CAMERA.HTML -->
                     <div class="tab-content" id="tab-camera">
                         <div class="tab-header">
-                            <h2><i class="material-icons">photo_camera</i> Configurações de Câmera</h2>
-                            <p>Configure ângulos, planos e perspectivas da filmagem</p>
+                            <h2><i class="material-icons">photo_camera</i> Gerador de Caminho de Câmera</h2>
+                            <p>Configure movimentos de câmera e alvo para criar animações cinematográficas</p>
                         </div>
 
-                        <!-- Área principal para conteúdo dos avatares -->
-                        <div class="avatars-content-area" style="margin: 0;">
-                            <!-- Barra de controles superior -->
-                            <div class="avatars-toolbar-modern">
-                                <!-- Barra de pesquisa (1/3 da largura) -->
-                                <div class="search-container">
-                                    <div class="search-input-group">
-                                        <i class="material-icons search-icon">search</i>
-                                        <input type="text" id="camera-search" placeholder="Buscar configurações de câmera..." class="search-input-modern">
-                                        <button class="clear-search" id="clear-camera-search" style="display: none;">
-                                            <i class="material-icons">clear</i>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <!-- Filtros e controles -->
-                                <div class="controls-container">
-                                    <!-- Filtro por tipo -->
-                                    <div class="filter-group">
-                                        <label class="filter-label">Tipo:</label>
-                                        <select id="camera-type-filter" class="filter-select-modern">
-                                            <option value="meus" selected>Meus</option>
-                                            <option value="publicos">Públicos</option>
-                                            <option value="favoritos">Favoritos</option>
-                                        </select>
-                                    </div>
-
-                                    <!-- Ordenação -->
-                                    <div class="filter-group">
-                                        <label class="filter-label">Ordenar:</label>
-                                        <select id="camera-sort" class="filter-select-modern">
-                                            <option value="recentes" selected>Recentes</option>
-                                            <option value="nome_az">Nomes A-Z</option>
-                                            <option value="ultimos_usados">Últimos usados</option>
-                                            <option value="tipos">Tipos</option>
-                                        </select>
-                                    </div>
-
-                                    <!-- Visualização -->
-                                    <div class="view-toggle-group">
-                                        <label class="filter-label">Exibir:</label>
-                                        <div class="view-toggle-buttons">
-                                            <button class="view-btn-modern active" data-view="cards" title="Cards">
-                                                <i class="material-icons">grid_view</i>
-                                            </button>
-                                            <button class="view-btn-modern" data-view="list" title="Lista">
-                                                <i class="material-icons">view_list</i>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <!-- Botão Criar -->
-                                    <button class="btn-create-avatar-modern" id="btn-create-camera">
-                                        <i class="material-icons">add</i>
-                                        <span>Criar</span>
-                                    </button>
-                                </div>
+                        <!-- Container principal inspirado no camera.html -->
+                        <div id="camera-app-container">
+                            <!-- Área do canvas -->
+                            <div id="camera-canvas-container">
+                                <canvas id="camera-canvas" width="800" height="600"></canvas>
                             </div>
-
-                            <!-- Área dos avatares -->
-                            <div class="avatars-display-area" id="camera-display">
-                                <!-- Layout dividido horizontalmente -->
-                                <div class="avatars-main-layout">
-                                    <!-- Bloco esquerdo - Cards de avatares -->
-                                    <div class="avatars-grid-section">
-                                        <div class="section-header">
-                                            <h4>
-                                                <i class="material-icons">camera_alt</i>
-                                                Minhas Configurações de Câmera
-                                            </h4>
-                                            <span class="avatar-count" id="camera-count-display">0 configurações</span>
-                                        </div>
-                                        
-                                        <!-- Grid de avatares -->
-                                        <div class="avatars-grid" id="camera-grid">
-                                            <!-- Estado vazio inicial -->
-                                            <div class="empty-grid-state" id="camera-empty-grid-state">
-                                                <div class="empty-grid-icon">
-                                                    <i class="material-icons">camera_alt</i>
-                                                </div>
-                                                <p>Nenhuma configuração de câmera criada ainda</p>
-                                                <small>Use o formulário ao lado para criar sua primeira configuração</small>
-                                            </div>
-                                            
-                                            <!-- Cards de configurações de câmera serão inseridos aqui dinamicamente -->
-                                        </div>
-                                    </div>
-
-                                    <!-- Bloco direito - Formulário de cadastro -->
-                                    <div class="avatar-form-section">
-                                        <div class="section-header">
-                                            <h4>
-                                                <i class="material-icons">add_circle</i>
-                                                Criar Nova Configuração de Câmera
-                                            </h4>
-                                            <p>Escolha o tipo de configuração para começar</p>
-                                        </div>
-                                        
-                                        <!-- Seleção de Tipo - Cards -->
-                                        <div class="avatar-type-selection" id="camera-type-selection">
-                                            <div class="type-cards-grid">
-                                                <div class="type-card" data-type="angulo">
-                                                    <div class="type-icon">
-                                                        <i class="material-icons">camera_alt</i>
-                                                    </div>
-                                                    <h5>Ângulo</h5>
-                                                    <p>Configurações de ângulo da câmera</p>
-                                                </div>
-                                                
-                                                <div class="type-card" data-type="plano">
-                                                    <div class="type-icon">
-                                                        <i class="material-icons">crop</i>
-                                                    </div>
-                                                    <h5>Plano</h5>
-                                                    <p>Configurações de plano da câmera</p>
-                                                </div>
-                                                
-                                                <div class="type-card" data-type="movimento">
-                                                    <div class="type-icon">
-                                                        <i class="material-icons">video_camera_front</i>
-                                                    </div>
-                                                    <h5>Movimento</h5>
-                                                    <p>Configurações de movimento da câmera</p>
-                                                </div>
-                                                
-                                                <div class="type-card" data-type="lente">
-                                                    <div class="type-icon">
-                                                        <i class="material-icons">center_focus_strong</i>
-                                                    </div>
-                                                    <h5>Lente</h5>
-                                                    <p>Configurações de lente da câmera</p>
-                                                </div>
-                                                
-                                                <div class="type-card" data-type="iluminacao_camera">
-                                                    <div class="type-icon">
-                                                        <i class="material-icons">wb_sunny</i>
-                                                    </div>
-                                                    <h5>Iluminação</h5>
-                                                    <p>Configurações de iluminação para câmera</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <!-- Formulários Dinâmicos Inline (aparecem abaixo dos cards) -->
-                                        <div class="dynamic-forms-inline" id="camera-dynamic-forms-inline" style="display: none;">
-                                            <!-- Indicador do tipo selecionado -->
-                                            <div class="selected-type-indicator">
-                                                <div class="type-indicator-content">
-                                                    <span class="selected-type-name" id="camera-selected-type-name"></span>
-                                                    <button type="button" class="btn-clear-selection" id="camera-btn-clear-selection" title="Limpar seleção">
-                                                        <i class="material-icons">close</i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            
-                                            <!-- Formulário para Ângulo -->
-                                            <form class="avatar-form angulo-form" id="camera-angulo-form" style="display: none;">
-                                                <div class="form-grid">
-                                                    <div class="form-group">
-                                                        <label for="camera-angulo-name">Nome da Configuração</label>
-                                                        <input type="text" id="camera-angulo-name" name="name" placeholder="Ex: Close-up Dramático" required>
-                                                    </div>
-                                                    
-                                                    <div class="form-row">
-                                                        <div class="form-group">
-                                                            <label for="camera-angulo-tipo">Tipo de Ângulo</label>
-                                                            <select id="camera-angulo-tipo" name="angle_type">
-                                                                <option value="eye_level">Eye Level</option>
-                                                                <option value="low_angle">Low Angle</option>
-                                                                <option value="high_angle">High Angle</option>
-                                                                <option value="birds_eye">Bird's Eye</option>
-                                                                <option value="dutch_angle">Dutch Angle</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="camera-angulo-altura">Altura da Câmera</label>
-                                                            <select id="camera-angulo-altura" name="camera_height">
-                                                                <option value="baixa">Baixa</option>
-                                                                <option value="media" selected>Média</option>
-                                                                <option value="alta">Alta</option>
-                                                                <option value="muito_alta">Muito Alta</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="form-group">
-                                                        <label for="camera-angulo-descricao">Descrição</label>
-                                                        <textarea id="camera-angulo-descricao" name="description" placeholder="Descreva a configuração de ângulo..." rows="3"></textarea>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="form-actions">
-                                                    <button type="button" class="btn-secondary" onclick="clearCameraForm('angulo')">
-                                                        <i class="material-icons">clear</i>
-                                                        Limpar
-                                                    </button>
-                                                    <button type="submit" class="btn-primary">
-                                                        <i class="material-icons">save</i>
-                                                        Criar Configuração de Ângulo
-                                                    </button>
-                                                </div>
-                                            </form>
-                                            
-                                            <!-- Formulário para Plano -->
-                                            <form class="avatar-form plano-form" id="camera-plano-form" style="display: none;">
-                                                <div class="form-grid">
-                                                    <div class="form-group">
-                                                        <label for="camera-plano-name">Nome da Configuração</label>
-                                                        <input type="text" id="camera-plano-name" name="name" placeholder="Ex: Plano Médio Americano" required>
-                                                    </div>
-                                                    
-                                                    <div class="form-row">
-                                                        <div class="form-group">
-                                                            <label for="camera-plano-tipo">Tipo de Plano</label>
-                                                            <select id="camera-plano-tipo" name="shot_type">
-                                                                <option value="close_up">Close-up</option>
-                                                                <option value="medium_shot">Medium Shot</option>
-                                                                <option value="wide_shot">Wide Shot</option>
-                                                                <option value="extreme_close_up">Extreme Close-up</option>
-                                                                <option value="long_shot">Long Shot</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="camera-plano-distancia">Distância</label>
-                                                            <select id="camera-plano-distancia" name="distance">
-                                                                <option value="proxima">Próxima</option>
-                                                                <option value="media" selected>Média</option>
-                                                                <option value="distante">Distante</option>
-                                                                <option value="muito_distante">Muito Distante</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="form-group">
-                                                        <label for="camera-plano-descricao">Descrição</label>
-                                                        <textarea id="camera-plano-descricao" name="description" placeholder="Descreva a configuração de plano..." rows="3"></textarea>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="form-actions">
-                                                    <button type="button" class="btn-secondary" onclick="clearCameraForm('plano')">
-                                                        <i class="material-icons">clear</i>
-                                                        Limpar
-                                                    </button>
-                                                    <button type="submit" class="btn-primary">
-                                                        <i class="material-icons">save</i>
-                                                        Criar Configuração de Plano
-                                                    </button>
-                                                </div>
-                                            </form>
-                                            
-                                            <!-- Formulário para Movimento -->
-                                            <form class="avatar-form movimento-form" id="camera-movimento-form" style="display: none;">
-                                                <div class="form-grid">
-                                                    <div class="form-group">
-                                                        <label for="camera-movimento-name">Nome da Configuração</label>
-                                                        <input type="text" id="camera-movimento-name" name="name" placeholder="Ex: Travelling Suave" required>
-                                                    </div>
-                                                    
-                                                    <div class="form-row">
-                                                        <div class="form-group">
-                                                            <label for="camera-movimento-tipo">Tipo de Movimento</label>
-                                                            <select id="camera-movimento-tipo" name="movement_type">
-                                                                <option value="travelling">Travelling</option>
-                                                                <option value="pan">Pan</option>
-                                                                <option value="tilt">Tilt</option>
-                                                                <option value="zoom">Zoom</option>
-                                                                <option value="dolly">Dolly</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="camera-movimento-velocidade">Velocidade</label>
-                                                            <select id="camera-movimento-velocidade" name="speed">
-                                                                <option value="lenta">Lenta</option>
-                                                                <option value="media" selected>Média</option>
-                                                                <option value="rapida">Rápida</option>
-                                                                <option value="muito_rapida">Muito Rápida</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="form-group">
-                                                        <label for="camera-movimento-descricao">Descrição</label>
-                                                        <textarea id="camera-movimento-descricao" name="description" placeholder="Descreva a configuração de movimento..." rows="3"></textarea>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="form-actions">
-                                                    <button type="button" class="btn-secondary" onclick="clearCameraForm('movimento')">
-                                                        <i class="material-icons">clear</i>
-                                                        Limpar
-                                                    </button>
-                                                    <button type="submit" class="btn-primary">
-                                                        <i class="material-icons">save</i>
-                                                        Criar Configuração de Movimento
-                                                    </button>
-                                                </div>
-                                            </form>
-                                            
-                                            <!-- Formulário para Lente -->
-                                            <form class="avatar-form lente-form" id="camera-lente-form" style="display: none;">
-                                                <div class="form-grid">
-                                                    <div class="form-group">
-                                                        <label for="camera-lente-name">Nome da Configuração</label>
-                                                        <input type="text" id="camera-lente-name" name="name" placeholder="Ex: Lente Grande Angular" required>
-                                                    </div>
-                                                    
-                                                    <div class="form-row">
-                                                        <div class="form-group">
-                                                            <label for="camera-lente-tipo">Tipo de Lente</label>
-                                                            <select id="camera-lente-tipo" name="lens_type">
-                                                                <option value="grande_angular">Grande Angular</option>
-                                                                <option value="normal">Normal</option>
-                                                                <option value="teleobjetiva">Teleobjetiva</option>
-                                                                <option value="macro">Macro</option>
-                                                                <option value="fisheye">Fisheye</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="camera-lente-distancia_focal">Distância Focal</label>
-                                                            <input type="text" id="camera-lente-distancia_focal" name="focal_length" placeholder="Ex: 24mm, 50mm, 200mm">
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="form-group">
-                                                        <label for="camera-lente-descricao">Descrição</label>
-                                                        <textarea id="camera-lente-descricao" name="description" placeholder="Descreva a configuração de lente..." rows="3"></textarea>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="form-actions">
-                                                    <button type="button" class="btn-secondary" onclick="clearCameraForm('lente')">
-                                                        <i class="material-icons">clear</i>
-                                                        Limpar
-                                                    </button>
-                                                    <button type="submit" class="btn-primary">
-                                                        <i class="material-icons">save</i>
-                                                        Criar Configuração de Lente
-                                                    </button>
-                                                </div>
-                                            </form>
-                                            
-                                            <!-- Formulário para Iluminação de Câmera -->
-                                            <form class="avatar-form iluminacao_camera-form" id="camera-iluminacao_camera-form" style="display: none;">
-                                                <div class="form-grid">
-                                                    <div class="form-group">
-                                                        <label for="camera-iluminacao_camera-name">Nome da Configuração</label>
-                                                        <input type="text" id="camera-iluminacao_camera-name" name="name" placeholder="Ex: Iluminação Dramática" required>
-                                                    </div>
-                                                    
-                                                    <div class="form-row">
-                                                        <div class="form-group">
-                                                            <label for="camera-iluminacao_camera-tipo">Tipo de Iluminação</label>
-                                                            <select id="camera-iluminacao_camera-tipo" name="lighting_type">
-                                                                <option value="natural">Natural</option>
-                                                                <option value="artificial">Artificial</option>
-                                                                <option value="mista">Mista</option>
-                                                                <option value="dramatica">Dramática</option>
-                                                                <option value="suave">Suave</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="camera-iluminacao_camera-intensidade">Intensidade</label>
-                                                            <select id="camera-iluminacao_camera-intensidade" name="intensity">
-                                                                <option value="baixa">Baixa</option>
-                                                                <option value="media" selected>Média</option>
-                                                                <option value="alta">Alta</option>
-                                                                <option value="muito_alta">Muito Alta</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="form-group">
-                                                        <label for="camera-iluminacao_camera-descricao">Descrição</label>
-                                                        <textarea id="camera-iluminacao_camera-descricao" name="description" placeholder="Descreva a configuração de iluminação..." rows="3"></textarea>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="form-actions">
-                                                    <button type="button" class="btn-secondary" onclick="clearCameraForm('iluminacao_camera')">
-                                                        <i class="material-icons">clear</i>
-                                                        Limpar
-                                                    </button>
-                                                    <button type="submit" class="btn-primary">
-                                                        <i class="material-icons">save</i>
-                                                        Criar Configuração de Iluminação
-                                                    </button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
+                            
+                            <!-- Painel de controles -->
+                            <div class="camera-controls-panel">
+                                <h3>Controles de Câmera</h3>
+                                
+                                <!-- Instruções -->
+                                <div class="camera-info-text">
+                                    Clique no canvas para adicionar pontos para a <strong>Câmera</strong>. Segure <strong>Shift</strong> e clique para adicionar pontos para o <strong>Alvo</strong>.
                                 </div>
-                            </div>
-
-                            <!-- Nova seção com dois blocos de 50% -->
-                            <div class="avatar-split-section">
-                                <!-- Bloco esquerdo -->
-                                <div class="split-block left-block">
-                                    <div class="block-header">
-                                        <h3>
-                                            <i class="material-icons">camera_alt</i>
-                                            Configurações Salvas
-                                        </h3>
-                                        <p>Suas configurações de câmera favoritas</p>
+                                
+                                <!-- Configurações de altura e tempo -->
+                                <div class="camera-input-group">
+                                    <div class="camera-input-row">
+                                        <label for="camera-height-input">Altura da Câmera (Y):</label>
+                                        <input type="number" id="camera-height-input" value="1.5" step="0.1">
                                     </div>
-                                    <div class="block-content">
-                                        <!-- Conteúdo personalizado aqui -->
-                                        <div class="content-placeholder">
-                                            <p>Este é o bloco esquerdo (50% da largura)</p>
-                                            <p>Adicione aqui o conteúdo desejado</p>
-                                        </div>
+                                    <div class="camera-input-row">
+                                        <label for="look-at-height-input">Altura do Alvo (Y):</label>
+                                        <input type="number" id="look-at-height-input" value="1.0" step="0.1">
+                                    </div>
+                                    <div class="camera-input-row">
+                                        <label for="segment-time-input">Tempo por Segmento (s):</label>
+                                        <input type="number" id="segment-time-input" value="2.0" step="0.1">
                                     </div>
                                 </div>
 
-                                <!-- Bloco direito -->
-                                <div class="split-block right-block">
-                                    <div class="block-header">
-                                        <h3>
-                                            <i class="material-icons">info</i>
-                                            Dicas de Câmera
-                                        </h3>
-                                        <p>Conteúdo do segundo bloco</p>
-                                    </div>
-                                    <div class="block-content">
-                                        <!-- Conteúdo personalizado aqui -->
-                                        <div class="content-placeholder">
-                                            <p>Este é o bloco direito (50% da largura)</p>
-                                            <p>Adicione aqui o conteúdo desejado</p>
-                                        </div>
-                                    </div>
+                                <!-- Botões de controle -->
+                                <div class="camera-button-group">
+                                    <button id="camera-add-example">Adicionar Exemplo</button>
+                                    <button id="camera-play">Reproduzir Animação</button>
+                                    <button id="camera-pause">Pausar Animação</button>
+                                    <button id="camera-reset">Reiniciar</button>
                                 </div>
+                                
+                                <!-- Lista de pontos de controle -->
+                                <div class="camera-section-title">Pontos de Controle</div>
+                                <div class="camera-keyframe-list" id="camera-keyframe-list">
+                                    <!-- Pontos serão adicionados aqui -->
+                                </div>
+
+                                <!-- Botão para gerar coordenadas -->
+                                <button id="camera-generate" class="btn-primary">Gerar Coordenadas</button>
+                                
+                                <!-- Área de saída de dados -->
+                                <h4>Dados de Posição</h4>
+                                <textarea id="camera-output-area" readonly placeholder="Adicione pontos para começar."></textarea>
+                                
+                                <!-- Botão para adicionar ao prompt principal -->
+                                <button id="camera-add-to-prompt" class="btn-primary">
+                                    <i class="material-icons">add</i>
+                                    Adicionar ao Prompt Principal
+                                </button>
                             </div>
                         </div>
                         
@@ -2803,6 +2672,381 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                 <textarea 
                                     name="custom_camera" 
                                     placeholder="Descreva configurações específicas de câmera que não estão nas opções acima..."
+                                    rows="3"></textarea>
+                            </div>
+
+                            <!-- Coluna 2: Controles de navegação -->
+                            <div class="tab-navigation">
+                                <div class="nav-buttons">
+                                    <button type="button" class="btn btn-secondary" onclick="goToFirstTab()" title="Início">
+                                        <i class="material-icons">home</i>
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="prevTab()" title="Anterior">
+                                        <i class="material-icons">arrow_back</i>
+                                    </button>
+                                    <button type="button" class="btn btn-primary" onclick="nextTab()" title="Próxima">
+                                        <i class="material-icons">arrow_forward</i>
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="goToLastTab()" title="Fim">
+                                        <i class="material-icons">flag</i>
+                                    </button>
+                                </div>
+                                <button type="button" class="btn-prompt" onclick="gerarPrompt()">
+                                    PROMPT
+                                </button>
+                            </div>
+
+                            <!-- Coluna 3: Espaço para propaganda -->
+                            <div class="advertisement-container">
+                                <div class="advertisement-content">
+                                    <i class="material-icons" style="font-size: 2rem; color: var(--text-muted);">campaign</i>
+                                    <div class="advertisement-placeholder">
+                                        Espaço para propaganda<br>
+                                        Anúncios e promoções
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- ABA 8.2: CÂMERA 2 - GERADOR VO3 -->
+                    <div class="tab-content" id="tab-camera2">
+                        <!-- Header com abas do VO3 -->
+                        <div class="vo3-header">
+                            <div class="vo3-tabs">
+                                <button class="vo3-tab-btn active" data-vo3-tab="simple">
+                                    <i class="material-icons">tune</i>
+                                    Simples
+                                </button>
+                                <button class="vo3-tab-btn" data-vo3-tab="advanced">
+                                    <i class="material-icons">grid_on</i>
+                                    Avançado
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Layout principal -->
+                        <div class="vo3-main-layout">
+                            <!-- Conteúdo principal (esquerda) -->
+                            <div class="vo3-content">
+                                <!-- MODO SIMPLES -->
+                                <div class="vo3-mode-content active" id="vo3-simple-mode">
+                                    <!-- Stepper -->
+                                    <div class="vo3-stepper">
+                                        <div class="step active" data-step="1">
+                                            <span class="step-number">1</span>
+                                            <span class="step-title">Enquadramento & Orientação</span>
+                                        </div>
+                                        <div class="step" data-step="2">
+                                            <span class="step-number">2</span>
+                                            <span class="step-title">Movimentos (Presets)</span>
+                                        </div>
+                                        <div class="step" data-step="3">
+                                            <span class="step-number">3</span>
+                                            <span class="step-title">Tempo & Intensidade</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Passo 1: Enquadramento & Orientação -->
+                                    <div class="vo3-step-content active" data-step="1">
+                                        <div class="vo3-section">
+                                            <h3>Enquadramento Inicial</h3>
+                                            <div class="framing-options">
+                                                <div class="framing-card" data-framing="general">
+                                                    <div class="framing-preview">PG</div>
+                                                    <span>Plano Geral</span>
+                                                </div>
+                                                <div class="framing-card" data-framing="medium">
+                                                    <div class="framing-preview">PM</div>
+                                                    <span>Médio</span>
+                                                </div>
+                                                <div class="framing-card" data-framing="bust">
+                                                    <div class="framing-preview">PB</div>
+                                                    <span>Busto</span>
+                                                </div>
+                                                <div class="framing-card" data-framing="close">
+                                                    <div class="framing-preview">PP</div>
+                                                    <span>Close</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="vo3-section">
+                                            <h3>Orientação Inicial</h3>
+                                            <div class="orientation-options">
+                                                <div class="orientation-card" data-orientation="FRONT">
+                                                    <i class="material-icons">person</i>
+                                                    <span>Frente</span>
+                                                </div>
+                                                <div class="orientation-card" data-orientation="BACK">
+                                                    <i class="material-icons">person_outline</i>
+                                                    <span>Costas</span>
+                                                </div>
+                                                <div class="orientation-card" data-orientation="RIGHT">
+                                                    <i class="material-icons">arrow_forward</i>
+                                                    <span>Direita</span>
+                                                </div>
+                                                <div class="orientation-card" data-orientation="LEFT">
+                                                    <i class="material-icons">arrow_back</i>
+                                                    <span>Esquerda</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Passo 2: Movimentos -->
+                                    <div class="vo3-step-content" data-step="2">
+                                        <div class="vo3-section">
+                                            <h3>Biblioteca de Movimentos</h3>
+                                            <div class="movements-grid">
+                                                <div class="movement-card" data-movement="dolly_in">
+                                                    <i class="material-icons">zoom_in</i>
+                                                    <h4>Dolly In</h4>
+                                                    <p>Aproximação suave</p>
+                                                </div>
+                                                <div class="movement-card" data-movement="dolly_out">
+                                                    <i class="material-icons">zoom_out</i>
+                                                    <h4>Dolly Out</h4>
+                                                    <p>Afastamento gradual</p>
+                                                </div>
+                                                <div class="movement-card" data-movement="truck_left">
+                                                    <i class="material-icons">keyboard_arrow_left</i>
+                                                    <h4>Truck Left</h4>
+                                                    <p>Movimento lateral esquerda</p>
+                                                </div>
+                                                <div class="movement-card" data-movement="truck_right">
+                                                    <i class="material-icons">keyboard_arrow_right</i>
+                                                    <h4>Truck Right</h4>
+                                                    <p>Movimento lateral direita</p>
+                                                </div>
+                                                <div class="movement-card" data-movement="pedestal_up">
+                                                    <i class="material-icons">keyboard_arrow_up</i>
+                                                    <h4>Pedestal Up</h4>
+                                                    <p>Elevação vertical</p>
+                                                </div>
+                                                <div class="movement-card" data-movement="pedestal_down">
+                                                    <i class="material-icons">keyboard_arrow_down</i>
+                                                    <h4>Pedestal Down</h4>
+                                                    <p>Descida vertical</p>
+                                                </div>
+                                                <div class="movement-card" data-movement="pan">
+                                                    <i class="material-icons">sync</i>
+                                                    <h4>Pan</h4>
+                                                    <p>Giro horizontal</p>
+                                                </div>
+                                                <div class="movement-card" data-movement="tilt">
+                                                    <i class="material-icons">swap_vert</i>
+                                                    <h4>Tilt</h4>
+                                                    <p>Inclinação vertical</p>
+                                                </div>
+                                                <div class="movement-card" data-movement="arc_quarter">
+                                                    <i class="material-icons">rotate_90_degrees_ccw</i>
+                                                    <h4>Arc ¼</h4>
+                                                    <p>Arco de 90°</p>
+                                                </div>
+                                                <div class="movement-card" data-movement="arc_half">
+                                                    <i class="material-icons">u_turn_left</i>
+                                                    <h4>Arc ½</h4>
+                                                    <p>Arco de 180°</p>
+                                                </div>
+                                                <div class="movement-card" data-movement="orbit_quarter">
+                                                    <i class="material-icons">track_changes</i>
+                                                    <h4>Orbit ¼</h4>
+                                                    <p>Órbita de 90°</p>
+                                                </div>
+                                                <div class="movement-card" data-movement="orbit_half">
+                                                    <i class="material-icons">360</i>
+                                                    <h4>Orbit ½</h4>
+                                                    <p>Órbita de 180°</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="vo3-section">
+                                            <h3>Movimentos Selecionados</h3>
+                                            <div class="selected-movements" id="selected-movements">
+                                                <div class="empty-movements">
+                                                    <p>Selecione movimentos acima para compor a sequência</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Passo 3: Tempo & Intensidade -->
+                                    <div class="vo3-step-content" data-step="3">
+                                        <div class="vo3-section">
+                                            <h3>Configuração de Tempo</h3>
+                                            <div class="time-controls">
+                                                <label for="duration-slider">Duração Total: <span id="duration-value">8</span>s</label>
+                                                <input type="range" id="duration-slider" min="1" max="8" value="8" step="0.5">
+                                            </div>
+                                        </div>
+
+                                        <div class="vo3-section">
+                                            <h3>Prévia da Sequência</h3>
+                                            <div class="sequence-preview" id="sequence-preview">
+                                                <p>Configure enquadramento e movimentos para ver a prévia</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- MODO AVANÇADO -->
+                                <div class="vo3-mode-content" id="vo3-advanced-mode">
+                                    <div class="vo3-advanced-layout">
+                                        <div class="vo3-canvas-area">
+                                            <canvas id="vo3-grid-canvas" width="800" height="800"></canvas>
+                                            <div class="vo3-target-bust" id="vo3-target-bust">
+                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="#333">
+                                                    <path d="M12,2A5,5 0 0,1 17,7A5,5 0 0,1 12,12A5,5 0 0,1 7,7A5,5 0 0,1 12,2M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/>
+                                                </svg>
+                                            </div>
+                                            <div class="vo3-camera-ref">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="#666">
+                                                    <path d="M4,4H7L9,2H15L17,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9Z"/>
+                                                </svg>
+                                                <span>Câmera</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="vo3-points-sidebar">
+                                            <h3>Pontos de Movimento</h3>
+                                            <div class="vo3-points-list" id="vo3-points-list">
+                                                <div class="empty-points">
+                                                    <p>Clique no grid para criar pontos</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="vo3-advanced-controls">
+                                                <label>
+                                                    <input type="checkbox" id="vo3-snap-toggle" checked>
+                                                    Snap to grid
+                                                </label>
+                                                <button id="vo3-clear-points" class="btn-secondary">
+                                                    <i class="material-icons">clear_all</i>
+                                                    Limpar Pontos
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Controles principais -->
+                                <div class="vo3-main-controls">
+                                    <button id="vo3-generate-btn" class="btn-primary" disabled>
+                                        <i class="material-icons">play_arrow</i>
+                                        Gerar VO3
+                                    </button>
+                                    <button id="vo3-clear-btn" class="btn-secondary">
+                                        <i class="material-icons">clear</i>
+                                        Limpar
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Painel de saída (direita) -->
+                            <div class="vo3-output-panel">
+                                <h3>Saída do Prompt</h3>
+                                
+                                <div class="vo3-output-section">
+                                    <h4>Resumo Natural</h4>
+                                    <textarea id="vo3-natural-output" readonly placeholder="O resumo natural aparecerá aqui após gerar..."></textarea>
+                                    <button id="vo3-copy-natural" class="btn-secondary">
+                                        <i class="material-icons">content_copy</i>
+                                        Copiar Resumo
+                                    </button>
+                                </div>
+
+                                <div class="vo3-output-section">
+                                    <h4>JSON VO3</h4>
+                                    <textarea id="vo3-json-output" readonly placeholder="O JSON VO3 aparecerá aqui após gerar..."></textarea>
+                                    <div class="vo3-json-controls">
+                                        <button id="vo3-copy-json" class="btn-secondary">
+                                            <i class="material-icons">content_copy</i>
+                                            Copiar JSON VO3
+                                        </button>
+                                        <button id="vo3-add-json" class="btn-primary">
+                                            <i class="material-icons">add</i>
+                                            Adicionar JSON ao Prompt
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal para adicionar JSON externo -->
+                        <div id="vo3-add-json-modal" class="position-modal" style="display: none;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3>Adicionar JSON VO3 Externo</h3>
+                                    <button class="modal-close" id="vo3-modal-close">×</button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Cole um JSON VO3 válido para adicionar ao prompt:</p>
+                                    <textarea id="vo3-external-json" placeholder='Cole aqui o JSON VO3 externo...' rows="10"></textarea>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" id="vo3-modal-cancel" class="btn-secondary">Cancelar</button>
+                                    <button type="button" id="vo3-modal-add" class="btn-primary">Adicionar</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal para configuração de pontos avançados -->
+                        <div id="vo3-point-modal" class="position-modal" style="display: none;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 id="vo3-point-modal-title">Configurar Ponto</h3>
+                                    <button class="modal-close" id="vo3-point-modal-close">×</button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="vo3-point-form">
+                                        <div id="vo3-orientation-group" class="form-group" style="display: none;">
+                                            <label for="vo3-orientation">Orientação*</label>
+                                            <select id="vo3-orientation" required>
+                                                <option value="">Selecione...</option>
+                                                <option value="FRONT">Frente</option>
+                                                <option value="BACK">Costas</option>
+                                                <option value="RIGHT">Direita</option>
+                                                <option value="LEFT">Esquerda</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="vo3-time">Tempo (s)*</label>
+                                            <input type="number" id="vo3-time" min="0" max="8" step="0.1" required>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="vo3-distance">Distância (m)*</label>
+                                            <input type="number" id="vo3-distance" min="0" step="0.1" required>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="vo3-height">Altura (m)*</label>
+                                            <input type="number" id="vo3-height" min="0" step="0.1" required>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" id="vo3-point-cancel" class="btn-secondary">Cancelar</button>
+                                    <button type="button" id="vo3-point-save" class="btn-primary">Salvar</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Container de 3 colunas na base -->
+                        <div class="bottom-controls-container">
+                            <!-- Coluna 1: Campo de descrição personalizada -->
+                            <div class="custom-description">
+                                <label>
+                                    <i class="material-icons">edit</i>
+                                    Descrição Personalizada da Câmera VO3
+                                </label>
+                                <textarea 
+                                    name="custom_camera_vo3" 
+                                    placeholder="Descreva configurações específicas para geração VO3..."
                                     rows="3"></textarea>
                             </div>
 
@@ -4511,6 +4755,3113 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 }
             }
         });
+
+        // ================================================
+        // SISTEMA DE POSICIONAMENTO DE CÂMERA
+        // ================================================
+
+        // Estado da aplicação
+        const cameraState = {
+            target: { x: 50, y: 50 },
+            points: [],
+            selectedPosition: null,
+            isDragging: false,
+            dragStartPos: null,
+            currentEditingPosition: null
+        };
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            initCameraPositioning();
+            initCameraPositioning2();
+            initVO3System();
+        });
+
+        function initCameraPositioning() {
+            // Nova implementação baseada no camera.html
+            const canvas = document.getElementById('camera-canvas');
+            if (!canvas) {
+                console.log('Canvas da câmera não encontrado, pulando inicialização');
+                return;
+            }
+
+            console.log('Inicializando nova implementação de câmera baseada em camera.html');
+            
+            // Inicializar sistema da nova câmera
+            initNewCameraSystem();
+        }
+
+        function setupCanvas() {
+            const canvas = document.getElementById('camera-positioning-grid');
+            const ctx = canvas.getContext('2d');
+            
+            // Configurar canvas para alta resolução
+            const rect = canvas.getBoundingClientRect();
+            const devicePixelRatio = window.devicePixelRatio || 1;
+            
+            canvas.width = 800 * devicePixelRatio;
+            canvas.height = 800 * devicePixelRatio;
+            ctx.scale(devicePixelRatio, devicePixelRatio);
+            
+            canvas.style.width = '800px';
+            canvas.style.height = '800px';
+        }
+
+        function bindEvents() {
+            const canvas = document.getElementById('camera-positioning-grid');
+            const modal = document.getElementById('position-modal');
+            const modalClose = document.getElementById('modal-close');
+            const modalCancel = document.getElementById('modal-cancel');
+            const modalSave = document.getElementById('modal-save');
+            const clearAllBtn = document.getElementById('clear-all-btn');
+            const exportBtn = document.getElementById('export-prompt-btn');
+            const allowDragToggle = document.getElementById('allow-drag-toggle');
+
+            // Canvas events
+            canvas.addEventListener('click', handleCanvasClick);
+            canvas.addEventListener('mousedown', handleMouseDown);
+            canvas.addEventListener('mousemove', handleMouseMove);
+            canvas.addEventListener('mouseup', handleMouseUp);
+            canvas.addEventListener('mouseleave', handleMouseUp);
+
+            // Modal events
+            modalClose.addEventListener('click', closeModal);
+            modalCancel.addEventListener('click', closeModal);
+            modalSave.addEventListener('click', savePosition);
+            
+            // Control events
+            clearAllBtn.addEventListener('click', clearAllPositions);
+            if (exportBtn) {
+                exportBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Botão exportar clicado');
+                    exportPrompt();
+                });
+            }
+
+            // Fechar modal ao clicar fora
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            // Fechar modal com ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modal.style.display !== 'none') {
+                    closeModal();
+                }
+            });
+        }
+
+        function renderGrid() {
+            const canvas = document.getElementById('camera-positioning-grid');
+            const ctx = canvas.getContext('2d');
+            
+            // Limpar canvas
+            ctx.clearRect(0, 0, 800, 800);
+            
+            // Desenhar grid
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.lineWidth = 1;
+            
+            // Linhas verticais
+            for (let x = 0; x <= 800; x += 80) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, 800);
+                ctx.stroke();
+            }
+            
+            // Linhas horizontais
+            for (let y = 0; y <= 800; y += 80) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(800, y);
+                ctx.stroke();
+            }
+            
+            // Linhas mais marcadas a cada 4 divisões (320px)
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.lineWidth = 2;
+            
+            for (let x = 0; x <= 800; x += 320) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, 800);
+                ctx.stroke();
+            }
+            
+            for (let y = 0; y <= 800; y += 320) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(800, y);
+                ctx.stroke();
+            }
+        }
+
+        function renderTarget() {
+            // O target SVG já está posicionado via CSS
+            // Apenas garantir que está visível
+            const targetIcon = document.getElementById('target-icon');
+            if (targetIcon) {
+                targetIcon.style.display = 'block';
+            }
+        }
+
+        function renderPositions() {
+            // Remover marcadores existentes
+            const existingMarkers = document.querySelectorAll('.camera-marker');
+            existingMarkers.forEach(marker => marker.remove());
+            
+            // Criar novos marcadores
+            cameraState.points.forEach((point, index) => {
+                createMarker(point, index + 1);
+            });
+            
+            // Desenhar linhas conectoras
+            drawConnectorLines();
+            
+            // Atualizar lista lateral
+            updatePositionsList();
+            
+            // Atualizar preview do prompt
+            updatePromptPreview();
+        }
+
+        function createMarker(point, number) {
+            const container = document.querySelector('.grid-container');
+            const marker = document.createElement('div');
+            marker.className = 'camera-marker';
+            marker.textContent = number;
+            marker.style.left = (point.x / 100 * 800) + 'px';
+            marker.style.top = (point.y / 100 * 800) + 'px';
+            marker.dataset.index = number - 1;
+            
+            if (cameraState.selectedPosition === number - 1) {
+                marker.classList.add('selected');
+            }
+            
+            marker.addEventListener('click', function(e) {
+                e.stopPropagation();
+                selectPosition(number - 1);
+            });
+            
+            container.appendChild(marker);
+        }
+
+        function drawConnectorLines() {
+            const canvas = document.getElementById('camera-positioning-grid');
+            const ctx = canvas.getContext('2d');
+            
+            if (cameraState.points.length < 2) return;
+            
+            ctx.strokeStyle = 'rgba(59, 130, 246, 0.6)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            
+            ctx.beginPath();
+            cameraState.points.forEach((point, index) => {
+                const x = point.x / 100 * 800;
+                const y = point.y / 100 * 800;
+                
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        function handleCanvasClick(e) {
+            if (cameraState.isDragging) return;
+            
+            const rect = e.target.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            
+            // Verificar se pode criar nova posição
+            if (cameraState.points.length > 0) {
+                const lastPoint = cameraState.points[cameraState.points.length - 1];
+                if (lastPoint.tempo_s >= 8) {
+                    showError('Não é possível criar mais posições. O tempo máximo de 8s foi atingido.');
+                    return;
+                }
+            }
+            
+            createNewPosition(x, y);
+        }
+
+        function createNewPosition(x, y) {
+            const position = {
+                idx: cameraState.points.length + 1,
+                x: parseFloat(x.toFixed(2)),
+                y: parseFloat(y.toFixed(2)),
+                distancia_m: null,
+                altura_m: null,
+                tempo_s: cameraState.points.length === 0 ? 0 : null,
+                orientacao: cameraState.points.length === 0 ? null : undefined
+            };
+            
+            cameraState.currentEditingPosition = position;
+            openModal(position);
+        }
+
+        function openModal(position) {
+            const modal = document.getElementById('position-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const orientationGroup = document.getElementById('orientation-group');
+            const timeInput = document.getElementById('time');
+            const distanceInput = document.getElementById('distance');
+            const heightInput = document.getElementById('height');
+            const orientationSelect = document.getElementById('orientation');
+            
+            // Configurar título
+            modalTitle.textContent = `Configurar Posição ${position.idx}`;
+            
+            // Mostrar/ocultar orientação (apenas para primeira posição)
+            if (position.idx === 1) {
+                orientationGroup.style.display = 'block';
+                orientationSelect.required = true;
+                orientationSelect.value = position.orientacao || '';
+            } else {
+                orientationGroup.style.display = 'none';
+                orientationSelect.required = false;
+            }
+            
+            // Configurar tempo
+            if (position.idx === 1) {
+                timeInput.value = 0;
+                timeInput.readOnly = true;
+            } else {
+                timeInput.readOnly = false;
+                timeInput.value = position.tempo_s || '';
+                const lastTime = cameraState.points[cameraState.points.length - 1]?.tempo_s || 0;
+                timeInput.min = lastTime + 0.1;
+            }
+            
+            // Configurar outros campos
+            distanceInput.value = position.distancia_m || '';
+            heightInput.value = position.altura_m || '';
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('position-modal');
+            modal.style.display = 'none';
+            cameraState.currentEditingPosition = null;
+            
+            // Limpar mensagens de erro
+            const errorMessages = document.querySelectorAll('.error-message');
+            errorMessages.forEach(msg => msg.remove());
+        }
+
+        function savePosition() {
+            const position = cameraState.currentEditingPosition;
+            if (!position) return;
+            
+            const timeInput = document.getElementById('time');
+            const distanceInput = document.getElementById('distance');
+            const heightInput = document.getElementById('height');
+            const orientationSelect = document.getElementById('orientation');
+            
+            // Validações
+            const distance = parseFloat(distanceInput.value);
+            const height = parseFloat(heightInput.value);
+            
+            if (isNaN(distance) || distance < 0) {
+                showError('Distância deve ser um número maior ou igual a 0.');
+                return;
+            }
+            
+            if (isNaN(height) || height < 0) {
+                showError('Altura deve ser um número maior ou igual a 0.');
+                return;
+            }
+            
+            if (position.idx === 1) {
+                if (!orientationSelect.value) {
+                    showError('Orientação inicial é obrigatória.');
+                    return;
+                }
+                position.orientacao = orientationSelect.value;
+                position.tempo_s = 0;
+            } else {
+                const time = parseFloat(timeInput.value);
+                const lastTime = cameraState.points[cameraState.points.length - 1]?.tempo_s || 0;
+                
+                if (isNaN(time) || time <= lastTime || time > 8) {
+                    showError(`Tempo deve ser maior que ${lastTime}s e no máximo 8s.`);
+                    return;
+                }
+                
+                position.tempo_s = time;
+            }
+            
+            position.distancia_m = distance;
+            position.altura_m = height;
+            
+            // Adicionar à lista ou atualizar existente
+            const existingIndex = cameraState.points.findIndex(p => p.idx === position.idx);
+            if (existingIndex >= 0) {
+                cameraState.points[existingIndex] = position;
+            } else {
+                cameraState.points.push(position);
+            }
+            
+            // Renderizar novamente
+            renderGrid();
+            renderPositions();
+            
+            closeModal();
+        }
+
+        function selectPosition(index) {
+            cameraState.selectedPosition = index;
+            const position = cameraState.points[index];
+            if (position) {
+                cameraState.currentEditingPosition = { ...position };
+                openModal(cameraState.currentEditingPosition);
+            }
+            renderPositions();
+        }
+
+        function updatePositionsList() {
+            const listContainer = document.getElementById('positions-list');
+            
+            if (cameraState.points.length === 0) {
+                listContainer.innerHTML = '<div class="empty-positions"><p>Clique no grid para criar posições</p></div>';
+                return;
+            }
+            
+            let html = '';
+            cameraState.points.forEach((point, index) => {
+                const isSelected = cameraState.selectedPosition === index;
+                html += `
+                    <div class="position-item ${isSelected ? 'selected' : ''}" onclick="selectPosition(${index})">
+                        <div class="position-header">
+                            <div class="position-number">${point.idx}</div>
+                            <div class="position-time">${point.tempo_s}s</div>
+                        </div>
+                        <div class="position-details">
+                            Distância: ${point.distancia_m}m | Altura: ${point.altura_m}m
+                            ${point.orientacao ? `<br>Orientação: ${point.orientacao}` : ''}
+                        </div>
+                        <div class="position-coords">
+                            x: ${point.x}, y: ${point.y}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            listContainer.innerHTML = html;
+        }
+
+        function clearAllPositions() {
+            if (cameraState.points.length === 0) return;
+            
+            if (confirm('Deseja realmente limpar todas as posições?')) {
+                cameraState.points = [];
+                cameraState.selectedPosition = null;
+                renderGrid();
+                renderPositions();
+            }
+        }
+
+        function updatePromptPreview() {
+            const previewContainer = document.getElementById('prompt-preview');
+            
+            if (cameraState.points.length === 0) {
+                previewContainer.innerHTML = '<div class="empty-prompt"><p>Crie posições no grid para gerar o prompt</p></div>';
+                return;
+            }
+            
+            const prompt = generatePromptText();
+            previewContainer.textContent = prompt;
+            
+            // Auto scroll para o final
+            previewContainer.scrollTop = previewContainer.scrollHeight;
+        }
+
+        function generatePromptText() {
+            let prompt = 'CAMERA_PATH (GRID FIXO)\n';
+            prompt += `Target: x=${cameraState.target.x}, y=${cameraState.target.y}  // busto humano central fixo\n`;
+            
+            if (cameraState.points.length > 0) {
+                const firstPoint = cameraState.points[0];
+                prompt += 'InitialPosition:\n';
+                prompt += `  index=${firstPoint.idx}, t=${firstPoint.tempo_s}s, x=${firstPoint.x}, y=${firstPoint.y}, distancia_m=${firstPoint.distancia_m}, altura_m=${firstPoint.altura_m}, orientacao=${firstPoint.orientacao}\n`;
+            }
+            
+            if (cameraState.points.length > 1) {
+                prompt += 'Positions:\n';
+                cameraState.points.slice(1).forEach(point => {
+                    prompt += `  ${point.idx}: t=${point.tempo_s}s, x=${point.x}, y=${point.y}, distancia_m=${point.distancia_m}, altura_m=${point.altura_m}\n`;
+                });
+            }
+            
+            prompt += `Constraints: 0 = t1 < t2 < ... ≤ 8s; grid=fixo 800x800; unidades x,y em 0–100\n`;
+            
+            return prompt;
+        }
+
+        function exportPrompt() {
+            console.log('Function addToPrompt chamada');
+            console.log('Posições criadas:', cameraState.points.length);
+            
+            if (cameraState.points.length === 0) {
+                showExportError('Não há posições para adicionar ao prompt.');
+                return;
+            }
+            
+            const prompt = generatePromptText();
+            console.log('Prompt gerado:', prompt);
+            
+            // Buscar o textarea do prompt principal
+            const promptTextarea = document.querySelector('textarea[name="enhanced_prompt"], textarea[name="original_prompt"], #enhanced_prompt, #original_prompt');
+            
+            if (promptTextarea) {
+                // Adicionar o prompt de câmera ao conteúdo existente
+                const currentContent = promptTextarea.value;
+                const newContent = currentContent ? currentContent + '\n\n' + prompt : prompt;
+                promptTextarea.value = newContent;
+                
+                // Focar no textarea e scroll para o final
+                promptTextarea.focus();
+                promptTextarea.scrollTop = promptTextarea.scrollHeight;
+                
+                showSuccess('Prompt de câmera adicionado com sucesso!');
+                console.log('Prompt adicionado ao textarea principal');
+            } else {
+                // Fallback: copiar para área de transferência
+                console.log('Textarea principal não encontrado, copiando para área de transferência');
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(prompt).then(() => {
+                        console.log('Prompt copiado com sucesso via clipboard API');
+                        showSuccess('Textarea principal não encontrado. Prompt copiado para a área de transferência!');
+                    }).catch((err) => {
+                        console.log('Erro no clipboard API, usando fallback:', err);
+                        copyToClipboardFallback(prompt);
+                    });
+                } else {
+                    console.log('Clipboard API não disponível, usando fallback');
+                    copyToClipboardFallback(prompt);
+                }
+            }
+        }
+
+        function copyToClipboardFallback(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.top = '-9999px';
+            textArea.style.left = '-9999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    console.log('Prompt copiado com sucesso via fallback');
+                    showSuccess('Prompt copiado para a área de transferência!');
+                } else {
+                    console.log('Falha ao copiar via fallback');
+                    showExportError('Falha ao copiar prompt. Tente novamente.');
+                }
+            } catch (err) {
+                console.log('Erro no fallback:', err);
+                showExportError('Erro ao copiar prompt: ' + err.message);
+            } finally {
+                document.body.removeChild(textArea);
+            }
+        }
+
+        function handleMouseDown(e) {
+            const allowDrag = document.getElementById('allow-drag-toggle').checked;
+            if (!allowDrag) return;
+            
+            const marker = e.target.closest('.camera-marker');
+            if (!marker) return;
+            
+            e.preventDefault();
+            cameraState.isDragging = true;
+            cameraState.dragStartPos = {
+                x: e.clientX,
+                y: e.clientY,
+                markerIndex: parseInt(marker.dataset.index)
+            };
+            
+            marker.classList.add('dragging');
+        }
+
+        function handleMouseMove(e) {
+            if (!cameraState.isDragging) return;
+            
+            const rect = e.target.getBoundingClientRect();
+            const x = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
+            const y = Math.max(0, Math.min(100, ((e.clientY - rect.top) / rect.height) * 100));
+            
+            const markerIndex = cameraState.dragStartPos.markerIndex;
+            const marker = document.querySelector(`[data-index="${markerIndex}"]`);
+            
+            if (marker) {
+                marker.style.left = (x / 100 * 800) + 'px';
+                marker.style.top = (y / 100 * 800) + 'px';
+            }
+        }
+
+        function handleMouseUp(e) {
+            if (!cameraState.isDragging) return;
+            
+            const rect = e.target.getBoundingClientRect();
+            const x = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
+            const y = Math.max(0, Math.min(100, ((e.clientY - rect.top) / rect.height) * 100));
+            
+            const markerIndex = cameraState.dragStartPos.markerIndex;
+            const point = cameraState.points[markerIndex];
+            
+            if (point) {
+                point.x = parseFloat(x.toFixed(2));
+                point.y = parseFloat(y.toFixed(2));
+            }
+            
+            // Limpar estado de arrasto
+            cameraState.isDragging = false;
+            cameraState.dragStartPos = null;
+            
+            const marker = document.querySelector(`[data-index="${markerIndex}"]`);
+            if (marker) {
+                marker.classList.remove('dragging');
+            }
+            
+            // Re-renderizar
+            renderGrid();
+            renderPositions();
+        }
+
+        function showError(message) {
+            // Remover mensagens existentes
+            const existingMessages = document.querySelectorAll('.error-message, .success-message');
+            existingMessages.forEach(msg => msg.remove());
+            
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            
+            const modalBody = document.querySelector('.modal-body');
+            modalBody.insertBefore(errorDiv, modalBody.firstChild);
+        }
+
+        function showSuccess(message) {
+            // Remover mensagens existentes
+            const existingMessages = document.querySelectorAll('.error-message, .success-message');
+            existingMessages.forEach(msg => msg.remove());
+            
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.textContent = message;
+            
+            const container = document.querySelector('.camera-instructions');
+            container.appendChild(successDiv);
+            
+            // Remover após 3 segundos
+            setTimeout(() => {
+                successDiv.remove();
+            }, 3000);
+        }
+
+        function showExportError(message) {
+            // Remover mensagens existentes
+            const existingMessages = document.querySelectorAll('.error-message, .success-message');
+            existingMessages.forEach(msg => msg.remove());
+            
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            
+            const container = document.querySelector('.camera-instructions');
+            container.appendChild(errorDiv);
+            
+            // Remover após 5 segundos
+            setTimeout(() => {
+                errorDiv.remove();
+            }, 5000);
+        }
+
+        // ================================================
+        // NOVA IMPLEMENTAÇÃO DE CÂMERA BASEADA NO CAMERA.HTML
+        // ================================================
+
+        // Sistema inspirado no camera.html com canvas interativo
+        function initNewCameraSystem() {
+            const canvas = document.getElementById('camera-canvas');
+            const ctx = canvas.getContext('2d');
+            const controlsPanel = document.querySelector('.camera-controls-panel');
+            const keyframeListContainer = document.getElementById('camera-keyframe-list');
+            const outputArea = document.getElementById('camera-output-area');
+            const cameraHeightInput = document.getElementById('camera-height-input');
+            const lookAtHeightInput = document.getElementById('look-at-height-input');
+            const segmentTimeInput = document.getElementById('segment-time-input');
+            const addExampleButton = document.getElementById('camera-add-example');
+            const playButton = document.getElementById('camera-play');
+            const pauseButton = document.getElementById('camera-pause');
+            const resetButton = document.getElementById('camera-reset');
+            const generateButton = document.getElementById('camera-generate');
+            const addToPromptButton = document.getElementById('camera-add-to-prompt');
+
+            let cameraPoints = [];
+            let lookAtPoints = [];
+            let isAnimating = false;
+            let animationProgress = 0;
+            let animationFrameId;
+
+            const scale = 10; // Pixels por unidade
+            const gridSize = 50; // Tamanho total da grelha
+
+            function setupCanvas() {
+                const container = document.getElementById('camera-canvas-container');
+                const rect = container.getBoundingClientRect();
+                
+                // Definir tamanho fixo mais apropriado
+                canvas.width = Math.min(rect.width || 600, 600);
+                canvas.height = Math.min(rect.height || 450, 450);
+                
+                // Definir tamanho visual do canvas
+                canvas.style.width = canvas.width + 'px';
+                canvas.style.height = canvas.height + 'px';
+                
+                draw();
+            }
+            
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#2a2a2a';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Desenhar a grelha
+                ctx.strokeStyle = '#3a3a3a';
+                ctx.lineWidth = 0.5;
+                const gridStep = scale * 5;
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+
+                for (let x = -centerX; x <= centerX; x += gridStep) {
+                    ctx.beginPath();
+                    ctx.moveTo(centerX + x, 0);
+                    ctx.lineTo(centerX + x, canvas.height);
+                    ctx.stroke();
+                }
+                for (let y = -centerY; y <= centerY; y += gridStep) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, centerY + y);
+                    ctx.lineTo(canvas.width, centerY + y);
+                    ctx.stroke();
+                }
+
+                // Desenhar os eixos
+                ctx.strokeStyle = '#6a6a6a';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(0, centerY);
+                ctx.lineTo(canvas.width, centerY);
+                ctx.moveTo(centerX, 0);
+                ctx.lineTo(centerX, canvas.height);
+                ctx.stroke();
+
+                // Desenhar o caminho da câmara e os pontos
+                if (cameraPoints.length > 0) {
+                    ctx.strokeStyle = '#ff5722';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(cameraPoints[0].x * scale + centerX, -cameraPoints[0].y * scale + centerY);
+                    for (let i = 1; i < cameraPoints.length; i++) {
+                        ctx.lineTo(cameraPoints[i].x * scale + centerX, -cameraPoints[i].y * scale + centerY);
+                    }
+                    ctx.stroke();
+
+                    // Desenhar pontos da câmera maiores e numerados
+                    cameraPoints.forEach((point, index) => {
+                        const screenX = point.x * scale + centerX;
+                        const screenY = -point.y * scale + centerY;
+                        
+                        // Círculo externo
+                        ctx.fillStyle = '#ff5722';
+                        ctx.beginPath();
+                        ctx.arc(screenX, screenY, 6, 0, 2 * Math.PI);
+                        ctx.fill();
+                        
+                        // Número do ponto
+                        ctx.fillStyle = 'white';
+                        ctx.font = '12px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillText((index + 1).toString(), screenX, screenY + 4);
+                    });
+                }
+                
+                // Desenhar o caminho do alvo e os pontos
+                if (lookAtPoints.length > 0) {
+                    ctx.strokeStyle = '#00ff00';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(lookAtPoints[0].x * scale + centerX, -lookAtPoints[0].y * scale + centerY);
+                    for (let i = 1; i < lookAtPoints.length; i++) {
+                        ctx.lineTo(lookAtPoints[i].x * scale + centerX, -lookAtPoints[i].y * scale + centerY);
+                    }
+                    ctx.stroke();
+
+                    // Desenhar pontos do alvo maiores e numerados
+                    lookAtPoints.forEach((point, index) => {
+                        const screenX = point.x * scale + centerX;
+                        const screenY = -point.y * scale + centerY;
+                        
+                        // Círculo externo
+                        ctx.fillStyle = '#00ff00';
+                        ctx.beginPath();
+                        ctx.arc(screenX, screenY, 6, 0, 2 * Math.PI);
+                        ctx.fill();
+                        
+                        // Número do ponto
+                        ctx.fillStyle = 'black';
+                        ctx.font = '12px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillText((index + 1).toString(), screenX, screenY + 4);
+                    });
+                }
+            }
+
+            function updateKeyframeList() {
+                keyframeListContainer.innerHTML = '';
+                
+                cameraPoints.forEach((point, i) => {
+                    const item = document.createElement('div');
+                    item.className = 'camera-keyframe-item';
+                    item.style.color = '#ff5722';
+                    item.innerHTML = `
+                        <span>Câmera ${i + 1}</span>
+                        <div class="coords">X: ${point.x.toFixed(2)}, Y: ${parseFloat(cameraHeightInput.value).toFixed(2)}, Z: ${point.y.toFixed(2)}</div>
+                    `;
+                    keyframeListContainer.appendChild(item);
+                });
+
+                lookAtPoints.forEach((point, i) => {
+                    const item = document.createElement('div');
+                    item.className = 'camera-keyframe-item';
+                    item.style.color = '#00ff00';
+                    item.innerHTML = `
+                        <span>Alvo ${i + 1}</span>
+                        <div class="coords">X: ${point.x.toFixed(2)}, Y: ${parseFloat(lookAtHeightInput.value).toFixed(2)}, Z: ${point.y.toFixed(2)}</div>
+                    `;
+                    keyframeListContainer.appendChild(item);
+                });
+            }
+
+            function resetApp() {
+                isAnimating = false;
+                animationProgress = 0;
+                cameraPoints = [];
+                lookAtPoints = [];
+                cameraHeightInput.value = '1.5';
+                lookAtHeightInput.value = '1.0';
+                segmentTimeInput.value = '2.0';
+                draw();
+                updateKeyframeList();
+                outputArea.value = 'Adicione pontos para começar.';
+                console.log('Sistema resetado');
+            }
+
+            function addExamplePaths() {
+                resetApp();
+                
+                cameraPoints = [
+                    { x: -15, y: -10 },
+                    { x: 15, y: -10 },
+                    { x: 15, y: 10 },
+                    { x: -15, y: 10 }
+                ];
+
+                lookAtPoints = [
+                    { x: -15, y: 10 },
+                    { x: 15, y: 10 },
+                    { x: 15, y: -10 },
+                    { x: -15, y: -10 }
+                ];
+                
+                draw();
+                updateKeyframeList();
+                outputArea.value = 'Exemplo de caminho adicionado. Clique em "Reproduzir Animação" para ver.';
+            }
+
+            // Event listeners
+            canvas.addEventListener('click', (event) => {
+                const rect = canvas.getBoundingClientRect();
+                
+                // Calcular posição real do mouse no canvas
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                
+                const canvasX = (event.clientX - rect.left) * scaleX;
+                const canvasY = (event.clientY - rect.top) * scaleY;
+                
+                // Converter para coordenadas do mundo (-25 a +25 para X e Y)
+                const worldX = (canvasX - canvas.width / 2) / scale;
+                const worldY = -(canvasY - canvas.height / 2) / scale;
+                
+                console.log(`Clique em: Canvas(${canvasX.toFixed(1)}, ${canvasY.toFixed(1)}) -> Mundo(${worldX.toFixed(2)}, ${worldY.toFixed(2)})`);
+                
+                if (event.shiftKey) {
+                    lookAtPoints.push({ x: worldX, y: worldY });
+                    console.log(`Adicionado ponto de alvo: ${worldX.toFixed(2)}, ${worldY.toFixed(2)}`);
+                } else {
+                    cameraPoints.push({ x: worldX, y: worldY });
+                    console.log(`Adicionado ponto de câmera: ${worldX.toFixed(2)}, ${worldY.toFixed(2)}`);
+                }
+                draw();
+                updateKeyframeList();
+                isAnimating = false;
+            });
+
+            addExampleButton.addEventListener('click', addExamplePaths);
+            
+            playButton.addEventListener('click', () => {
+                if (cameraPoints.length < 2 || lookAtPoints.length < 2) {
+                    outputArea.value = 'Adicione pelo menos 2 pontos para cada caminho para iniciar a animação.';
+                    return;
+                }
+                isAnimating = true;
+                animationProgress = 0;
+                outputArea.value = 'Iniciando animação...';
+                console.log('Animação iniciada');
+            });
+            
+            pauseButton.addEventListener('click', () => { 
+                isAnimating = false; 
+                outputArea.value = 'Animação pausada.';
+                console.log('Animação pausada');
+            });
+            
+            resetButton.addEventListener('click', resetApp);
+
+            generateButton.addEventListener('click', () => {
+                if (cameraPoints.length < 2 || lookAtPoints.length < 2) {
+                    outputArea.value = 'Adicione pelo menos 2 pontos para cada caminho para gerar as coordenadas.';
+                    return;
+                }
+                
+                isAnimating = false;
+
+                const numSteps = 100;
+                const generatedData = [];
+                const camHeight = parseFloat(cameraHeightInput.value);
+                const lookAtHeight = parseFloat(lookAtHeightInput.value);
+                const totalTime = parseFloat(segmentTimeInput.value) * (Math.max(cameraPoints.length, lookAtPoints.length) - 1);
+
+                for (let i = 0; i < numSteps; i++) {
+                    const t = i / (numSteps - 1);
+                    const camPos = getPointOnPath(cameraPoints, t);
+                    const lookAtPos = getPointOnPath(lookAtPoints, t);
+                    
+                    generatedData.push({
+                        time: (t * totalTime).toFixed(2),
+                        position: [camPos.x.toFixed(2), camHeight.toFixed(2), camPos.y.toFixed(2)],
+                        lookAt: [lookAtPos.x.toFixed(2), lookAtHeight.toFixed(2), lookAtPos.y.toFixed(2)]
+                    });
+                }
+                
+                outputArea.value = JSON.stringify(generatedData, null, 2);
+            });
+
+            addToPromptButton.addEventListener('click', () => {
+                if (outputArea.value === 'Adicione pontos para começar.' || !outputArea.value.trim()) {
+                    alert('Gere as coordenadas primeiro usando o botão "Gerar Coordenadas"');
+                    return;
+                }
+
+                // Buscar o textarea do prompt principal
+                const promptTextarea = document.querySelector('textarea[name="enhanced_prompt"], textarea[name="original_prompt"], #enhanced_prompt, #original_prompt');
+                
+                if (promptTextarea) {
+                    const currentContent = promptTextarea.value;
+                    const newContent = currentContent ? currentContent + '\n\n// CAMERA PATH\n' + outputArea.value : '// CAMERA PATH\n' + outputArea.value;
+                    promptTextarea.value = newContent;
+                    
+                    promptTextarea.focus();
+                    promptTextarea.scrollTop = promptTextarea.scrollHeight;
+                    
+                    alert('Dados de câmera adicionados ao prompt principal!');
+                } else {
+                    // Copiar para área de transferência como fallback
+                    navigator.clipboard.writeText(outputArea.value).then(() => {
+                        alert('Textarea principal não encontrado. Dados copiados para a área de transferência!');
+                    }).catch(() => {
+                        alert('Erro ao copiar dados. Textarea principal não encontrado.');
+                    });
+                }
+            });
+
+            function getPointOnPath(pathPoints, t) {
+                if (pathPoints.length < 2) return { x: 0, y: 0 };
+                
+                const totalSegments = pathPoints.length - 1;
+                const segmentIndex = Math.floor(t * totalSegments);
+                const segmentProgress = (t * totalSegments) - segmentIndex;
+                
+                const startPoint = pathPoints[segmentIndex];
+                const endPoint = pathPoints[Math.min(segmentIndex + 1, totalSegments)];
+
+                const x = startPoint.x + segmentProgress * (endPoint.x - startPoint.x);
+                const y = startPoint.y + segmentProgress * (endPoint.y - startPoint.y);
+                
+                return { x, y };
+            }
+
+            // Função de animação
+            function animate() {
+                animationFrameId = requestAnimationFrame(animate);
+
+                if (!isAnimating || cameraPoints.length < 2 || lookAtPoints.length < 2) {
+                    draw();
+                    return;
+                }
+
+                const camPos = getPointOnPath(cameraPoints, animationProgress);
+                const lookAtPos = getPointOnPath(lookAtPoints, animationProgress);
+                
+                draw();
+
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+                const camScreenX = camPos.x * scale + centerX;
+                const camScreenY = -camPos.y * scale + centerY;
+                const lookAtScreenX = lookAtPos.x * scale + centerX;
+                const lookAtScreenY = -lookAtPos.y * scale + centerY;
+                
+                const cameraHeight = parseFloat(cameraHeightInput.value);
+                const lookAtHeight = parseFloat(lookAtHeightInput.value);
+                const dist3D = Math.sqrt(Math.pow(lookAtPos.x - camPos.x, 2) + Math.pow(lookAtHeight - cameraHeight, 2) + Math.pow(lookAtPos.y - camPos.y, 2)).toFixed(2);
+                
+                // Desenhar a linha de visão durante animação
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(camScreenX, camScreenY);
+                ctx.lineTo(lookAtScreenX, lookAtScreenY);
+                ctx.stroke();
+
+                // Desenhar ícone da câmara (triângulo) durante animação
+                ctx.fillStyle = '#ffaa00';
+                const angle = Math.atan2(lookAtScreenY - camScreenY, lookAtScreenX - camScreenX);
+                ctx.beginPath();
+                ctx.moveTo(camScreenX + 12 * Math.cos(angle), camScreenY + 12 * Math.sin(angle));
+                ctx.lineTo(camScreenX + 12 * Math.cos(angle + 2 * Math.PI / 3), camScreenY + 12 * Math.sin(angle + 2 * Math.PI / 3));
+                ctx.lineTo(camScreenX + 12 * Math.cos(angle + 4 * Math.PI / 3), camScreenY + 12 * Math.sin(angle + 4 * Math.PI / 3));
+                ctx.closePath();
+                ctx.fill();
+                
+                // Desenhar ícone do alvo (círculo) durante animação
+                ctx.fillStyle = '#00ffaa';
+                ctx.beginPath();
+                ctx.arc(lookAtScreenX, lookAtScreenY, 8, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                // Atualizar a área de saída com dados em tempo real
+                const currentTime = (animationProgress * parseFloat(segmentTimeInput.value) * (cameraPoints.length - 1)).toFixed(2);
+                outputArea.value = `ANIMAÇÃO EM EXECUÇÃO:\n` +
+                                  `Tempo: ${currentTime}s\n` +
+                                  `Distância: ${dist3D}\n` +
+                                  `Pos. Câmera: X: ${camPos.x.toFixed(2)}, Y: ${cameraHeight.toFixed(2)}, Z: ${camPos.y.toFixed(2)}\n` +
+                                  `Pos. Alvo: X: ${lookAtPos.x.toFixed(2)}, Y: ${lookAtHeight.toFixed(2)}, Z: ${lookAtPos.y.toFixed(2)}`;
+
+                animationProgress += (1 / 60) / (parseFloat(segmentTimeInput.value) * (cameraPoints.length - 1));
+                if (animationProgress > 1) {
+                    animationProgress = 0;
+                }
+            }
+
+            // Redimensionar canvas quando a janela muda
+            window.addEventListener('resize', setupCanvas);
+
+            // Inicializar
+            setupCanvas();
+            resetApp();
+            
+            // Iniciar loop de animação
+            animate();
+        }
+
+        // ================================================
+        // SISTEMA DE POSICIONAMENTO DE CÂMERA 2
+        // ================================================
+
+        // Estado da segunda câmera
+        const cameraState2 = {
+            target: { x: 50, y: 50 },
+            points: [],
+            selectedPosition: null,
+            isDragging: false,
+            dragStartPos: null,
+            currentEditingPosition: null
+        };
+
+        function initCameraPositioning2() {
+            const canvas = document.getElementById('camera-positioning-grid-2');
+            if (!canvas) return;
+
+            setupCanvas2();
+            bindEvents2();
+            renderGrid2();
+            renderTarget2();
+            updatePromptPreview2();
+        }
+
+        function setupCanvas2() {
+            const canvas = document.getElementById('camera-positioning-grid-2');
+            const ctx = canvas.getContext('2d');
+            
+            const devicePixelRatio = window.devicePixelRatio || 1;
+            canvas.width = 800 * devicePixelRatio;
+            canvas.height = 800 * devicePixelRatio;
+            ctx.scale(devicePixelRatio, devicePixelRatio);
+            
+            canvas.style.width = '800px';
+            canvas.style.height = '800px';
+        }
+
+        function bindEvents2() {
+            const canvas = document.getElementById('camera-positioning-grid-2');
+            const modal = document.getElementById('position-modal-2');
+            const modalClose = document.getElementById('modal-close-2');
+            const modalCancel = document.getElementById('modal-cancel-2');
+            const modalSave = document.getElementById('modal-save-2');
+            const clearAllBtn = document.getElementById('clear-all-btn-2');
+            const exportBtn = document.getElementById('export-prompt-btn-2');
+
+            canvas.addEventListener('click', handleCanvasClick2);
+            canvas.addEventListener('mousedown', handleMouseDown2);
+            canvas.addEventListener('mousemove', handleMouseMove2);
+            canvas.addEventListener('mouseup', handleMouseUp2);
+            canvas.addEventListener('mouseleave', handleMouseUp2);
+
+            modalClose.addEventListener('click', closeModal2);
+            modalCancel.addEventListener('click', closeModal2);
+            modalSave.addEventListener('click', savePosition2);
+            
+            clearAllBtn.addEventListener('click', clearAllPositions2);
+            if (exportBtn) {
+                exportBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    exportPrompt2();
+                });
+            }
+
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModal2();
+                }
+            });
+        }
+
+        function renderGrid2() {
+            const canvas = document.getElementById('camera-positioning-grid-2');
+            const ctx = canvas.getContext('2d');
+            
+            ctx.clearRect(0, 0, 800, 800);
+            
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.lineWidth = 1;
+            
+            for (let x = 0; x <= 800; x += 80) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, 800);
+                ctx.stroke();
+            }
+            
+            for (let y = 0; y <= 800; y += 80) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(800, y);
+                ctx.stroke();
+            }
+            
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.lineWidth = 2;
+            
+            for (let x = 0; x <= 800; x += 320) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, 800);
+                ctx.stroke();
+            }
+            
+            for (let y = 0; y <= 800; y += 320) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(800, y);
+                ctx.stroke();
+            }
+        }
+
+        function renderTarget2() {
+            const targetIcon = document.getElementById('target-icon-2');
+            if (targetIcon) {
+                targetIcon.style.display = 'block';
+            }
+        }
+
+        function renderPositions2() {
+            const existingMarkers = document.querySelectorAll('.camera-marker-2');
+            existingMarkers.forEach(marker => marker.remove());
+            
+            cameraState2.points.forEach((point, index) => {
+                createMarker2(point, index + 1);
+            });
+            
+            drawConnectorLines2();
+            updatePositionsList2();
+            updatePromptPreview2();
+        }
+
+        function createMarker2(point, number) {
+            const container = document.querySelector('#tab-camera2 .grid-container');
+            const marker = document.createElement('div');
+            marker.className = 'camera-marker camera-marker-2';
+            marker.textContent = number;
+            marker.style.left = (point.x / 100 * 800) + 'px';
+            marker.style.top = (point.y / 100 * 800) + 'px';
+            marker.dataset.index = number - 1;
+            
+            if (cameraState2.selectedPosition === number - 1) {
+                marker.classList.add('selected');
+            }
+            
+            marker.addEventListener('click', function(e) {
+                e.stopPropagation();
+                selectPosition2(number - 1);
+            });
+            
+            container.appendChild(marker);
+        }
+
+        function drawConnectorLines2() {
+            const canvas = document.getElementById('camera-positioning-grid-2');
+            const ctx = canvas.getContext('2d');
+            
+            if (cameraState2.points.length < 2) return;
+            
+            ctx.strokeStyle = 'rgba(59, 130, 246, 0.6)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            
+            ctx.beginPath();
+            cameraState2.points.forEach((point, index) => {
+                const x = point.x / 100 * 800;
+                const y = point.y / 100 * 800;
+                
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        function handleCanvasClick2(e) {
+            if (cameraState2.isDragging) return;
+            
+            const rect = e.target.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            
+            if (cameraState2.points.length > 0) {
+                const lastPoint = cameraState2.points[cameraState2.points.length - 1];
+                if (lastPoint.tempo_s >= 8) {
+                    showExportError2('Não é possível criar mais posições. O tempo máximo de 8s foi atingido.');
+                    return;
+                }
+            }
+            
+            createNewPosition2(x, y);
+        }
+
+        function createNewPosition2(x, y) {
+            const position = {
+                idx: cameraState2.points.length + 1,
+                x: parseFloat(x.toFixed(2)),
+                y: parseFloat(y.toFixed(2)),
+                distancia_m: null,
+                altura_m: null,
+                tempo_s: cameraState2.points.length === 0 ? 0 : null,
+                orientacao: cameraState2.points.length === 0 ? null : undefined
+            };
+            
+            cameraState2.currentEditingPosition = position;
+            openModal2(position);
+        }
+
+        function openModal2(position) {
+            const modal = document.getElementById('position-modal-2');
+            const modalTitle = document.getElementById('modal-title-2');
+            const orientationGroup = document.getElementById('orientation-group-2');
+            const timeInput = document.getElementById('time-2');
+            const distanceInput = document.getElementById('distance-2');
+            const heightInput = document.getElementById('height-2');
+            const orientationSelect = document.getElementById('orientation-2');
+            
+            modalTitle.textContent = `Configurar Posição ${position.idx}`;
+            
+            if (position.idx === 1) {
+                orientationGroup.style.display = 'block';
+                orientationSelect.required = true;
+                orientationSelect.value = position.orientacao || '';
+            } else {
+                orientationGroup.style.display = 'none';
+                orientationSelect.required = false;
+            }
+            
+            if (position.idx === 1) {
+                timeInput.value = 0;
+                timeInput.readOnly = true;
+            } else {
+                timeInput.readOnly = false;
+                timeInput.value = position.tempo_s || '';
+                const lastTime = cameraState2.points[cameraState2.points.length - 1]?.tempo_s || 0;
+                timeInput.min = lastTime + 0.1;
+            }
+            
+            distanceInput.value = position.distancia_m || '';
+            heightInput.value = position.altura_m || '';
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeModal2() {
+            const modal = document.getElementById('position-modal-2');
+            modal.style.display = 'none';
+            cameraState2.currentEditingPosition = null;
+            
+            const errorMessages = document.querySelectorAll('.error-message');
+            errorMessages.forEach(msg => msg.remove());
+        }
+
+        function savePosition2() {
+            const position = cameraState2.currentEditingPosition;
+            if (!position) return;
+            
+            const timeInput = document.getElementById('time-2');
+            const distanceInput = document.getElementById('distance-2');
+            const heightInput = document.getElementById('height-2');
+            const orientationSelect = document.getElementById('orientation-2');
+            
+            const distance = parseFloat(distanceInput.value);
+            const height = parseFloat(heightInput.value);
+            
+            if (isNaN(distance) || distance < 0) {
+                showError2('Distância deve ser um número maior ou igual a 0.');
+                return;
+            }
+            
+            if (isNaN(height) || height < 0) {
+                showError2('Altura deve ser um número maior ou igual a 0.');
+                return;
+            }
+            
+            if (position.idx === 1) {
+                if (!orientationSelect.value) {
+                    showError2('Orientação inicial é obrigatória.');
+                    return;
+                }
+                position.orientacao = orientationSelect.value;
+                position.tempo_s = 0;
+            } else {
+                const time = parseFloat(timeInput.value);
+                const lastTime = cameraState2.points[cameraState2.points.length - 1]?.tempo_s || 0;
+                
+                if (isNaN(time) || time <= lastTime || time > 8) {
+                    showError2(`Tempo deve ser maior que ${lastTime}s e no máximo 8s.`);
+                    return;
+                }
+                
+                position.tempo_s = time;
+            }
+            
+            position.distancia_m = distance;
+            position.altura_m = height;
+            
+            const existingIndex = cameraState2.points.findIndex(p => p.idx === position.idx);
+            if (existingIndex >= 0) {
+                cameraState2.points[existingIndex] = position;
+            } else {
+                cameraState2.points.push(position);
+            }
+            
+            renderGrid2();
+            renderPositions2();
+            closeModal2();
+        }
+
+        function selectPosition2(index) {
+            cameraState2.selectedPosition = index;
+            const position = cameraState2.points[index];
+            if (position) {
+                cameraState2.currentEditingPosition = { ...position };
+                openModal2(cameraState2.currentEditingPosition);
+            }
+            renderPositions2();
+        }
+
+        function updatePositionsList2() {
+            const listContainer = document.getElementById('positions-list-2');
+            
+            if (cameraState2.points.length === 0) {
+                listContainer.innerHTML = '<div class="empty-positions"><p>Clique no grid para criar posições</p></div>';
+                return;
+            }
+            
+            let html = '';
+            cameraState2.points.forEach((point, index) => {
+                const isSelected = cameraState2.selectedPosition === index;
+                html += `
+                    <div class="position-item ${isSelected ? 'selected' : ''}" onclick="selectPosition2(${index})">
+                        <div class="position-header">
+                            <div class="position-number">${point.idx}</div>
+                            <div class="position-time">${point.tempo_s}s</div>
+                        </div>
+                        <div class="position-details">
+                            Distância: ${point.distancia_m}m | Altura: ${point.altura_m}m
+                            ${point.orientacao ? `<br>Orientação: ${point.orientacao}` : ''}
+                        </div>
+                        <div class="position-coords">
+                            x: ${point.x}, y: ${point.y}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            listContainer.innerHTML = html;
+        }
+
+        function clearAllPositions2() {
+            if (cameraState2.points.length === 0) return;
+            
+            if (confirm('Deseja realmente limpar todas as posições?')) {
+                cameraState2.points = [];
+                cameraState2.selectedPosition = null;
+                renderGrid2();
+                renderPositions2();
+            }
+        }
+
+        function updatePromptPreview2() {
+            const previewContainer = document.getElementById('prompt-preview-2');
+            
+            if (cameraState2.points.length === 0) {
+                previewContainer.innerHTML = '<div class="empty-prompt"><p>Crie posições no grid para gerar o prompt</p></div>';
+                return;
+            }
+            
+            const prompt = generatePromptText2();
+            previewContainer.textContent = prompt;
+            previewContainer.scrollTop = previewContainer.scrollHeight;
+        }
+
+        function generatePromptText2() {
+            let prompt = 'CAMERA_PATH_2 (GRID FIXO)\n';
+            prompt += `Target: x=${cameraState2.target.x}, y=${cameraState2.target.y}  // busto humano central fixo\n`;
+            
+            if (cameraState2.points.length > 0) {
+                const firstPoint = cameraState2.points[0];
+                prompt += 'InitialPosition:\n';
+                prompt += `  index=${firstPoint.idx}, t=${firstPoint.tempo_s}s, x=${firstPoint.x}, y=${firstPoint.y}, distancia_m=${firstPoint.distancia_m}, altura_m=${firstPoint.altura_m}, orientacao=${firstPoint.orientacao}\n`;
+            }
+            
+            if (cameraState2.points.length > 1) {
+                prompt += 'Positions:\n';
+                cameraState2.points.slice(1).forEach(point => {
+                    prompt += `  ${point.idx}: t=${point.tempo_s}s, x=${point.x}, y=${point.y}, distancia_m=${point.distancia_m}, altura_m=${point.altura_m}\n`;
+                });
+            }
+            
+            prompt += `Constraints: 0 = t1 < t2 < ... ≤ 8s; grid=fixo 800x800; unidades x,y em 0–100\n`;
+            
+            return prompt;
+        }
+
+        function exportPrompt2() {
+            if (cameraState2.points.length === 0) {
+                showExportError2('Não há posições para adicionar ao prompt.');
+                return;
+            }
+            
+            const prompt = generatePromptText2();
+            const promptTextarea = document.querySelector('textarea[name="enhanced_prompt"], textarea[name="original_prompt"], #enhanced_prompt, #original_prompt');
+            
+            if (promptTextarea) {
+                const currentContent = promptTextarea.value;
+                const newContent = currentContent ? currentContent + '\n\n' + prompt : prompt;
+                promptTextarea.value = newContent;
+                
+                promptTextarea.focus();
+                promptTextarea.scrollTop = promptTextarea.scrollHeight;
+                
+                showSuccess2('Prompt da câmera 2 adicionado com sucesso!');
+            } else {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(prompt).then(() => {
+                        showSuccess2('Textarea principal não encontrado. Prompt copiado para a área de transferência!');
+                    }).catch(() => {
+                        copyToClipboardFallback2(prompt);
+                    });
+                } else {
+                    copyToClipboardFallback2(prompt);
+                }
+            }
+        }
+
+        function copyToClipboardFallback2(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.top = '-9999px';
+            textArea.style.left = '-9999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showSuccess2('Prompt copiado com sucesso via fallback');
+                } else {
+                    showExportError2('Falha ao copiar prompt. Tente novamente.');
+                }
+            } catch (err) {
+                showExportError2('Erro ao copiar prompt: ' + err.message);
+            } finally {
+                document.body.removeChild(textArea);
+            }
+        }
+
+        function handleMouseDown2(e) {
+            const allowDrag = document.getElementById('allow-drag-toggle-2').checked;
+            if (!allowDrag) return;
+            
+            const marker = e.target.closest('.camera-marker-2');
+            if (!marker) return;
+            
+            e.preventDefault();
+            cameraState2.isDragging = true;
+            cameraState2.dragStartPos = {
+                x: e.clientX,
+                y: e.clientY,
+                markerIndex: parseInt(marker.dataset.index)
+            };
+            
+            marker.classList.add('dragging');
+        }
+
+        function handleMouseMove2(e) {
+            if (!cameraState2.isDragging) return;
+            
+            const rect = e.target.getBoundingClientRect();
+            const x = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
+            const y = Math.max(0, Math.min(100, ((e.clientY - rect.top) / rect.height) * 100));
+            
+            const markerIndex = cameraState2.dragStartPos.markerIndex;
+            const marker = document.querySelector(`.camera-marker-2[data-index="${markerIndex}"]`);
+            
+            if (marker) {
+                marker.style.left = (x / 100 * 800) + 'px';
+                marker.style.top = (y / 100 * 800) + 'px';
+            }
+        }
+
+        function handleMouseUp2(e) {
+            if (!cameraState2.isDragging) return;
+            
+            const rect = e.target.getBoundingClientRect();
+            const x = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
+            const y = Math.max(0, Math.min(100, ((e.clientY - rect.top) / rect.height) * 100));
+            
+            const markerIndex = cameraState2.dragStartPos.markerIndex;
+            const point = cameraState2.points[markerIndex];
+            
+            if (point) {
+                point.x = parseFloat(x.toFixed(2));
+                point.y = parseFloat(y.toFixed(2));
+            }
+            
+            cameraState2.isDragging = false;
+            cameraState2.dragStartPos = null;
+            
+            const marker = document.querySelector(`.camera-marker-2[data-index="${markerIndex}"]`);
+            if (marker) {
+                marker.classList.remove('dragging');
+            }
+            
+            renderGrid2();
+            renderPositions2();
+        }
+
+        function showError2(message) {
+            const existingMessages = document.querySelectorAll('.error-message, .success-message');
+            existingMessages.forEach(msg => msg.remove());
+            
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            
+            const modalBody = document.querySelector('#position-modal-2 .modal-body');
+            modalBody.insertBefore(errorDiv, modalBody.firstChild);
+        }
+
+        function showSuccess2(message) {
+            const existingMessages = document.querySelectorAll('.error-message, .success-message');
+            existingMessages.forEach(msg => msg.remove());
+            
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.textContent = message;
+            
+            const container = document.querySelector('#tab-camera2 .camera-instructions');
+            container.appendChild(successDiv);
+            
+            setTimeout(() => {
+                successDiv.remove();
+            }, 3000);
+        }
+
+        function showExportError2(message) {
+            const existingMessages = document.querySelectorAll('.error-message, .success-message');
+            existingMessages.forEach(msg => msg.remove());
+            
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            
+            const container = document.querySelector('#tab-camera2 .camera-instructions');
+            container.appendChild(errorDiv);
+            
+            setTimeout(() => {
+                errorDiv.remove();
+            }, 5000);
+        }
+
+        // ================================================
+        // SISTEMA VO3 - CÂMERA 2
+        // ================================================
+
+        // Estado global do sistema VO3
+        const vo3State = {
+            currentMode: 'simple', // 'simple' | 'advanced'
+            currentStep: 1, // Para modo simples: 1, 2, 3
+            
+            // Dados do Modo Simples
+            simple: {
+                framing: '', // 'general', 'medium', 'bust', 'close'
+                orientation: '', // 'FRONT', 'BACK', 'RIGHT', 'LEFT'
+                movements: [], // Array de objetos: {type, intensity, seconds}
+                totalDuration: 8 // segundos
+            },
+            
+            // Dados do Modo Avançado
+            advanced: {
+                points: [], // Array de pontos: {id, t, x, y, height_m, distance_m, orientation?}
+                selectedPointId: null,
+                snapToGrid: true
+            },
+            
+            // Cache dos resultados
+            lastGenerated: {
+                naturalText: '',
+                vo3Json: ''
+            }
+        };
+
+        // Inicialização do sistema VO3
+        function initVO3System() {
+            console.log('🎬 Inicializando Sistema VO3');
+            
+            initVO3Tabs();
+            initVO3Stepper();
+            initVO3SimpleMode();
+            initVO3AdvancedMode();
+            initVO3OutputPanel();
+            initVO3Modals();
+            
+            // Verificar se a aba câmera2 existe
+            const camera2Tab = document.getElementById('tab-camera2');
+            if (camera2Tab) {
+                console.log('✅ Aba Câmera 2 encontrada - Sistema VO3 carregado');
+            } else {
+                console.warn('⚠️ Aba Câmera 2 não encontrada');
+            }
+        }
+
+        // Sistema de abas VO3 (Simples/Avançado)
+        function initVO3Tabs() {
+            const tabBtns = document.querySelectorAll('.vo3-tab-btn');
+            const modeContents = document.querySelectorAll('.vo3-mode-content');
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetMode = btn.getAttribute('data-vo3-tab');
+                    switchVO3Mode(targetMode);
+                });
+            });
+        }
+
+        function switchVO3Mode(mode) {
+            vo3State.currentMode = mode;
+            
+            // Atualizar botões das abas
+            document.querySelectorAll('.vo3-tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-vo3-tab') === mode) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Atualizar conteúdo
+            document.querySelectorAll('.vo3-mode-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            const targetContent = document.getElementById(`vo3-${mode}-mode`);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+            
+            updateVO3GenerateButton();
+        }
+
+        // Sistema de stepper para modo simples
+        function initVO3Stepper() {
+            const steps = document.querySelectorAll('.step[data-step]');
+            
+            steps.forEach(step => {
+                step.addEventListener('click', () => {
+                    const stepNumber = parseInt(step.getAttribute('data-step'));
+                    if (canAccessStep(stepNumber)) {
+                        switchToStep(stepNumber);
+                    }
+                });
+            });
+        }
+
+        function canAccessStep(stepNumber) {
+            // Passo 1 sempre acessível
+            if (stepNumber === 1) return true;
+            
+            // Passo 2 requer enquadramento e orientação
+            if (stepNumber === 2) {
+                return vo3State.simple.framing && vo3State.simple.orientation;
+            }
+            
+            // Passo 3 requer pelo menos um movimento
+            if (stepNumber === 3) {
+                return vo3State.simple.movements.length > 0;
+            }
+            
+            return false;
+        }
+
+        function switchToStep(stepNumber) {
+            vo3State.currentStep = stepNumber;
+            
+            // Atualizar stepper visual
+            document.querySelectorAll('.step').forEach(step => {
+                const num = parseInt(step.getAttribute('data-step'));
+                step.classList.toggle('active', num === stepNumber);
+            });
+            
+            // Atualizar conteúdo dos passos
+            document.querySelectorAll('.vo3-step-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            const targetContent = document.querySelector(`.vo3-step-content[data-step="${stepNumber}"]`);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+        }
+
+        // Modo Simples - Funcionalidades
+        function initVO3SimpleMode() {
+            initFramingSelection();
+            initOrientationSelection();
+            initMovementLibrary();
+            initDurationSlider();
+        }
+
+        function initFramingSelection() {
+            const framingCards = document.querySelectorAll('.framing-card');
+            
+            framingCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const framing = card.getAttribute('data-framing');
+                    selectFraming(framing);
+                });
+            });
+        }
+
+        function selectFraming(framing) {
+            vo3State.simple.framing = framing;
+            
+            // Atualizar visual
+            document.querySelectorAll('.framing-card').forEach(card => {
+                card.classList.remove('selected');
+                if (card.getAttribute('data-framing') === framing) {
+                    card.classList.add('selected');
+                }
+            });
+            
+            updateStepNavigation();
+            updateSequencePreview();
+        }
+
+        function initOrientationSelection() {
+            const orientationCards = document.querySelectorAll('.orientation-card');
+            
+            orientationCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const orientation = card.getAttribute('data-orientation');
+                    selectOrientation(orientation);
+                });
+            });
+        }
+
+        function selectOrientation(orientation) {
+            vo3State.simple.orientation = orientation;
+            
+            // Atualizar visual
+            document.querySelectorAll('.orientation-card').forEach(card => {
+                card.classList.remove('selected');
+                if (card.getAttribute('data-orientation') === orientation) {
+                    card.classList.add('selected');
+                }
+            });
+            
+            updateStepNavigation();
+            updateSequencePreview();
+        }
+
+        function initMovementLibrary() {
+            const movementCards = document.querySelectorAll('.movement-card');
+            
+            movementCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const movement = card.getAttribute('data-movement');
+                    addMovement(movement);
+                });
+            });
+        }
+
+        function addMovement(movementType) {
+            // Abrir modal para configurar tempo e intensidade
+            openMovementModal(movementType);
+        }
+
+        function openMovementModal(movementType) {
+            const movementNames = {
+                'dolly_in': 'Dolly In',
+                'dolly_out': 'Dolly Out',
+                'truck_left': 'Truck Left',
+                'truck_right': 'Truck Right',
+                'pedestal_up': 'Pedestal Up',
+                'pedestal_down': 'Pedestal Down',
+                'pan': 'Pan',
+                'tilt': 'Tilt',
+                'arc_quarter': 'Arc ¼',
+                'arc_half': 'Arc ½',
+                'orbit_quarter': 'Orbit ¼',
+                'orbit_half': 'Orbit ½'
+            };
+
+            const movementName = movementNames[movementType] || movementType;
+            
+            // Criar modal dinamicamente
+            const modal = document.createElement('div');
+            modal.className = 'position-modal';
+            modal.style.display = 'block';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Configurar ${movementName}</h3>
+                        <button class="modal-close" onclick="closeMovementModal()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="movement-duration">Duração (segundos)*</label>
+                            <input type="number" id="movement-duration" min="0.5" max="4" step="0.1" value="2" required>
+                            <small>Entre 0.5s e 4s</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="movement-intensity">Intensidade*</label>
+                            <select id="movement-intensity" required>
+                                <option value="light">Leve</option>
+                                <option value="medium" selected>Média</option>
+                                <option value="strong">Forte</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn-secondary" onclick="closeMovementModal()">Cancelar</button>
+                        <button type="button" class="btn-primary" onclick="confirmAddMovement('${movementType}')">Adicionar</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Focar no campo de duração
+            setTimeout(() => {
+                document.getElementById('movement-duration').focus();
+            }, 100);
+        }
+
+        function closeMovementModal() {
+            const modal = document.querySelector('.position-modal:last-child');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        function confirmAddMovement(movementType) {
+            const durationInput = document.getElementById('movement-duration');
+            const intensitySelect = document.getElementById('movement-intensity');
+            
+            const duration = parseFloat(durationInput.value);
+            const intensity = intensitySelect.value;
+            
+            // Validações
+            if (isNaN(duration) || duration < 0.5 || duration > 4) {
+                showVO3Error('Duração deve estar entre 0.5 e 4 segundos.');
+                return;
+            }
+            
+            // Verificar se não excede o tempo total
+            const currentTotal = vo3State.simple.movements.reduce((sum, mov) => sum + mov.seconds, 0);
+            if (currentTotal + duration > vo3State.simple.totalDuration) {
+                showVO3Error(`Tempo total seria ${(currentTotal + duration).toFixed(1)}s, excedendo o limite de ${vo3State.simple.totalDuration}s. Ajuste a duração total primeiro.`);
+                return;
+            }
+            
+            const movement = {
+                type: movementType,
+                intensity: intensity,
+                seconds: duration
+            };
+            
+            vo3State.simple.movements.push(movement);
+            updateSelectedMovements();
+            updateStepNavigation();
+            updateSequencePreview();
+            updateVO3GenerateButton();
+            
+            closeMovementModal();
+            showVO3Success(`Movimento adicionado: ${duration}s`);
+        }
+
+        function updateSelectedMovements() {
+            const container = document.getElementById('selected-movements');
+            if (!container) return;
+            
+            if (vo3State.simple.movements.length === 0) {
+                container.innerHTML = '<div class="empty-movements"><p>Selecione movimentos acima para compor a sequência</p></div>';
+                return;
+            }
+            
+            const movementNames = {
+                'dolly_in': 'Dolly In',
+                'dolly_out': 'Dolly Out',
+                'truck_left': 'Truck Left',
+                'truck_right': 'Truck Right',
+                'pedestal_up': 'Pedestal Up',
+                'pedestal_down': 'Pedestal Down',
+                'pan': 'Pan',
+                'tilt': 'Tilt',
+                'arc_quarter': 'Arc ¼',
+                'arc_half': 'Arc ½',
+                'orbit_quarter': 'Orbit ¼',
+                'orbit_half': 'Orbit ½'
+            };
+
+            const intensityNames = {
+                'light': 'Leve',
+                'medium': 'Médio',
+                'strong': 'Forte'
+            };
+
+            // Calcular tempo total usado
+            const totalUsed = vo3State.simple.movements.reduce((sum, mov) => sum + mov.seconds, 0);
+            
+            const html = `
+                <div class="movement-sequence">
+                    <div style="margin-bottom: 1rem; padding: 0.5rem; background: rgba(59, 130, 246, 0.1); border-radius: 4px; font-size: 12px;">
+                        <strong>Tempo usado: ${totalUsed.toFixed(1)}s / ${vo3State.simple.totalDuration}s</strong>
+                        ${totalUsed > vo3State.simple.totalDuration ? ' <span style="color: #ef4444;">⚠️ Excedendo limite!</span>' : ''}
+                    </div>
+                    ${vo3State.simple.movements.map((mov, index) => `
+                        <div class="movement-item">
+                            <div style="flex: 1;">
+                                <strong>${movementNames[mov.type] || mov.type}</strong>
+                                <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
+                                    ${mov.seconds}s • ${intensityNames[mov.intensity] || mov.intensity}
+                                </div>
+                            </div>
+                            <button class="remove-btn" onclick="removeMovement(${index})" title="Remover movimento">×</button>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        function removeMovement(index) {
+            vo3State.simple.movements.splice(index, 1);
+            updateSelectedMovements();
+            updateStepNavigation();
+            updateSequencePreview();
+        }
+
+        function initDurationSlider() {
+            const slider = document.getElementById('duration-slider');
+            const valueDisplay = document.getElementById('duration-value');
+            
+            if (slider && valueDisplay) {
+                slider.addEventListener('input', (e) => {
+                    const value = parseFloat(e.target.value);
+                    vo3State.simple.totalDuration = value;
+                    valueDisplay.textContent = value;
+                    updateSequencePreview();
+                });
+            }
+        }
+
+        function updateStepNavigation() {
+            // Atualizar qual step pode ser acessado
+            const steps = document.querySelectorAll('.step');
+            
+            steps.forEach(step => {
+                const stepNumber = parseInt(step.getAttribute('data-step'));
+                const canAccess = canAccessStep(stepNumber);
+                step.style.opacity = canAccess ? '1' : '0.5';
+                step.style.cursor = canAccess ? 'pointer' : 'not-allowed';
+            });
+        }
+
+        function updateSequencePreview() {
+            const preview = document.getElementById('sequence-preview');
+            if (!preview) return;
+            
+            if (!vo3State.simple.framing || !vo3State.simple.orientation || vo3State.simple.movements.length === 0) {
+                preview.textContent = 'Configure enquadramento e movimentos para ver a prévia';
+                return;
+            }
+            
+            const framingNames = {
+                'general': 'Plano Geral',
+                'medium': 'Médio', 
+                'bust': 'Busto',
+                'close': 'Close'
+            };
+            
+            const orientationNames = {
+                'FRONT': 'Frente',
+                'BACK': 'Costas',
+                'RIGHT': 'Direita',
+                'LEFT': 'Esquerda'
+            };
+            
+            const movementNames = {
+                'dolly_in': 'Dolly In',
+                'dolly_out': 'Dolly Out',
+                'truck_left': 'Truck Left',
+                'truck_right': 'Truck Right',
+                'pedestal_up': 'Pedestal Up',
+                'pedestal_down': 'Pedestal Down',
+                'pan': 'Pan',
+                'tilt': 'Tilt',
+                'arc_quarter': 'Arc ¼',
+                'arc_half': 'Arc ½',
+                'orbit_quarter': 'Orbit ¼',
+                'orbit_half': 'Orbit ½'
+            };
+
+            const intensityNames = {
+                'light': 'leve',
+                'medium': 'médio',
+                'strong': 'forte'
+            };
+
+            // Calcular tempo total real
+            const totalRealTime = vo3State.simple.movements.reduce((sum, mov) => sum + mov.seconds, 0);
+            
+            let previewText = `CENA: estúdio neutro; sujeito estático.
+Enquadramento inicial: ${framingNames[vo3State.simple.framing]}; Orientação: ${orientationNames[vo3State.simple.orientation]}.
+
+MOVIMENTOS (dur=${totalRealTime.toFixed(1)}s):`;
+            
+            let currentTime = 0;
+            
+            vo3State.simple.movements.forEach((mov, index) => {
+                const startTime = currentTime;
+                currentTime += mov.seconds;
+                previewText += `\n${index + 1}) ${startTime.toFixed(1)}–${currentTime.toFixed(1)}s: ${movementNames[mov.type]} ${intensityNames[mov.intensity]} (${mov.seconds}s).`;
+            });
+
+            // Adicionar aviso se houver discrepância
+            if (Math.abs(totalRealTime - vo3State.simple.totalDuration) > 0.1) {
+                previewText += `\n\n⚠️ AVISO: Tempo real dos movimentos (${totalRealTime.toFixed(1)}s) difere da duração configurada (${vo3State.simple.totalDuration}s).`;
+            }
+            
+            preview.textContent = previewText;
+        }
+
+        // Modo Avançado - Funcionalidades
+        function initVO3AdvancedMode() {
+            initVO3Canvas();
+            initVO3PointsList();
+            initVO3AdvancedControls();
+        }
+
+        function initVO3Canvas() {
+            const canvas = document.getElementById('vo3-grid-canvas');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            
+            // Desenhar grid
+            drawVO3Grid(ctx, canvas.width, canvas.height);
+            
+            // Event listeners
+            canvas.addEventListener('click', handleVO3CanvasClick);
+        }
+
+        function drawVO3Grid(ctx, width, height) {
+            ctx.clearRect(0, 0, width, height);
+            
+            // Grid lines
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.lineWidth = 1;
+            
+            const gridSize = 40; // 20x20 grid
+            
+            for (let x = 0; x <= width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, height);
+                ctx.stroke();
+            }
+            
+            for (let y = 0; y <= height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(width, y);
+                ctx.stroke();
+            }
+            
+            // Desenhar pontos existentes
+            drawVO3Points(ctx, width, height);
+        }
+
+        function drawVO3Points(ctx, width, height) {
+            if (vo3State.advanced.points.length === 0) return;
+            
+            // Desenhar linhas conectoras
+            if (vo3State.advanced.points.length > 1) {
+                ctx.strokeStyle = 'rgba(59, 130, 246, 0.6)';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 5]);
+                
+                ctx.beginPath();
+                for (let i = 0; i < vo3State.advanced.points.length; i++) {
+                    const point = vo3State.advanced.points[i];
+                    const canvasX = (point.x / 100) * width;
+                    const canvasY = (point.y / 100) * height;
+                    
+                    if (i === 0) {
+                        ctx.moveTo(canvasX, canvasY);
+                    } else {
+                        ctx.lineTo(canvasX, canvasY);
+                    }
+                }
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+            
+            // Desenhar pontos
+            vo3State.advanced.points.forEach((point, index) => {
+                const canvasX = (point.x / 100) * width;
+                const canvasY = (point.y / 100) * height;
+                
+                // Círculo do ponto
+                ctx.fillStyle = point.id === vo3State.advanced.selectedPointId ? '#3b82f6' : '#1e40af';
+                ctx.beginPath();
+                ctx.arc(canvasX, canvasY, 15, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                // Borda
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                // Número
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 12px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText((index + 1).toString(), canvasX, canvasY);
+            });
+        }
+
+        function handleVO3CanvasClick(e) {
+            const canvas = e.target;
+            const rect = canvas.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            
+            // Verificar se clicou em um ponto existente
+            const clickedPoint = findPointAtPosition(x, y);
+            if (clickedPoint) {
+                selectVO3Point(clickedPoint.id);
+                return;
+            }
+            
+            // Verificar limites de tempo
+            if (vo3State.advanced.points.length > 0) {
+                const lastPoint = vo3State.advanced.points[vo3State.advanced.points.length - 1];
+                if (lastPoint.t >= 8) {
+                    showVO3Error('Não é possível criar mais pontos. O tempo máximo de 8s foi atingido.');
+                    return;
+                }
+            }
+            
+            // Criar novo ponto
+            createVO3Point(x, y);
+        }
+
+        function findPointAtPosition(x, y) {
+            const threshold = 5; // 5% de tolerância
+            return vo3State.advanced.points.find(point => {
+                const distance = Math.sqrt(Math.pow(point.x - x, 2) + Math.pow(point.y - y, 2));
+                return distance <= threshold;
+            });
+        }
+
+        function createVO3Point(x, y) {
+            const pointId = Date.now();
+            const isFirstPoint = vo3State.advanced.points.length === 0;
+            
+            const point = {
+                id: pointId,
+                t: isFirstPoint ? 0 : null, // Será definido no modal
+                x: parseFloat(x.toFixed(2)),
+                y: parseFloat(y.toFixed(2)),
+                height_m: null,
+                distance_m: null,
+                orientation: isFirstPoint ? null : undefined // Apenas primeiro ponto tem orientação
+            };
+            
+            openVO3PointModal(point);
+        }
+
+        function selectVO3Point(pointId) {
+            vo3State.advanced.selectedPointId = pointId;
+            updateVO3PointsList();
+            redrawVO3Canvas();
+            
+            // Abrir modal para edição
+            const point = vo3State.advanced.points.find(p => p.id === pointId);
+            if (point) {
+                openVO3PointModal(point);
+            }
+        }
+
+        function openVO3PointModal(point) {
+            const modal = document.getElementById('vo3-point-modal');
+            const titleEl = document.getElementById('vo3-point-modal-title');
+            const orientationGroup = document.getElementById('vo3-orientation-group');
+            const orientationSelect = document.getElementById('vo3-orientation');
+            const timeInput = document.getElementById('vo3-time');
+            const distanceInput = document.getElementById('vo3-distance');
+            const heightInput = document.getElementById('vo3-height');
+            
+            if (!modal) return;
+            
+            // Configurar título
+            const isNew = !vo3State.advanced.points.find(p => p.id === point.id);
+            const pointIndex = isNew ? vo3State.advanced.points.length + 1 : vo3State.advanced.points.findIndex(p => p.id === point.id) + 1;
+            titleEl.textContent = `Configurar Ponto ${pointIndex}`;
+            
+            // Configurar campos
+            const isFirstPoint = pointIndex === 1;
+            
+            // Orientação (apenas primeiro ponto)
+            if (orientationGroup) {
+                orientationGroup.style.display = isFirstPoint ? 'block' : 'none';
+                if (orientationSelect && isFirstPoint) {
+                    orientationSelect.value = point.orientation || '';
+                    orientationSelect.required = true;
+                }
+            }
+            
+            // Tempo
+            if (timeInput) {
+                if (isFirstPoint) {
+                    timeInput.value = '0';
+                    timeInput.readOnly = true;
+                } else {
+                    timeInput.value = point.t || '';
+                    timeInput.readOnly = false;
+                    
+                    // Definir mínimo baseado no ponto anterior
+                    const prevPoint = vo3State.advanced.points[pointIndex - 2];
+                    if (prevPoint) {
+                        timeInput.min = (prevPoint.t + 0.1).toFixed(1);
+                    }
+                }
+            }
+            
+            // Distância e altura
+            if (distanceInput) distanceInput.value = point.distance_m || '';
+            if (heightInput) heightInput.value = point.height_m || '';
+            
+            // Armazenar ponto sendo editado
+            modal.dataset.editingPointId = point.id;
+            modal.dataset.editingPointX = point.x;
+            modal.dataset.editingPointY = point.y;
+            
+            modal.style.display = 'block';
+        }
+
+        function initVO3PointsList() {
+            // Lista será atualizada dinamicamente
+            updateVO3PointsList();
+        }
+
+        function updateVO3PointsList() {
+            const container = document.getElementById('vo3-points-list');
+            if (!container) return;
+            
+            if (vo3State.advanced.points.length === 0) {
+                container.innerHTML = '<div class="empty-points"><p>Clique no grid para criar pontos</p></div>';
+                return;
+            }
+            
+            const html = vo3State.advanced.points.map((point, index) => `
+                <div class="vo3-point-item ${point.id === vo3State.advanced.selectedPointId ? 'selected' : ''}" 
+                     onclick="selectVO3Point(${point.id})">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <strong>Ponto ${index + 1}</strong>
+                        <span>t=${point.t}s</span>
+                    </div>
+                    <div style="font-size: 12px; color: var(--text-muted);">
+                        <div>Posição: x=${point.x}, y=${point.y}</div>
+                        <div>Dist: ${point.distance_m}m, Alt: ${point.height_m}m</div>
+                        ${point.orientation ? `<div>Orientação: ${point.orientation}</div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+            
+            container.innerHTML = html;
+        }
+
+        function initVO3AdvancedControls() {
+            const snapToggle = document.getElementById('vo3-snap-toggle');
+            const clearBtn = document.getElementById('vo3-clear-points');
+            
+            if (snapToggle) {
+                snapToggle.addEventListener('change', (e) => {
+                    vo3State.advanced.snapToGrid = e.target.checked;
+                });
+            }
+            
+            if (clearBtn) {
+                clearBtn.addEventListener('click', clearVO3Points);
+            }
+        }
+
+        function clearVO3Points() {
+            if (vo3State.advanced.points.length > 0) {
+                if (confirm('Tem certeza que deseja limpar todos os pontos?')) {
+                    vo3State.advanced.points = [];
+                    vo3State.advanced.selectedPointId = null;
+                    updateVO3PointsList();
+                    redrawVO3Canvas();
+                    updateVO3GenerateButton();
+                }
+            }
+        }
+
+        function redrawVO3Canvas() {
+            const canvas = document.getElementById('vo3-grid-canvas');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                drawVO3Grid(ctx, canvas.width, canvas.height);
+            }
+        }
+
+        // Painel de saída
+        function initVO3OutputPanel() {
+            const generateBtn = document.getElementById('vo3-generate-btn');
+            const clearBtn = document.getElementById('vo3-clear-btn');
+            const copyNaturalBtn = document.getElementById('vo3-copy-natural');
+            const copyJsonBtn = document.getElementById('vo3-copy-json');
+            const addJsonBtn = document.getElementById('vo3-add-json');
+            
+            if (generateBtn) generateBtn.addEventListener('click', generateVO3Output);
+            if (clearBtn) clearBtn.addEventListener('click', clearVO3Everything);
+            if (copyNaturalBtn) copyNaturalBtn.addEventListener('click', () => copyVO3ToClipboard('natural'));
+            if (copyJsonBtn) copyJsonBtn.addEventListener('click', () => copyVO3ToClipboard('json'));
+            if (addJsonBtn) addJsonBtn.addEventListener('click', addVO3ToPrompt);
+        }
+
+        function updateVO3GenerateButton() {
+            const generateBtn = document.getElementById('vo3-generate-btn');
+            if (!generateBtn) return;
+            
+            let canGenerate = false;
+            
+            if (vo3State.currentMode === 'simple') {
+                canGenerate = vo3State.simple.framing && vo3State.simple.orientation && vo3State.simple.movements.length > 0;
+            } else if (vo3State.currentMode === 'advanced') {
+                canGenerate = vo3State.advanced.points.length > 0;
+            }
+            
+            generateBtn.disabled = !canGenerate;
+        }
+
+        function generateVO3Output() {
+            if (vo3State.currentMode === 'simple') {
+                generateSimpleVO3();
+            } else {
+                generateAdvancedVO3();
+            }
+        }
+
+        function generateSimpleVO3() {
+            // Converter modo simples para pontos
+            const points = convertSimpleToPoints();
+            
+            // Gerar saídas
+            const naturalText = generateNaturalText(points, true);
+            const vo3Json = generateVO3JSON(points);
+            
+            // Atualizar interface
+            updateVO3Outputs(naturalText, vo3Json);
+            
+            vo3State.lastGenerated = { naturalText, vo3Json };
+        }
+
+        function generateAdvancedVO3() {
+            // Validar pontos
+            if (!validateAdvancedPoints()) return;
+            
+            // Gerar saídas
+            const naturalText = generateNaturalText(vo3State.advanced.points, false);
+            const vo3Json = generateVO3JSON(vo3State.advanced.points);
+            
+            // Atualizar interface
+            updateVO3Outputs(naturalText, vo3Json);
+            
+            vo3State.lastGenerated = { naturalText, vo3Json };
+        }
+
+        function convertSimpleToPoints() {
+            // Converter presets para pontos baseado no enquadramento e movimentos configurados
+            const points = [];
+            
+            // Ponto inicial baseado no enquadramento
+            const initialDistance = getDistanceFromFraming(vo3State.simple.framing);
+            const initialPos = getPositionFromOrientation(vo3State.simple.orientation);
+            
+            points.push({
+                id: 1,
+                t: 0,
+                x: initialPos.x,
+                y: initialPos.y,
+                height_m: 1.7, // Altura padrão
+                distance_m: initialDistance,
+                orientation: vo3State.simple.orientation
+            });
+            
+            // Usar os tempos reais configurados para cada movimento
+            let currentTime = 0;
+            let currentX = initialPos.x;
+            let currentY = initialPos.y;
+            let currentDistance = initialDistance;
+            let currentHeight = 1.7;
+            let pointId = 2;
+            
+            vo3State.simple.movements.forEach((movement, index) => {
+                // Para movimentos curvos (orbit e arc), gerar múltiplos pontos
+                if (movement.type === 'orbit_quarter' || movement.type === 'orbit_half' || 
+                    movement.type === 'arc_quarter' || movement.type === 'arc_half') {
+                    const curvePoints = generateCurvePoints(movement, currentTime, currentX, currentY, currentDistance, currentHeight);
+                    
+                    curvePoints.forEach(curvePoint => {
+                        points.push({
+                            id: pointId++,
+                            t: parseFloat(curvePoint.t.toFixed(2)),
+                            x: parseFloat(curvePoint.x.toFixed(2)),
+                            y: parseFloat(curvePoint.y.toFixed(2)),
+                            height_m: parseFloat(curvePoint.height_m.toFixed(2)),
+                            distance_m: parseFloat(curvePoint.distance_m.toFixed(2))
+                        });
+                    });
+                    
+                    // Atualizar posição atual para o último ponto da curva
+                    const lastCurvePoint = curvePoints[curvePoints.length - 1];
+                    currentTime = lastCurvePoint.t;
+                    currentX = lastCurvePoint.x;
+                    currentY = lastCurvePoint.y;
+                } else {
+                    // Movimento linear normal
+                    currentTime += movement.seconds;
+                    
+                    // Aplicar transformação baseada no tipo e intensidade do movimento
+                    const delta = applyMovementDelta(movement.type, movement.seconds, movement.intensity);
+                    currentX = Math.max(0, Math.min(100, currentX + delta.x));
+                    currentY = Math.max(0, Math.min(100, currentY + delta.y));
+                    currentDistance = Math.max(0.5, currentDistance + delta.distance);
+                    currentHeight = Math.max(0.5, currentHeight + delta.height);
+                    
+                    points.push({
+                        id: pointId++,
+                        t: parseFloat(currentTime.toFixed(2)),
+                        x: parseFloat(currentX.toFixed(2)),
+                        y: parseFloat(currentY.toFixed(2)),
+                        height_m: parseFloat(currentHeight.toFixed(2)),
+                        distance_m: parseFloat(currentDistance.toFixed(2))
+                    });
+                }
+            });
+            
+            return points;
+        }
+
+        function getDistanceFromFraming(framing) {
+            const distances = {
+                'general': 5.0,
+                'medium': 3.0,
+                'bust': 2.0,
+                'close': 1.5
+            };
+            return distances[framing] || 3.0;
+        }
+
+        function getPositionFromOrientation(orientation) {
+            const positions = {
+                'FRONT': { x: 50, y: 30 },
+                'BACK': { x: 50, y: 70 },
+                'RIGHT': { x: 30, y: 50 },
+                'LEFT': { x: 70, y: 50 }
+            };
+            return positions[orientation] || { x: 50, y: 30 };
+        }
+
+        function applyMovementDelta(movementType, duration, intensity = 'medium') {
+            // Para movimentos curvos (orbit e arc), usar lógica especial
+            if (movementType === 'orbit_quarter' || movementType === 'orbit_half' || 
+                movementType === 'arc_quarter' || movementType === 'arc_half') {
+                return { x: 0, y: 0, distance: 0, height: 0 }; // Será tratado em convertSimpleToPoints
+            }
+            
+            // Calcular multiplicador baseado na intensidade
+            const intensityMultipliers = {
+                'light': 0.6,
+                'medium': 1.0,
+                'strong': 1.5
+            };
+            
+            const intensityFactor = intensityMultipliers[intensity] || 1.0;
+            const timeFactor = duration / 2; // Normalizar por 2 segundos
+            const factor = intensityFactor * timeFactor;
+            
+            const deltas = {
+                'dolly_in': { x: 0, y: 0, distance: -0.8 * factor, height: 0 },
+                'dolly_out': { x: 0, y: 0, distance: 0.8 * factor, height: 0 },
+                'truck_left': { x: -12 * factor, y: 0, distance: 0, height: 0 },
+                'truck_right': { x: 12 * factor, y: 0, distance: 0, height: 0 },
+                'pedestal_up': { x: 0, y: 0, distance: 0, height: 0.4 * factor },
+                'pedestal_down': { x: 0, y: 0, distance: 0, height: -0.4 * factor },
+                'pan': { x: 18 * factor, y: 0, distance: 0, height: 0 },
+                'tilt': { x: 0, y: 12 * factor, distance: 0, height: 0 }
+            };
+            
+            return deltas[movementType] || { x: 0, y: 0, distance: 0, height: 0 };
+        }
+
+        function generateCurvePoints(movement, startTime, startX, startY, startDistance, startHeight) {
+            const isOrbit = movement.type.startsWith('orbit');
+            const isArc = movement.type.startsWith('arc');
+            const isQuarter = movement.type.includes('quarter');
+            const duration = movement.seconds;
+            
+            // Configurar ângulo total baseado no tipo
+            let totalAngle;
+            if (isOrbit) {
+                totalAngle = isQuarter ? Math.PI / 2 : Math.PI; // 90° ou 180°
+            } else if (isArc) {
+                totalAngle = isQuarter ? Math.PI / 4 : Math.PI / 2; // 45° ou 90° (arco é menor que órbita)
+            }
+            
+            // Raio baseado na intensidade e tipo de movimento
+            const intensityMultipliers = {
+                'light': isOrbit ? 15 : 10,
+                'medium': isOrbit ? 20 : 15, 
+                'strong': isOrbit ? 30 : 25
+            };
+            const radius = intensityMultipliers[movement.intensity] || (isOrbit ? 20 : 15);
+            
+            // Número de pontos intermediários baseado na duração
+            const numPoints = Math.max(2, Math.floor(duration * 1.5)); // Mais pontos para movimento suave
+            const points = [];
+            
+            // Para órbita: girar ao redor do centro (50,50)
+            // Para arco: movimento mais direcional
+            let centerX, centerY, initialAngle;
+            
+            if (isOrbit) {
+                centerX = 50;
+                centerY = 50;
+                initialAngle = Math.atan2(startY - centerY, startX - centerX);
+            } else {
+                // Arc: movimento mais linear com curvatura
+                centerX = startX;
+                centerY = startY;
+                initialAngle = 0; // Começar na direção horizontal
+            }
+            
+            for (let i = 1; i <= numPoints; i++) {
+                const progress = i / numPoints;
+                let x, y;
+                
+                if (isOrbit) {
+                    // Movimento circular ao redor do alvo
+                    const angle = initialAngle + (totalAngle * progress);
+                    x = centerX + radius * Math.cos(angle);
+                    y = centerY + radius * Math.sin(angle);
+                } else {
+                    // Arc: movimento curvado mais suave
+                    const angle = totalAngle * progress;
+                    const forwardDistance = radius * progress;
+                    const sidewaysDistance = radius * Math.sin(angle) * 0.5;
+                    
+                    x = startX + forwardDistance;
+                    y = startY + sidewaysDistance;
+                }
+                
+                points.push({
+                    id: 'temp',
+                    t: startTime + (duration * progress),
+                    x: Math.max(5, Math.min(95, x)), // Manter dentro dos limites
+                    y: Math.max(5, Math.min(95, y)),
+                    height_m: startHeight,
+                    distance_m: startDistance
+                });
+            }
+            
+            return points;
+        }
+
+        function validateAdvancedPoints() {
+            if (vo3State.advanced.points.length === 0) {
+                showVO3Error('Nenhum ponto foi criado.');
+                return false;
+            }
+            
+            // Verificar se todos os pontos têm dados completos
+            for (let point of vo3State.advanced.points) {
+                if (point.distance_m === null || point.height_m === null) {
+                    showVO3Error('Todos os pontos devem ter distância e altura configuradas.');
+                    return false;
+                }
+                
+                if (point.t === null) {
+                    showVO3Error('Todos os pontos devem ter tempo configurado.');
+                    return false;
+                }
+            }
+            
+            // Verificar se primeiro ponto tem orientação
+            const firstPoint = vo3State.advanced.points[0];
+            if (!firstPoint.orientation) {
+                showVO3Error('O primeiro ponto deve ter orientação configurada.');
+                return false;
+            }
+            
+            return true;
+        }
+
+        function generateNaturalText(points, isSimple) {
+            const framingNames = {
+                'general': 'Plano Geral',
+                'medium': 'Médio',
+                'bust': 'Busto', 
+                'close': 'Close'
+            };
+            
+            const orientationNames = {
+                'FRONT': 'Frente',
+                'BACK': 'Costas',
+                'RIGHT': 'Direita',
+                'LEFT': 'Esquerda'
+            };
+            
+            let text = `CENA: estúdio neutro; sujeito estático. `;
+            
+            if (isSimple) {
+                text += `Enquadramento inicial: ${framingNames[vo3State.simple.framing]}; `;
+            } else {
+                text += `Enquadramento inicial: baseado na distância; `;
+            }
+            
+            const firstPoint = points[0];
+            text += `Orientação: ${orientationNames[firstPoint.orientation]}.\n\n`;
+            
+            const maxTime = points[points.length - 1].t;
+            text += `MOVIMENTOS (dur=${maxTime}s):\n`;
+            
+            for (let i = 1; i < points.length; i++) {
+                const prevPoint = points[i - 1];
+                const currentPoint = points[i];
+                
+                text += `${i}) ${prevPoint.t}–${currentPoint.t}s: Movimento de `;
+                text += `(${prevPoint.x.toFixed(1)},${prevPoint.y.toFixed(1)}) para `;
+                text += `(${currentPoint.x.toFixed(1)},${currentPoint.y.toFixed(1)}), `;
+                text += `distância ${prevPoint.distance_m}m→${currentPoint.distance_m}m, `;
+                text += `altura ${prevPoint.height_m}m→${currentPoint.height_m}m.\n`;
+            }
+            
+            return text;
+        }
+
+        function generateVO3JSON(points) {
+            const jsonData = {
+                "type": "VO3_CAMERA_PATH",
+                "language": "pt-BR", 
+                "strict": true,
+                
+                "intent": "render_from_camera_pov_only",
+                "do_not_render": ["camera", "tripod", "operator", "ui", "overlays"],
+                
+                "scene": {
+                    "description": "Pessoa em ambiente controlado, permanece imóvel durante toda a sequência. Apenas respiração sutil permitida."
+                },
+                
+                "composition": {
+                    "look_at_target": true,
+                    "frame_lock": getFrameLockFromFraming(),
+                    "lens_mm": 35
+                },
+                
+                "grid": {
+                    "coords": { "x_range": [0, 100], "y_range": [0, 100] },
+                    "target": { "x": 50.0, "y": 50.0 }
+                },
+                
+                "interpolation": { 
+                    "position": "linear", 
+                    "height": "linear", 
+                    "fps": 24 
+                },
+                
+                "points": points.map(point => {
+                    const jsonPoint = {
+                        "id": point.id,
+                        "t": parseFloat(point.t.toFixed(2)),
+                        "x": parseFloat(point.x.toFixed(2)),
+                        "y": parseFloat(point.y.toFixed(2)),
+                        "height_m": parseFloat(point.height_m.toFixed(2)),
+                        "distance_m": parseFloat(point.distance_m.toFixed(2))
+                    };
+                    
+                    if (point.orientation) {
+                        jsonPoint.orientation = point.orientation;
+                    }
+                    
+                    return jsonPoint;
+                })
+            };
+            
+            return JSON.stringify(jsonData, null, 2);
+        }
+
+        function getFrameLockFromFraming() {
+            const framingToLock = {
+                'general': 'full_body',
+                'medium': 'medium_shot', 
+                'bust': 'bust',
+                'close': 'close_up'
+            };
+            return framingToLock[vo3State.simple.framing] || 'full_body';
+        }
+
+        function updateVO3Outputs(naturalText, vo3Json) {
+            const naturalOutput = document.getElementById('vo3-natural-output');
+            const jsonOutput = document.getElementById('vo3-json-output');
+            
+            if (naturalOutput) naturalOutput.value = naturalText;
+            if (jsonOutput) jsonOutput.value = vo3Json;
+        }
+
+        function clearVO3Everything() {
+            if (confirm('Tem certeza que deseja limpar tudo?')) {
+                // Reset state
+                vo3State.simple = {
+                    framing: '',
+                    orientation: '',
+                    movements: [],
+                    totalDuration: 4
+                };
+                
+                vo3State.advanced = {
+                    points: [],
+                    selectedPointId: null,
+                    snapToGrid: true
+                };
+                
+                vo3State.lastGenerated = {
+                    naturalText: '',
+                    vo3Json: ''
+                };
+                
+                // Reset UI
+                document.querySelectorAll('.framing-card, .orientation-card, .movement-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                
+                updateSelectedMovements();
+                updateVO3PointsList();
+                redrawVO3Canvas();
+                updateVO3Outputs('', '');
+                updateVO3GenerateButton();
+                
+                // Reset stepper
+                switchToStep(1);
+            }
+        }
+
+        function copyVO3ToClipboard(type) {
+            const text = type === 'natural' ? vo3State.lastGenerated.naturalText : vo3State.lastGenerated.vo3Json;
+            
+            if (!text) {
+                showVO3Error('Nada para copiar. Gere o VO3 primeiro.');
+                return;
+            }
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showVO3Success(type === 'natural' ? 'Resumo copiado!' : 'JSON VO3 copiado!');
+                }).catch(() => {
+                    fallbackCopyToClipboard(text, type);
+                });
+            } else {
+                fallbackCopyToClipboard(text, type);
+            }
+        }
+
+        function fallbackCopyToClipboard(text, type) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                showVO3Success(type === 'natural' ? 'Resumo copiado!' : 'JSON VO3 copiado!');
+            } catch (err) {
+                showVO3Error('Erro ao copiar para área de transferência.');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        function addVO3ToPrompt() {
+            if (!vo3State.lastGenerated.vo3Json) {
+                showVO3Error('Nada para adicionar. Gere o VO3 primeiro.');
+                return;
+            }
+            
+            // Encontrar textarea principal do prompt
+            const promptTextarea = document.querySelector('textarea[name="enhanced_prompt"], textarea[name="original_prompt"], #enhanced_prompt, #original_prompt');
+            
+            if (promptTextarea) {
+                const currentContent = promptTextarea.value;
+                const newContent = currentContent ? currentContent + '\n\n' + vo3State.lastGenerated.vo3Json : vo3State.lastGenerated.vo3Json;
+                promptTextarea.value = newContent;
+                
+                // Focar e rolar para o final
+                promptTextarea.focus();
+                promptTextarea.scrollTop = promptTextarea.scrollHeight;
+                
+                showVO3Success('JSON VO3 adicionado ao prompt principal!');
+            } else {
+                // Fallback: copiar para área de transferência
+                copyVO3ToClipboard('json');
+                showVO3Error('Prompt principal não encontrado. JSON copiado para área de transferência.');
+            }
+        }
+
+        // Modais
+        function initVO3Modals() {
+            initVO3PointModal();
+            initVO3AddJsonModal();
+        }
+
+        function initVO3PointModal() {
+            const modal = document.getElementById('vo3-point-modal');
+            const closeBtn = document.getElementById('vo3-point-modal-close');
+            const cancelBtn = document.getElementById('vo3-point-cancel');
+            const saveBtn = document.getElementById('vo3-point-save');
+            
+            if (closeBtn) closeBtn.addEventListener('click', closeVO3PointModal);
+            if (cancelBtn) cancelBtn.addEventListener('click', closeVO3PointModal);
+            if (saveBtn) saveBtn.addEventListener('click', saveVO3Point);
+            
+            // Fechar clicando fora
+            if (modal) {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        closeVO3PointModal();
+                    }
+                });
+            }
+        }
+
+        function closeVO3PointModal() {
+            const modal = document.getElementById('vo3-point-modal');
+            if (modal) {
+                modal.style.display = 'none';
+                delete modal.dataset.editingPointId;
+                delete modal.dataset.editingPointX;
+                delete modal.dataset.editingPointY;
+            }
+        }
+
+        function saveVO3Point() {
+            const modal = document.getElementById('vo3-point-modal');
+            const orientationSelect = document.getElementById('vo3-orientation');
+            const timeInput = document.getElementById('vo3-time');
+            const distanceInput = document.getElementById('vo3-distance');
+            const heightInput = document.getElementById('vo3-height');
+            
+            if (!modal) return;
+            
+            const pointId = parseInt(modal.dataset.editingPointId);
+            const x = parseFloat(modal.dataset.editingPointX);
+            const y = parseFloat(modal.dataset.editingPointY);
+            
+            // Validações
+            const time = parseFloat(timeInput.value);
+            const distance = parseFloat(distanceInput.value);
+            const height = parseFloat(heightInput.value);
+            const orientation = orientationSelect ? orientationSelect.value : '';
+            
+            if (isNaN(time) || time < 0 || time > 8) {
+                showVO3Error('Tempo deve estar entre 0 e 8 segundos.');
+                return;
+            }
+            
+            if (isNaN(distance) || distance < 0) {
+                showVO3Error('Distância deve ser um número positivo.');
+                return;
+            }
+            
+            if (isNaN(height) || height < 0) {
+                showVO3Error('Altura deve ser um número positivo.');
+                return;
+            }
+            
+            // Verificar se é primeiro ponto e precisa de orientação
+            const isFirstPoint = vo3State.advanced.points.length === 0;
+            if (isFirstPoint && !orientation) {
+                showVO3Error('O primeiro ponto deve ter orientação definida.');
+                return;
+            }
+            
+            // Verificar ordem de tempo
+            if (!isFirstPoint) {
+                const existingPoints = vo3State.advanced.points.filter(p => p.id !== pointId);
+                const prevTime = existingPoints.length > 0 ? Math.max(...existingPoints.map(p => p.t)) : 0;
+                if (time <= prevTime) {
+                    showVO3Error(`Tempo deve ser maior que ${prevTime}s.`);
+                    return;
+                }
+            }
+            
+            // Criar ou atualizar ponto
+            const pointData = {
+                id: pointId,
+                t: time,
+                x: x,
+                y: y,
+                height_m: height,
+                distance_m: distance
+            };
+            
+            if (isFirstPoint) {
+                pointData.orientation = orientation;
+            }
+            
+            // Verificar se é novo ou edição
+            const existingIndex = vo3State.advanced.points.findIndex(p => p.id === pointId);
+            if (existingIndex >= 0) {
+                vo3State.advanced.points[existingIndex] = pointData;
+            } else {
+                vo3State.advanced.points.push(pointData);
+                vo3State.advanced.points.sort((a, b) => a.t - b.t);
+            }
+            
+            updateVO3PointsList();
+            redrawVO3Canvas();
+            updateVO3GenerateButton();
+            closeVO3PointModal();
+        }
+
+        function initVO3AddJsonModal() {
+            const modal = document.getElementById('vo3-add-json-modal');
+            const addJsonBtn = document.getElementById('vo3-add-json');
+            const closeBtn = document.getElementById('vo3-modal-close');
+            const cancelBtn = document.getElementById('vo3-modal-cancel');
+            const addBtn = document.getElementById('vo3-modal-add');
+            
+            if (addJsonBtn) {
+                addJsonBtn.addEventListener('click', () => {
+                    modal.style.display = 'block';
+                });
+            }
+            
+            if (closeBtn) closeBtn.addEventListener('click', () => modal.style.display = 'none');
+            if (cancelBtn) cancelBtn.addEventListener('click', () => modal.style.display = 'none');
+            if (addBtn) addBtn.addEventListener('click', processExternalVO3JSON);
+            
+            // Fechar clicando fora
+            if (modal) {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            }
+        }
+
+        function processExternalVO3JSON() {
+            const textarea = document.getElementById('vo3-external-json');
+            const modal = document.getElementById('vo3-add-json-modal');
+            
+            if (!textarea || !modal) return;
+            
+            const jsonText = textarea.value.trim();
+            if (!jsonText) {
+                showVO3Error('Cole um JSON VO3 válido.');
+                return;
+            }
+            
+            try {
+                // Extrair JSON do texto (pode ter prefixo {VO3_JSON})
+                const jsonStart = jsonText.indexOf('{');
+                if (jsonStart === -1) {
+                    throw new Error('JSON não encontrado');
+                }
+                
+                const jsonOnly = jsonText.substring(jsonStart);
+                const parsed = JSON.parse(jsonOnly);
+                
+                // Validar estrutura básica VO3
+                if (parsed.type !== 'VO3_CAMERA_PATH') {
+                    throw new Error('Tipo VO3_CAMERA_PATH não encontrado');
+                }
+                
+                if (!parsed.points || !Array.isArray(parsed.points)) {
+                    throw new Error('Array de pontos não encontrado');
+                }
+                
+                // Adicionar ao prompt principal
+                const promptTextarea = document.querySelector('textarea[name="enhanced_prompt"], textarea[name="original_prompt"], #enhanced_prompt, #original_prompt');
+                
+                if (promptTextarea) {
+                    const currentContent = promptTextarea.value;
+                    const newContent = currentContent ? currentContent + '\n\n' + jsonText : jsonText;
+                    promptTextarea.value = newContent;
+                    
+                    promptTextarea.focus();
+                    promptTextarea.scrollTop = promptTextarea.scrollHeight;
+                    
+                    showVO3Success('JSON VO3 externo adicionado ao prompt!');
+                    modal.style.display = 'none';
+                    textarea.value = '';
+                } else {
+                    throw new Error('Prompt principal não encontrado');
+                }
+                
+            } catch (error) {
+                showVO3Error('JSON inválido para VO3. Verifique campos obrigatórios.');
+            }
+        }
+
+        // Utilitários de mensagens
+        function showVO3Success(message) {
+            const existingMessages = document.querySelectorAll('#tab-camera2 .success-message, #tab-camera2 .error-message');
+            existingMessages.forEach(msg => msg.remove());
+            
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.textContent = message;
+            successDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #10b981;
+                color: white;
+                padding: 12px 20px;
+                border-radius: 6px;
+                z-index: 10000;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            `;
+            
+            document.body.appendChild(successDiv);
+            
+            setTimeout(() => {
+                successDiv.remove();
+            }, 3000);
+        }
+
+        function showVO3Error(message) {
+            const existingMessages = document.querySelectorAll('#tab-camera2 .success-message, #tab-camera2 .error-message');
+            existingMessages.forEach(msg => msg.remove());
+            
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            errorDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #ef4444;
+                color: white;
+                padding: 12px 20px;
+                border-radius: 6px;
+                z-index: 10000;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            `;
+            
+            document.body.appendChild(errorDiv);
+            
+            setTimeout(() => {
+                errorDiv.remove();
+            }, 4000);
+        }
+
     </script>
 
     <?php
