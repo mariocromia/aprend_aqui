@@ -558,6 +558,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             gap: 1rem;
         }
         
+        /* Layout específico para aba avatar - 3 colunas e 2 linhas */
+        #tab-avatar .type-cards-grid {
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 1.5rem;
+            max-width: 100%;
+        }
+        
         .type-card {
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1441,113 +1449,81 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                             <p>Configure as características do seu personagem</p>
                         </div>
 
-                        <!-- Área principal para conteúdo dos avatares -->
-                        <div class="avatars-content-area" style="margin: 0;">
-                            <!-- Barra de controles superior -->
-                            <div class="avatars-toolbar-modern">
-                                <!-- Barra de pesquisa (1/3 da largura) -->
-                                <div class="search-container">
-                                    <div class="search-input-group">
-                                        <i class="material-icons search-icon">search</i>
-                                        <input type="text" id="avatar-search" placeholder="Buscar avatares por nome..." class="search-input-modern">
-                                        <button class="clear-search" id="clear-search" style="display: none;">
-                                            <i class="material-icons">clear</i>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <!-- Filtros e controles -->
-                                <div class="controls-container">
-                                    <!-- Filtro por tipo -->
-                                    <div class="filter-group">
-                                        <label class="filter-label">Tipo:</label>
-                                        <select id="avatar-type-filter" class="filter-select-modern">
-                                            <option value="meus" selected>Meus</option>
-                                            <option value="publicos">Públicos</option>
-                                            <option value="favoritos">Favoritos</option>
-                                        </select>
-                                    </div>
-
-                                    <!-- Ordenação -->
-                                    <div class="filter-group">
-                                        <label class="filter-label">Ordenar:</label>
-                                        <select id="avatar-sort" class="filter-select-modern">
-                                            <option value="recentes" selected>Recentes</option>
-                                            <option value="nome_az">Nomes A-Z</option>
-                                            <option value="ultimos_usados">Últimos usados</option>
-                                            <option value="tipos">Tipos</option>
-                                        </select>
-                                    </div>
-
-                                    <!-- Visualização -->
-                                    <div class="view-toggle-group">
-                                        <label class="filter-label">Exibir:</label>
-                                        <div class="view-toggle-buttons">
-                                            <button class="view-btn-modern active" data-view="cards" title="Cards">
-                                                <i class="material-icons">grid_view</i>
-                                            </button>
-                                            <button class="view-btn-modern" data-view="list" title="Lista">
-                                                <i class="material-icons">view_list</i>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <!-- Botão Criar -->
-                                    <button class="btn-create-avatar-modern" id="btn-create-avatar">
-                                        <i class="material-icons">add</i>
-                                        <span>Criar</span>
+                        <!-- Barra de controles superior -->
+                        <div class="avatars-toolbar-modern">
+                            <!-- Barra de pesquisa (1/3 da largura) -->
+                            <div class="search-container">
+                                <div class="search-input-group">
+                                    <i class="material-icons search-icon">search</i>
+                                    <input type="text" id="avatar-search" placeholder="Buscar avatares por nome..." class="search-input-modern">
+                                    <button class="clear-search" id="clear-search" style="display: none;">
+                                        <i class="material-icons">clear</i>
                                     </button>
                                 </div>
                             </div>
 
-                            <!-- Área dos avatares -->
-                            <div class="avatars-display-area" id="avatars-display">
-                                <!-- Layout dividido horizontalmente -->
-                                <div class="avatars-main-layout">
-                                    <!-- Bloco esquerdo - Cards de avatares -->
-                                    <div class="avatars-grid-section">
-                                        <div class="section-header">
-                                            <h4>
-                                                <i class="material-icons">people</i>
-                                                Meus Avatares
-                                            </h4>
-                                            <span class="avatar-count" id="avatar-count-display">0 avatares</span>
-                                        </div>
-                                        
-                                        <!-- Grid de avatares -->
-                                        <div class="avatars-grid" id="avatars-grid">
-                                            <!-- Estado vazio inicial -->
-                                            <div class="empty-grid-state" id="empty-grid-state">
-                                                <div class="empty-grid-icon">
-                                                    <i class="material-icons">person_add_alt</i>
-                                                </div>
-                                                <p>Nenhum avatar criado ainda</p>
-                                                <small>Use o formulário ao lado para criar seu primeiro avatar</small>
-                                            </div>
-                                            
-                                            <!-- Cards de avatares serão inseridos aqui dinamicamente -->
-                                        </div>
-                                    </div>
+                            <!-- Filtros e controles -->
+                            <div class="controls-container">
+                                <!-- Filtro por tipo -->
+                                <div class="filter-group">
+                                    <label class="filter-label">Tipo:</label>
+                                    <select id="avatar-type-filter" class="filter-select-modern">
+                                        <option value="meus" selected>Meus</option>
+                                        <option value="publicos">Públicos</option>
+                                        <option value="favoritos">Favoritos</option>
+                                    </select>
+                                </div>
 
-                                    <!-- Bloco direito - Formulário de cadastro -->
-                                    <div class="avatar-form-section">
-                                        <div class="section-header">
-                                            <h4>
-                                                <i class="material-icons">add_circle</i>
-                                                Criar Novo Avatar
-                                            </h4>
-                                            <p>Escolha o tipo de avatar para começar</p>
-                                        </div>
-                                        
-                                        <!-- Seleção de Tipo - Cards -->
+                                <!-- Ordenação -->
+                                <div class="filter-group">
+                                    <label class="filter-label">Ordenar:</label>
+                                    <select id="avatar-sort" class="filter-select-modern">
+                                        <option value="recentes" selected>Recentes</option>
+                                        <option value="nome_az">Nomes A-Z</option>
+                                        <option value="ultimos_usados">Últimos usados</option>
+                                        <option value="tipos">Tipos</option>
+                                    </select>
+                                </div>
+
+                                <!-- Visualização -->
+                                <div class="view-toggle-group">
+                                    <label class="filter-label">Exibir:</label>
+                                    <div class="view-toggle-buttons">
+                                        <button class="view-btn-modern active" data-view="cards" title="Cards">
+                                            <i class="material-icons">grid_view</i>
+                                        </button>
+                                        <button class="view-btn-modern" data-view="list" title="Lista">
+                                            <i class="material-icons">view_list</i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Botão Criar -->
+                                <button class="btn-create-avatar-modern" id="btn-create-avatar">
+                                    <i class="material-icons">add</i>
+                                    <span>Criar</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Dois blocos lado a lado -->
+                        <div class="two-blocks-container">
+                            <!-- Bloco esquerdo -->
+                            <div class="bloco-esquerdo">
+                                <div class="bloco-header">
+                                    <h3><i class="material-icons">west</i> Tipos de Avatar</h3>
+                                    <p>Selecione o tipo de avatar desejado</p>
+                                </div>
+                                <div class="bloco-content">
+                                                                        <!-- Seleção de Tipo - Cards -->
                                         <div class="avatar-type-selection" id="avatar-type-selection">
                                             <div class="type-cards-grid">
                                                 <div class="type-card" data-type="humano">
                                                     <div class="type-icon">
-                                                        <i class="material-icons">person</i>
+                                                        <i class="material-icons">face</i>
                                                     </div>
                                                     <h5>Humano</h5>
-                                                    <p>Personagens humanos com características realistas</p>
+                                                    <p>Personagens humanos</p>
                                                 </div>
                                                 
                                                 <div class="type-card" data-type="animal">
@@ -1555,450 +1531,309 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                                         <i class="material-icons">pets</i>
                                                     </div>
                                                     <h5>Animal</h5>
-                                                    <p>Criaturas animais domésticas ou selvagens</p>
+                                                    <p>Personagens animais</p>
                                                 </div>
                                                 
                                                 <div class="type-card" data-type="fantastico">
                                                     <div class="type-icon">
-                                                        <i class="material-icons">auto_fix_high</i>
+                                                        <i class="material-icons">auto_awesome</i>
                                                     </div>
                                                     <h5>Fantástico</h5>
-                                                    <p>Seres mágicos, elfos, dragões e criaturas míticas</p>
+                                                    <p>Criaturas mágicas</p>
                                                 </div>
                                                 
-                                                <div class="type-card" data-type="extraterrestre">
+                                                <div class="type-card" data-type="extraterrestres">
                                                     <div class="type-icon">
                                                         <i class="material-icons">rocket_launch</i>
                                                     </div>
-                                                    <h5>Extraterrestre</h5>
-                                                    <p>Alienígenas e seres de outros planetas</p>
+                                                    <h5>Extraterrestres</h5>
+                                                    <p>Aliens e seres espaciais</p>
                                                 </div>
                                                 
-                                                <div class="type-card" data-type="robotico">
+                                                <div class="type-card" data-type="robos">
                                                     <div class="type-icon">
                                                         <i class="material-icons">smart_toy</i>
                                                     </div>
-                                                    <h5>Robótico/IA</h5>
-                                                    <p>Robôs, androides e inteligências artificiais</p>
+                                                    <h5>Robôs</h5>
+                                                    <p>Máquinas e androides</p>
+                                                </div>
+                                                
+                                                <div class="type-card" data-type="outros">
+                                                    <div class="type-icon">
+                                                        <i class="material-icons">more_horiz</i>
+                                                    </div>
+                                                    <h5>Outros</h5>
+                                                    <p>Outros tipos especiais</p>
                                                 </div>
                                             </div>
                                         </div>
-                                        
-                                        <!-- Formulários Dinâmicos Inline (aparecem abaixo dos cards) -->
-                                        <div class="dynamic-forms-inline" id="dynamic-forms-inline" style="display: none;">
-                                            <!-- Indicador do tipo selecionado -->
-                                            <div class="selected-type-indicator">
-                                                <div class="type-indicator-content">
-                                                    <span class="selected-type-name" id="selected-type-name"></span>
-                                                    <button type="button" class="btn-clear-selection" id="btn-clear-selection" title="Limpar seleção">
-                                                        <i class="material-icons">close</i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            
-                                            <!-- Formulário para Humano -->
-                                            <form class="avatar-form humano-form" id="humano-form" style="display: none;">
-                                                <div class="form-grid">
-                                                    <div class="form-group">
-                                                        <label for="humano-name">Nome</label>
-                                                        <input type="text" id="humano-name" name="name" placeholder="Ex: Elena Rodriguez" required>
-                                                    </div>
-                                                    
-                                                    <div class="form-row">
-                                                        <div class="form-group">
-                                                            <label for="humano-gender">Gênero</label>
-                                                            <select id="humano-gender" name="gender">
-                                                                <option value="masculino">Masculino</option>
-                                                                <option value="feminino">Feminino</option>
-                                                                <option value="outro">Outro</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="humano-age">Idade</label>
-                                                            <select id="humano-age" name="age">
-                                                                <option value="crianca">Criança (5-12)</option>
-                                                                <option value="adolescente">Adolescente (13-17)</option>
-                                                                <option value="jovem_adulto" selected>Jovem Adulto (18-30)</option>
-                                                                <option value="adulto">Adulto (31-50)</option>
-                                                                <option value="meia_idade">Meia-idade (51-65)</option>
-                                                                <option value="idoso">Idoso (65+)</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="form-row">
-                                                        <div class="form-group">
-                                                            <label for="humano-ethnicity">Etnia</label>
-                                                            <select id="humano-ethnicity" name="ethnicity">
-                                                                <option value="brasileiro" selected>Brasileiro</option>
-                                                                <option value="caucasiano">Caucasiano</option>
-                                                                <option value="afrodescendente">Afrodescendente</option>
-                                                                <option value="asiatico">Asiático</option>
-                                                                <option value="latino">Latino</option>
-                                                                <option value="indigena">Indígena</option>
-                                                                <option value="misto">Miscigenado</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="humano-body-type">Tipo Físico</label>
-                                                            <select id="humano-body-type" name="body_type">
-                                                                <option value="magro">Magro/Esbelto</option>
-                                                                <option value="atletico" selected>Atlético</option>
-                                                                <option value="musculoso">Musculoso</option>
-                                                                <option value="curvilineo">Curvilíneo</option>
-                                                                <option value="robusto">Robusto</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="form-row">
-                                                        <div class="form-group">
-                                                            <label for="humano-hair-color">Cor do Cabelo</label>
-                                                            <select id="humano-hair-color" name="hair_color">
-                                                                <option value="preto" selected>Preto</option>
-                                                                <option value="castanho_escuro">Castanho escuro</option>
-                                                                <option value="castanho_claro">Castanho claro</option>
-                                                                <option value="loiro_escuro">Loiro escuro</option>
-                                                                <option value="loiro_claro">Loiro claro</option>
-                                                                <option value="ruivo">Ruivo</option>
-                                                                <option value="grisalho">Grisalho</option>
-                                                                <option value="branco">Branco</option>
-                                                                <option value="careca">Careca</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="humano-eye-color">Cor dos Olhos</label>
-                                                            <select id="humano-eye-color" name="eye_color">
-                                                                <option value="castanho" selected>Castanho</option>
-                                                                <option value="azul">Azul</option>
-                                                                <option value="verde">Verde</option>
-                                                                <option value="mel">Mel</option>
-                                                                <option value="cinza">Cinza</option>
-                                                                <option value="preto">Preto</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="form-group">
-                                                        <label for="humano-profession">Profissão</label>
-                                                        <input type="text" id="humano-profession" name="profession" placeholder="Ex: Médico, Artista, Estudante">
-                                                    </div>
-                                                    
-                                                    <div class="form-group">
-                                                        <label for="humano-description">Descrição</label>
-                                                        <textarea id="humano-description" name="description" placeholder="Descreva características específicas..." rows="3"></textarea>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="form-actions">
-                                                    <button type="button" class="btn-secondary" onclick="clearForm('humano')">
-                                                        <i class="material-icons">clear</i>
-                                                        Limpar
-                                                    </button>
-                                                    <button type="submit" class="btn-primary">
-                                                        <i class="material-icons">save</i>
-                                                        Criar Avatar Humano
-                                                    </button>
-                                                </div>
-                                            </form>
-                                            
-                                            <!-- Formulário para Animal -->
-                                            <form class="avatar-form animal-form" id="animal-form" style="display: none;">
-                                                <div class="form-grid">
-                                                    <div class="form-group">
-                                                        <label for="animal-name">Nome</label>
-                                                        <input type="text" id="animal-name" name="name" placeholder="Ex: Rex, Miau, Lobo Alfa" required>
-                                                    </div>
-                                                    
-                                                    <div class="form-row">
-                                                        <div class="form-group">
-                                                            <label for="animal-species">Espécie</label>
-                                                            <select id="animal-species" name="species" required>
-                                                                <option value="">Selecione...</option>
-                                                                <option value="gato">Gato</option>
-                                                                <option value="cachorro">Cachorro</option>
-                                                                <option value="lobo">Lobo</option>
-                                                                <option value="leao">Leão</option>
-                                                                <option value="tigre">Tigre</option>
-                                                                <option value="urso">Urso</option>
-                                                                <option value="aguia">Águia</option>
-                                                                <option value="coruja">Coruja</option>
-                                                                <option value="serpente">Serpente</option>
-                                                                <option value="outro">Outro</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="animal-size">Tamanho</label>
-                                                            <select id="animal-size" name="size">
-                                                                <option value="pequeno">Pequeno</option>
-                                                                <option value="medio" selected>Médio</option>
-                                                                <option value="grande">Grande</option>
-                                                                <option value="gigante">Gigante</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="form-row">
-                                                        <div class="form-group">
-                                                            <label for="animal-fur-pattern">Padrão da Pelagem</label>
-                                                            <input type="text" id="animal-fur-pattern" name="fur_pattern" placeholder="Ex: Listrado, Manchado, Sólido">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="animal-primary-color">Cor Primária</label>
-                                                            <input type="text" id="animal-primary-color" name="primary_color" placeholder="Ex: Marrom, Preto, Branco">
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="form-group">
-                                                        <label for="animal-description">Descrição</label>
-                                                        <textarea id="animal-description" name="description" placeholder="Descreva características específicas do animal..." rows="3"></textarea>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="form-actions">
-                                                    <button type="button" class="btn-secondary" onclick="clearForm('animal')">
-                                                        <i class="material-icons">clear</i>
-                                                        Limpar
-                                                    </button>
-                                                    <button type="submit" class="btn-primary">
-                                                        <i class="material-icons">save</i>
-                                                        Criar Avatar Animal
-                                                    </button>
-                                                </div>
-                                            </form>
-                                            
-                                            <!-- Formulário para Fantástico -->
-                                            <form class="avatar-form fantastico-form" id="fantastico-form" style="display: none;">
-                                                <div class="form-grid">
-                                                    <div class="form-group">
-                                                        <label for="fantastico-name">Nome</label>
-                                                        <input type="text" id="fantastico-name" name="name" placeholder="Ex: Elrond, Draconius, Lyralei" required>
-                                                    </div>
-                                                    
-                                                    <div class="form-row">
-                                                        <div class="form-group">
-                                                            <label for="fantastico-type">Tipo de Criatura</label>
-                                                            <select id="fantastico-type" name="fantasy_type" required>
-                                                                <option value="">Selecione...</option>
-                                                                <option value="elfo">Elfo</option>
-                                                                <option value="anao">Anão</option>
-                                                                <option value="orc">Orc</option>
-                                                                <option value="dragao">Dragão</option>
-                                                                <option value="vampiro">Vampiro</option>
-                                                                <option value="lobisomem">Lobisomem</option>
-                                                                <option value="anjo">Anjo</option>
-                                                                <option value="demonio">Demônio</option>
-                                                                <option value="fada">Fada</option>
-                                                                <option value="centauro">Centauro</option>
-                                                                <option value="sereia">Sereia</option>
-                                                                <option value="unicornio">Unicórnio</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="fantastico-gender">Gênero</label>
-                                                            <select id="fantastico-gender" name="gender">
-                                                                <option value="neutro">Neutro</option>
-                                                                <option value="masculino">Masculino</option>
-                                                                <option value="feminino">Feminino</option>
-                                                                <option value="outro">Outro</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="form-group">
-                                                        <label for="fantastico-abilities">Habilidades Mágicas</label>
-                                                        <textarea id="fantastico-abilities" name="magical_abilities" rows="2" placeholder="Ex: Controle de fogo, telepatia, cura"></textarea>
-                                                    </div>
-                                                    
-                                                    <div class="form-group">
-                                                        <label for="fantastico-features">Características Especiais</label>
-                                                        <textarea id="fantastico-features" name="special_features" rows="2" placeholder="Ex: Asas, chifres, escamas, aura luminosa"></textarea>
-                                                    </div>
-                                                    
-                                                    <div class="form-group">
-                                                        <label for="fantastico-description">Descrição</label>
-                                                        <textarea id="fantastico-description" name="description" placeholder="Descreva o ser fantástico..." rows="3"></textarea>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="form-actions">
-                                                    <button type="button" class="btn-secondary" onclick="clearForm('fantastico')">
-                                                        <i class="material-icons">clear</i>
-                                                        Limpar
-                                                    </button>
-                                                    <button type="submit" class="btn-primary">
-                                                        <i class="material-icons">save</i>
-                                                        Criar Avatar Fantástico
-                                                    </button>
-                                                </div>
-                                            </form>
-                                            
-                                            <!-- Formulário para Extraterrestre -->
-                                            <form class="avatar-form extraterrestre-form" id="extraterrestre-form" style="display: none;">
-                                                <div class="form-grid">
-                                                    <div class="form-group">
-                                                        <label for="extraterrestre-name">Nome</label>
-                                                        <input type="text" id="extraterrestre-name" name="name" placeholder="Ex: Zyx'tel, Commander Kral" required>
-                                                    </div>
-                                                    
-                                                    <div class="form-row">
-                                                        <div class="form-group">
-                                                            <label for="extraterrestre-origin">Planeta de Origem</label>
-                                                            <input type="text" id="extraterrestre-origin" name="alien_origin" placeholder="Ex: Andrômeda, Zeta Reticuli">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="extraterrestre-eyes">Número de Olhos</label>
-                                                            <select id="extraterrestre-eyes" name="number_of_eyes">
-                                                                <option value="1">1</option>
-                                                                <option value="2" selected>2</option>
-                                                                <option value="3">3</option>
-                                                                <option value="4">4</option>
-                                                                <option value="6">6</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="form-row">
-                                                        <div class="form-group">
-                                                            <label for="extraterrestre-skin">Textura da Pele</label>
-                                                            <select id="extraterrestre-skin" name="skin_texture">
-                                                                <option value="lisa">Lisa</option>
-                                                                <option value="escamosa">Escamosa</option>
-                                                                <option value="rugosa">Rugosa</option>
-                                                                <option value="metalica">Metálica</option>
-                                                                <option value="translucida">Translúcida</option>
-                                                                <option value="cristalina">Cristalina</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="extraterrestre-communication">Comunicação</label>
-                                                            <select id="extraterrestre-communication" name="communication_method">
-                                                                <option value="verbal">Verbal</option>
-                                                                <option value="telepatico">Telepático</option>
-                                                                <option value="gestual">Gestual</option>
-                                                                <option value="luminoso">Sinais Luminosos</option>
-                                                                <option value="quimico">Químico</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="form-group">
-                                                        <label for="extraterrestre-description">Descrição</label>
-                                                        <textarea id="extraterrestre-description" name="description" placeholder="Descreva o alienígena..." rows="3"></textarea>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="form-actions">
-                                                    <button type="button" class="btn-secondary" onclick="clearForm('extraterrestre')">
-                                                        <i class="material-icons">clear</i>
-                                                        Limpar
-                                                    </button>
-                                                    <button type="submit" class="btn-primary">
-                                                        <i class="material-icons">save</i>
-                                                        Criar Avatar Extraterrestre
-                                                    </button>
-                                                </div>
-                                            </form>
-                                            
-                                            <!-- Formulário para Robótico/IA -->
-                                            <form class="avatar-form robotico-form" id="robotico-form" style="display: none;">
-                                                <div class="form-grid">
-                                                    <div class="form-group">
-                                                        <label for="robotico-name">Nome</label>
-                                                        <input type="text" id="robotico-name" name="name" placeholder="Ex: ARIA, X-01, Commander Data" required>
-                                                    </div>
-                                                    
-                                                    <div class="form-row">
-                                                        <div class="form-group">
-                                                            <label for="robotico-type">Tipo de Robô</label>
-                                                            <select id="robotico-type" name="robot_type" required>
-                                                                <option value="">Selecione...</option>
-                                                                <option value="android_humanoid">Android Humanoide</option>
-                                                                <option value="cyborg">Cyborg</option>
-                                                                <option value="robo_industrial">Robô Industrial</option>
-                                                                <option value="ia_holografica">IA Holográfica</option>
-                                                                <option value="mecha">Mecha</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="robotico-ai-level">Nível de IA</label>
-                                                            <select id="robotico-ai-level" name="ai_level">
-                                                                <option value="basico">Básico</option>
-                                                                <option value="avancado" selected>Avançado</option>
-                                                                <option value="superinteligente">Superinteligente</option>
-                                                                <option value="consciente">Consciente</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="form-group">
-                                                        <label for="robotico-power">Fonte de Energia</label>
-                                                        <select id="robotico-power" name="power_source">
-                                                            <option value="bateria">Bateria</option>
-                                                            <option value="energia_solar">Energia Solar</option>
-                                                            <option value="nuclear">Nuclear</option>
-                                                            <option value="plasma">Plasma</option>
-                                                            <option value="cristal_energetico">Cristal Energético</option>
-                                                        </select>
-                                                    </div>
-                                                    
-                                                    <div class="form-group">
-                                                        <label for="robotico-description">Descrição</label>
-                                                        <textarea id="robotico-description" name="description" placeholder="Descreva o robô/IA..." rows="3"></textarea>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="form-actions">
-                                                    <button type="button" class="btn-secondary" onclick="clearForm('robotico')">
-                                                        <i class="material-icons">clear</i>
-                                                        Limpar
-                                                    </button>
-                                                    <button type="submit" class="btn-primary">
-                                                        <i class="material-icons">save</i>
-                                                        Criar Avatar Robótico
-                                                    </button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
-
-                            <!-- Nova seção com dois blocos de 50% -->
-                            <div class="avatar-split-section">
-                                <!-- Bloco esquerdo -->
-                                <div class="split-block left-block">
-                                    <div class="block-header">
-                                        <h3>
-                                            <i class="material-icons">add_circle</i>
-                                            Bloco Esquerdo
-                                        </h3>
-                                        <p>Conteúdo do primeiro bloco</p>
-                                    </div>
-                                    <div class="block-content">
-                                        <!-- Conteúdo personalizado aqui -->
-                                        <div class="content-placeholder">
-                                            <p>Este é o bloco esquerdo (50% da largura)</p>
-                                            <p>Adicione aqui o conteúdo desejado</p>
-                                        </div>
-                                    </div>
+                            
+                            <!-- Bloco direito -->
+                            <div class="bloco-direito">
+                                <div class="bloco-header">
+                                    <h3><i class="material-icons">east</i> Formulário do Avatar</h3>
+                                    <p>Preencha os campos específicos do tipo selecionado</p>
                                 </div>
-
-                                <!-- Bloco direito -->
-                                <div class="split-block right-block">
-                                    <div class="block-header">
-                                        <h3>
-                                            <i class="material-icons">info</i>
-                                            Bloco Direito
-                                        </h3>
-                                        <p>Conteúdo do segundo bloco</p>
-                                    </div>
-                                    <div class="block-content">
-                                        <!-- Conteúdo personalizado aqui -->
-                                        <div class="content-placeholder">
-                                            <p>Este é o bloco direito (50% da largura)</p>
-                                            <p>Adicione aqui o conteúdo desejado</p>
+                                <div class="bloco-content">
+                                    <!-- Formulário Humano -->
+                                    <div class="avatar-form" id="form-humano" style="display: none;">
+                                        <h4><i class="material-icons">face</i> Formulário Humano</h4>
+                                        <div class="form-group">
+                                            <label>Gênero:</label>
+                                            <select name="genero_humano">
+                                                <option value="">Selecione...</option>
+                                                <option value="masculino">Masculino</option>
+                                                <option value="feminino">Feminino</option>
+                                                <option value="nao_binario">Não-binário</option>
+                                            </select>
                                         </div>
+                                        <div class="form-group">
+                                            <label>Idade:</label>
+                                            <input type="number" name="idade_humano" placeholder="Ex: 25" min="1" max="120">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Etnia:</label>
+                                            <select name="etnia_humano">
+                                                <option value="">Selecione...</option>
+                                                <option value="caucasiana">Caucasiana</option>
+                                                <option value="africana">Africana</option>
+                                                <option value="asiatica">Asiática</option>
+                                                <option value="latina">Latina</option>
+                                                <option value="indigena">Indígena</option>
+                                                <option value="mista">Mista</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Cor do Cabelo:</label>
+                                            <select name="cabelo_humano">
+                                                <option value="">Selecione...</option>
+                                                <option value="preto">Preto</option>
+                                                <option value="castanho">Castanho</option>
+                                                <option value="loiro">Loiro</option>
+                                                <option value="ruivo">Ruivo</option>
+                                                <option value="grisalho">Grisalho</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Cor dos Olhos:</label>
+                                            <select name="olhos_humano">
+                                                <option value="">Selecione...</option>
+                                                <option value="castanhos">Castanhos</option>
+                                                <option value="azuis">Azuis</option>
+                                                <option value="verdes">Verdes</option>
+                                                <option value="cinza">Cinza</option>
+                                                <option value="pretos">Pretos</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Formulário Animal -->
+                                    <div class="avatar-form" id="form-animal" style="display: none;">
+                                        <h4><i class="material-icons">pets</i> Formulário Animal</h4>
+                                        <div class="form-group">
+                                            <label>Espécie:</label>
+                                            <select name="especie_animal">
+                                                <option value="">Selecione...</option>
+                                                <option value="cachorro">Cachorro</option>
+                                                <option value="gato">Gato</option>
+                                                <option value="cavalo">Cavalo</option>
+                                                <option value="urso">Urso</option>
+                                                <option value="lobo">Lobo</option>
+                                                <option value="tigre">Tigre</option>
+                                                <option value="leao">Leão</option>
+                                                <option value="aguia">Águia</option>
+                                                <option value="dragao">Dragão</option>
+                                                <option value="unicornio">Unicórnio</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Cor da Pelagem:</label>
+                                            <input type="text" name="pelagem_animal" placeholder="Ex: Marrom com manchas brancas">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Características Especiais:</label>
+                                            <textarea name="caracteristicas_animal" placeholder="Ex: Asas, chifres, cauda longa..." rows="2"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Comportamento:</label>
+                                            <select name="comportamento_animal">
+                                                <option value="">Selecione...</option>
+                                                <option value="selvagem">Selvagem</option>
+                                                <option value="domestico">Doméstico</option>
+                                                <option value="misterioso">Misterioso</option>
+                                                <option value="amigavel">Amigável</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Formulário Fantástico -->
+                                    <div class="avatar-form" id="form-fantastico" style="display: none;">
+                                        <h4><i class="material-icons">auto_awesome</i> Formulário Fantástico</h4>
+                                        <div class="form-group">
+                                            <label>Tipo de Criatura:</label>
+                                            <select name="tipo_fantastico">
+                                                <option value="">Selecione...</option>
+                                                <option value="elfo">Elfo</option>
+                                                <option value="anao">Anão</option>
+                                                <option value="orc">Orc</option>
+                                                <option value="fada">Fada</option>
+                                                <option value="sereia">Sereia</option>
+                                                <option value="centauro">Centauro</option>
+                                                <option value="minotauro">Minotauro</option>
+                                                <option value="grifo">Grifo</option>
+                                                <option value="fenix">Fênix</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Elemento Mágico:</label>
+                                            <select name="elemento_fantastico">
+                                                <option value="">Selecione...</option>
+                                                <option value="fogo">Fogo</option>
+                                                <option value="agua">Água</option>
+                                                <option value="terra">Terra</option>
+                                                <option value="ar">Ar</option>
+                                                <option value="luz">Luz</option>
+                                                <option value="sombra">Sombra</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Poderes Especiais:</label>
+                                            <textarea name="poderes_fantastico" placeholder="Ex: Voo, invisibilidade, telepatia..." rows="2"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Origem:</label>
+                                            <select name="origem_fantastico">
+                                                <option value="">Selecione...</option>
+                                                <option value="floresta">Floresta</option>
+                                                <option value="montanha">Montanha</option>
+                                                <option value="oceano">Oceano</option>
+                                                <option value="subterraneo">Subterrâneo</option>
+                                                <option value="celestial">Celestial</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Formulário Extraterrestres -->
+                                    <div class="avatar-form" id="form-extraterrestres" style="display: none;">
+                                        <h4><i class="material-icons">rocket_launch</i> Formulário Extraterrestres</h4>
+                                        <div class="form-group">
+                                            <label>Planeta de Origem:</label>
+                                            <input type="text" name="planeta_extraterrestres" placeholder="Ex: Marte, Alpha Centauri">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Tipo de Alien:</label>
+                                            <select name="tipo_extraterrestres">
+                                                <option value="">Selecione...</option>
+                                                <option value="greys">Greys (Cinzas)</option>
+                                                <option value="reptilianos">Reptilianos</option>
+                                                <option value="nordicos">Nórdicos</option>
+                                                <option value="insetoides">Insetoides</option>
+                                                <option value="cristalinos">Cristalinos</option>
+                                                <option value="energeticos">Energéticos</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Características Físicas:</label>
+                                            <textarea name="caracteristicas_extraterrestres" placeholder="Ex: Cabeça grande, olhos negros, pele translúcida..." rows="2"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Tecnologia:</label>
+                                            <select name="tecnologia_extraterrestres">
+                                                <option value="">Selecione...</option>
+                                                <option value="avançada">Muito Avançada</option>
+                                                <option value="media">Média</option>
+                                                <option value="primitiva">Primitiva</option>
+                                                <option value="organica">Orgânica</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Formulário Robôs -->
+                                    <div class="avatar-form" id="form-robos" style="display: none;">
+                                        <h4><i class="material-icons">smart_toy</i> Formulário Robôs</h4>
+                                        <div class="form-group">
+                                            <label>Tipo de Robô:</label>
+                                            <select name="tipo_robos">
+                                                <option value="">Selecione...</option>
+                                                <option value="humanoide">Humanóide</option>
+                                                <option value="animal">Animal</option>
+                                                <option value="veiculo">Veículo</option>
+                                                <option value="voador">Voador</option>
+                                                <option value="aquatico">Aquático</option>
+                                                <option value="modular">Modular</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Material Principal:</label>
+                                            <select name="material_robos">
+                                                <option value="">Selecione...</option>
+                                                <option value="metal">Metal</option>
+                                                <option value="plastico">Plástico</option>
+                                                <option value="ceramica">Cerâmica</option>
+                                                <option value="composito">Compósito</option>
+                                                <option value="organico">Orgânico</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Cor:</label>
+                                            <input type="text" name="cor_robos" placeholder="Ex: Prateado, azul metálico">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Funcionalidade:</label>
+                                            <select name="funcionalidade_robos">
+                                                <option value="">Selecione...</option>
+                                                <option value="servico">Serviço</option>
+                                                <option value="combate">Combate</option>
+                                                <option value="exploracao">Exploração</option>
+                                                <option value="companhia">Companhia</option>
+                                                <option value="especializada">Especializada</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Formulário Outros -->
+                                    <div class="avatar-form" id="form-outros" style="display: none;">
+                                        <h4><i class="material-icons">more_horiz</i> Formulário Outros</h4>
+                                        <div class="form-group">
+                                            <label>Categoria:</label>
+                                            <select name="categoria_outros">
+                                                <option value="">Selecione...</option>
+                                                <option value="elemental">Elemental</option>
+                                                <option value="espiritual">Espiritual</option>
+                                                <option value="mecanico">Mecânico</option>
+                                                <option value="hibrido">Híbrido</option>
+                                                <option value="abstrato">Abstrato</option>
+                                                <option value="customizado">Customizado</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Descrição Específica:</label>
+                                            <textarea name="descricao_outros" placeholder="Descreva detalhadamente o tipo de avatar..." rows="3"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Características Únicas:</label>
+                                            <textarea name="caracteristicas_outros" placeholder="Ex: Poderes especiais, aparência única, habilidades..." rows="2"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Estilo Visual:</label>
+                                            <select name="estilo_outros">
+                                                <option value="">Selecione...</option>
+                                                <option value="realista">Realista</option>
+                                                <option value="cartoon">Cartoon</option>
+                                                <option value="anime">Anime</option>
+                                                <option value="3d">3D</option>
+                                                <option value="pixel">Pixel Art</option>
+                                                <option value="artistico">Artístico</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Placeholder inicial -->
+                                    <div class="content-placeholder" id="placeholder-inicial">
+                                        <i class="material-icons">touch_app</i>
+                                        <p>Selecione um tipo de avatar no bloco esquerdo para ver o formulário específico</p>
                                     </div>
                                 </div>
                             </div>
@@ -2050,6 +1885,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
 
 
@@ -3629,22 +3465,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <script>
         // Sistema de seleção de tipos de avatar (INLINE - SEM MODAIS)
         function initAvatarTypeSelection() {
-            console.log('📋 Configurando sistema inline de seleção de avatares');
+            console.log('📋 Configurando sistema de seleção de avatares para bloco direito');
             
             const typeCards = document.querySelectorAll('#tab-avatar .type-card');
-            const dynamicFormsInline = document.getElementById('dynamic-forms-inline');
-            const selectedTypeName = document.getElementById('selected-type-name');
-            const clearSelectionButton = document.getElementById('btn-clear-selection');
-            
-            // Prevenir qualquer modal que possa ser aberto por outros scripts
-            document.addEventListener('click', function(e) {
-                // Prevenir abertura de modais nos cards de tipo
-                if (e.target.closest('.type-card') && e.target.closest('.modal')) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('🚫 Modal bloqueado - usando sistema inline');
-                }
-            }, true);
             
             // Adicionar eventos aos cards de tipo
             typeCards.forEach(card => {
@@ -3655,23 +3478,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     const type = this.dataset.type;
                     const typeName = this.querySelector('h5').textContent;
                     
-                    console.log(`✅ Card selecionado: ${typeName} (${type}) - Modo INLINE`);
+                    console.log(`✅ Card selecionado: ${typeName} (${type}) - Modo BLOCO DIREITO`);
                     
                     // Marcar card como selecionado
                     typeCards.forEach(c => c.classList.remove('selected'));
                     this.classList.add('selected');
                     
-                    // Mostrar formulário correspondente inline
-                    showFormInline(type, typeName);
+                    // Mostrar formulário no bloco direito
+                    showAvatarForm(type, typeName);
                 });
             });
+        }
+        
+        // Função para mostrar formulário no bloco direito
+        function showAvatarForm(type, typeName) {
+            console.log(`🎯 Exibindo formulário ${type} no bloco direito`);
             
-            // Botão limpar seleção
-            if (clearSelectionButton) {
-                clearSelectionButton.addEventListener('click', function() {
-                    clearTypeSelection();
-                });
+            // Ocultar placeholder
+            const placeholder = document.getElementById('placeholder-inicial');
+            if (placeholder) {
+                placeholder.style.display = 'none';
             }
+            
+            // Ocultar todos os formulários de avatar
+            const allForms = document.querySelectorAll('#tab-avatar .avatar-form');
+            allForms.forEach(form => {
+                form.style.display = 'none';
+                form.classList.remove('active');
+            });
+            
+            // Mostrar formulário específico
+            const targetForm = document.getElementById('form-' + type);
+            if (targetForm) {
+                targetForm.style.display = 'block';
+                targetForm.classList.add('active');
+                console.log(`✅ Formulário ${type} exibido com sucesso`);
+            } else {
+                console.error(`❌ Formulário form-${type} não encontrado`);
+            }
+        }
+        
+        // Função para limpar seleção de avatar
+        function clearAvatarSelection() {
+            const typeCards = document.querySelectorAll('#tab-avatar .type-card');
+            const placeholder = document.getElementById('placeholder-inicial');
+            
+            // Remover seleção dos cards
+            typeCards.forEach(card => card.classList.remove('selected'));
+            
+            // Ocultar todos os formulários
+            const allForms = document.querySelectorAll('#tab-avatar .avatar-form');
+            allForms.forEach(form => {
+                form.style.display = 'none';
+                form.classList.remove('active');
+                if (form.reset) form.reset();
+            });
+            
+            // Mostrar placeholder
+            if (placeholder) {
+                placeholder.style.display = 'flex';
+            }
+            
+            console.log('🧹 Seleção de avatar limpa');
         }
         
         // Sistema de seleção de tipos de câmera
@@ -3790,7 +3658,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             
             const dynamicFormsInline = document.getElementById('dynamic-forms-inline');
             const selectedTypeName = document.getElementById('selected-type-name');
-            const targetForm = document.getElementById(type + '-form');
+            const targetForm = document.getElementById('form-' + type);
             
             console.log(`🔍 Elementos encontrados:`, {
                 dynamicFormsInline: !!dynamicFormsInline,

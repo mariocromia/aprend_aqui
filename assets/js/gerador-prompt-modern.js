@@ -1877,6 +1877,45 @@ document.addEventListener('DOMContentLoaded', function() {
         input.addEventListener('change', generateAvatarPrompt);
         input.addEventListener('input', debounce(generateAvatarPrompt, 500));
     });
+
+    // Selecionar o primeiro bloco por padrão (Humano)
+    if (avatarTypeBlocks.length > 0) {
+        avatarTypeBlocks[0].click();
+    }
+
+    // Função para mostrar formulário específico do tipo de avatar
+    function showAvatarForm(avatarType) {
+        // Ocultar todos os formulários
+        const allForms = document.querySelectorAll('.avatar-form');
+        allForms.forEach(form => {
+            form.style.display = 'none';
+        });
+
+        // Ocultar placeholder inicial
+        const placeholder = document.getElementById('placeholder-inicial');
+        if (placeholder) {
+            placeholder.style.display = 'none';
+        }
+
+        // Mostrar formulário específico
+        const targetForm = document.getElementById(`form-${avatarType}`);
+        if (targetForm) {
+            targetForm.style.display = 'block';
+        }
+    }
+
+    // Adicionar event listeners para os blocos de tipo de avatar
+    avatarTypeBlocks.forEach(block => {
+        block.addEventListener('click', function() {
+            const avatarType = this.getAttribute('data-type');
+            
+            // Mostrar formulário correspondente
+            showAvatarForm(avatarType);
+            
+            // Log para debug
+            console.log('Tipo de avatar selecionado:', avatarType);
+        });
+    });
 });
 
 // Função debounce para evitar muitas chamadas
@@ -2751,4 +2790,41 @@ document.addEventListener('click', function(e) {
     if (modal && e.target === modal) {
         closeAvatarCreator();
     }
+});
+
+// Funcionalidade para os blocos de tipos de avatar
+document.addEventListener('DOMContentLoaded', function() {
+    // Selecionar todos os blocos de tipo de avatar
+    const avatarTypeBlocks = document.querySelectorAll('.avatar-type-block');
+    
+    // Adicionar evento de clique para cada bloco
+    avatarTypeBlocks.forEach(block => {
+        block.addEventListener('click', function() {
+            // Remover seleção de todos os blocos
+            avatarTypeBlocks.forEach(b => {
+                b.classList.remove('selected');
+                const checkIcon = b.querySelector('.avatar-type-check i');
+                checkIcon.textContent = 'radio_button_unchecked';
+                checkIcon.style.color = '';
+            });
+            
+            // Selecionar o bloco clicado
+            this.classList.add('selected');
+            const checkIcon = this.querySelector('.avatar-type-check i');
+            checkIcon.textContent = 'check_circle';
+            checkIcon.style.color = 'var(--primary-blue)';
+            
+            // Armazenar o tipo selecionado (opcional)
+            const selectedType = this.getAttribute('data-type');
+            console.log('Tipo de avatar selecionado:', selectedType);
+            
+            // Aqui você pode adicionar lógica adicional quando um tipo é selecionado
+            // Por exemplo, atualizar outros campos do formulário, fazer requisições, etc.
+        });
+    });
+    
+         // Selecionar o primeiro bloco por padrão (Humano)
+     if (avatarTypeBlocks.length > 0) {
+         avatarTypeBlocks[0].click();
+     }
 });
