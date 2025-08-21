@@ -1780,8 +1780,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     <!-- ABA 7: AVATAR/PERSONAGEM -->
                     <div class="tab-content" id="tab-avatar">
                         <div class="tab-header">
-                            <h2><i class="material-icons">groups</i> Avatar/Personagem</h2>
-                            <p>Configure as características do seu personagem</p>
                         </div>
 
                         <!-- Barra de controles superior -->
@@ -1933,38 +1931,92 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                             <input type="number" name="idade_humano" placeholder="Ex: 25" min="1" max="120">
                                         </div>
                                         <div class="form-group">
-                                            <label>Etnia:</label>
-                                            <select name="etnia_humano">
+                                            <label>Peso (em kg):</label>
+                                            <input type="number" name="peso_humano" placeholder="Ex: 70" min="20" max="300" step="0.1">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Altura (em metros):</label>
+                                            <input type="number" name="altura_humano" placeholder="Ex: 1.75" min="0.5" max="2.5" step="0.01">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Cor da Pele:</label>
+                                            <select name="cor_pele_humano">
                                                 <option value="">Selecione...</option>
-                                                <option value="caucasiana">Caucasiana</option>
-                                                <option value="africana">Africana</option>
-                                                <option value="asiatica">Asiática</option>
-                                                <option value="latina">Latina</option>
-                                                <option value="indigena">Indígena</option>
-                                                <option value="mista">Mista</option>
+                                                <option value="branca">Branca</option>
+                                                <option value="morena_clara">Morena Clara</option>
+                                                <option value="morena">Morena</option>
+                                                <option value="morena_escura">Morena Escura</option>
+                                                <option value="negra">Negra</option>
+                                                <option value="amarela">Amarela</option>
+                                                <option value="vermelha">Vermelha</option>
+                                                <option value="oliva">Oliva</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <label>Cor do Cabelo:</label>
-                                            <select name="cabelo_humano">
+                                            <select name="cor_cabelo_humano">
                                                 <option value="">Selecione...</option>
                                                 <option value="preto">Preto</option>
+                                                <option value="castanho_escuro">Castanho Escuro</option>
                                                 <option value="castanho">Castanho</option>
+                                                <option value="castanho_claro">Castanho Claro</option>
+                                                <option value="loiro_escuro">Loiro Escuro</option>
                                                 <option value="loiro">Loiro</option>
+                                                <option value="loiro_claro">Loiro Claro</option>
                                                 <option value="ruivo">Ruivo</option>
                                                 <option value="grisalho">Grisalho</option>
+                                                <option value="branco">Branco</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Altura do Cabelo:</label>
+                                            <select name="altura_cabelo_humano">
+                                                <option value="">Selecione...</option>
+                                                <option value="careca">Careca</option>
+                                                <option value="muito_curto">Muito Curto</option>
+                                                <option value="curto">Curto</option>
+                                                <option value="medio">Médio</option>
+                                                <option value="longo">Longo</option>
+                                                <option value="muito_longo">Muito Longo</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Corte do Cabelo:</label>
+                                            <select name="corte_cabelo_humano">
+                                                <option value="">Selecione...</option>
+                                                <option value="liso">Liso</option>
+                                                <option value="ondulado">Ondulado</option>
+                                                <option value="crespo">Crespo</option>
+                                                <option value="cacheado">Cacheado</option>
+                                                <option value="afro">Afro</option>
+                                                <option value="coque">Coque</option>
+                                                <option value="tranca">Trança</option>
+                                                <option value="rabo_cavalo">Rabo de Cavalo</option>
+                                                <option value="moicano">Moicano</option>
+                                                <option value="undercut">Undercut</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <label>Cor dos Olhos:</label>
-                                            <select name="olhos_humano">
+                                            <select name="cor_olhos_humano">
                                                 <option value="">Selecione...</option>
+                                                <option value="castanhos_escuros">Castanhos Escuros</option>
                                                 <option value="castanhos">Castanhos</option>
+                                                <option value="castanhos_claros">Castanhos Claros</option>
+                                                <option value="azuis_escuros">Azuis Escuros</option>
                                                 <option value="azuis">Azuis</option>
+                                                <option value="azuis_claros">Azuis Claros</option>
                                                 <option value="verdes">Verdes</option>
+                                                <option value="verdes_azulados">Verdes Azulados</option>
                                                 <option value="cinza">Cinza</option>
                                                 <option value="pretos">Pretos</option>
+                                                <option value="mel">Mel</option>
+                                                <option value="heterocromia">Heterocromia</option>
                                             </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Descrição Complementar:</label>
+                                            <textarea name="descricao_complementar_humano" placeholder="Descreva outras características como tatuagens, cicatrizes, marcas de nascença, piercings, etc..." rows="3"></textarea>
                                         </div>
                                         <div class="form-actions">
                                             <button type="button" class="btn-secondary" onclick="clearAvatarSelection()">
@@ -3898,6 +3950,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 placeholder.style.display = 'none';
             }
             
+            // Ocultar o header do bloco central (título e descrição)
+            const blocoHeader = document.querySelector('#tab-avatar .bloco-meio .bloco-header');
+            if (blocoHeader) {
+                blocoHeader.classList.add('hidden');
+            }
+            
             // Ocultar todos os formulários de avatar
             const allForms = document.querySelectorAll('#tab-avatar .avatar-form');
             allForms.forEach(form => {
@@ -3910,6 +3968,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             if (targetForm) {
                 targetForm.style.display = 'block';
                 targetForm.classList.add('active');
+                
+                // Adicionar classe ao bloco content para maximizar espaço
+                const blocoContent = document.querySelector('#tab-avatar .bloco-meio .bloco-content');
+                if (blocoContent) {
+                    blocoContent.classList.add('avatar-form-active');
+                }
+                
                 console.log(`✅ Formulário ${type} exibido com sucesso`);
             } else {
                 console.error(`❌ Formulário form-${type} não encontrado`);
@@ -3920,6 +3985,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         function clearAvatarSelection() {
             const typeCards = document.querySelectorAll('#tab-avatar .type-card');
             const placeholder = document.getElementById('placeholder-inicial');
+            const blocoHeader = document.querySelector('#tab-avatar .bloco-meio .bloco-header');
             
             // Remover seleção dos cards
             typeCards.forEach(card => card.classList.remove('selected'));
@@ -3931,6 +3997,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 form.classList.remove('active');
                 if (form.reset) form.reset();
             });
+            
+            // Restaurar o header do bloco central
+            if (blocoHeader) {
+                blocoHeader.classList.remove('hidden');
+            }
+            
+            // Remover classe do bloco content
+            const blocoContent = document.querySelector('#tab-avatar .bloco-meio .bloco-content');
+            if (blocoContent) {
+                blocoContent.classList.remove('avatar-form-active');
+            }
             
             // Mostrar placeholder
             if (placeholder) {

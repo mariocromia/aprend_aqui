@@ -358,7 +358,7 @@ body {
 /* Conteúdo das abas */
 .tab-content {
     display: none;
-    padding: 1.5rem;
+    padding: 0.75rem;
     height: auto;
     overflow: visible;
     width: 100%;
@@ -4248,7 +4248,7 @@ body {
 .form-group select:focus,
 .form-group textarea:focus {
     transform: translateY(-1px);
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.15);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
 }
 
 /* Melhorias na Responsividade */
@@ -4777,4 +4777,64 @@ body {
 .form-group textarea:focus {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.15);
+}
+
+/* Estilos para formulários de avatar quando ativos - maximizar espaço */
+.avatar-form.active {
+    width: calc(100% - 16px) !important; /* Ocupa toda largura menos as margens */
+    height: calc(100% - 16px) !important; /* Ocupa toda altura menos as margens */
+    margin: 8px !important; /* Margens reduzidas conforme solicitado */
+    padding: 24px !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    overflow-y: auto !important;
+    min-height: 0 !important; /* Permite que o formulário cresça naturalmente */
+    flex: 1 1 auto !important; /* Cresce para ocupar espaço disponível */
+}
+
+.avatar-form.active h4 {
+    margin-top: 0 !important;
+    margin-bottom: 24px !important;
+    padding-bottom: 16px !important;
+    border-bottom: 2px solid var(--border-color) !important;
+}
+
+.avatar-form.active .form-group {
+    margin-bottom: 20px !important;
+}
+
+.avatar-form.active .form-actions {
+    margin-top: auto !important;
+    padding-top: 20px !important;
+    border-top: 2px solid var(--border-color) !important;
+}
+
+/* Ocultar header do bloco central quando formulário estiver ativo */
+.bloco-meio .bloco-header.hidden {
+    display: none !important;
+}
+
+/* Ajustar bloco content para ocupar todo o espaço disponível */
+.bloco-meio .bloco-content:has(.avatar-form.active) {
+    min-height: 0 !important;
+    height: 100% !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    flex: 1 1 auto !important; /* Cresce para ocupar espaço disponível */
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* Fallback para navegadores que não suportam :has() */
+.bloco-meio .bloco-content.avatar-form-active {
+    min-height: 0 !important;
+    height: 100% !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    flex: 1 1 auto !important; /* Cresce para ocupar espaço disponível */
+    display: flex !important;
+    flex-direction: column !important;
 }
