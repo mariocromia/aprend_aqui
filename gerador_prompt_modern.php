@@ -1917,84 +1917,93 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                             <label>Nome do Avatar:</label>
                                             <input type="text" name="nome_humano" placeholder="Ex: João, Maria, Alex..." required>
                                         </div>
-                                        <div class="form-group">
-                                            <label>Gênero:</label>
-                                            <select name="genero_humano">
-                                                <option value="">Selecione...</option>
-                                                <option value="masculino">Masculino</option>
-                                                <option value="feminino">Feminino</option>
-                                                <option value="nao_binario">Não-binário</option>
-                                            </select>
+                                        
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label>Gênero:</label>
+                                                <select name="genero_humano">
+                                                    <option value="">Selecione...</option>
+                                                    <option value="masculino">Masculino</option>
+                                                    <option value="feminino">Feminino</option>
+                                                    <option value="nao_binario">Não-binário</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Idade:</label>
+                                                <input type="number" name="idade_humano" placeholder="Ex: 25" min="1" max="120">
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label>Idade:</label>
-                                            <input type="number" name="idade_humano" placeholder="Ex: 25" min="1" max="120">
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label>Peso (em kg):</label>
+                                                <input type="number" name="peso_humano" placeholder="Ex: 70" min="20" max="300" step="0.1">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Altura (em metros):</label>
+                                                <input type="number" name="altura_humano" placeholder="Ex: 1.75" min="0.5" max="2.5" step="0.01">
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label>Peso (em kg):</label>
-                                            <input type="number" name="peso_humano" placeholder="Ex: 70" min="20" max="300" step="0.1">
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label>Cor da Pele:</label>
+                                                <select name="cor_pele_humano">
+                                                    <option value="">Selecione...</option>
+                                                    <option value="branca">Branca</option>
+                                                    <option value="morena_clara">Morena Clara</option>
+                                                    <option value="morena">Morena</option>
+                                                    <option value="morena_escura">Morena Escura</option>
+                                                    <option value="negra">Negra</option>
+                                                    <option value="amarela">Amarela</option>
+                                                    <option value="vermelha">Vermelha</option>
+                                                    <option value="oliva">Oliva</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Cor do Cabelo:</label>
+                                                <select name="cor_cabelo_humano">
+                                                    <option value="">Selecione...</option>
+                                                    <option value="preto">Preto</option>
+                                                    <option value="castanho_escuro">Castanho Escuro</option>
+                                                    <option value="castanho">Castanho</option>
+                                                    <option value="castanho_claro">Castanho Claro</option>
+                                                    <option value="loiro_escuro">Loiro Escuro</option>
+                                                    <option value="loiro">Loiro</option>
+                                                    <option value="loiro_claro">Loiro Claro</option>
+                                                    <option value="ruivo">Ruivo</option>
+                                                    <option value="grisalho">Grisalho</option>
+                                                    <option value="branco">Branco</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label>Altura (em metros):</label>
-                                            <input type="number" name="altura_humano" placeholder="Ex: 1.75" min="0.5" max="2.5" step="0.01">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Cor da Pele:</label>
-                                            <select name="cor_pele_humano">
-                                                <option value="">Selecione...</option>
-                                                <option value="branca">Branca</option>
-                                                <option value="morena_clara">Morena Clara</option>
-                                                <option value="morena">Morena</option>
-                                                <option value="morena_escura">Morena Escura</option>
-                                                <option value="negra">Negra</option>
-                                                <option value="amarela">Amarela</option>
-                                                <option value="vermelha">Vermelha</option>
-                                                <option value="oliva">Oliva</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Cor do Cabelo:</label>
-                                            <select name="cor_cabelo_humano">
-                                                <option value="">Selecione...</option>
-                                                <option value="preto">Preto</option>
-                                                <option value="castanho_escuro">Castanho Escuro</option>
-                                                <option value="castanho">Castanho</option>
-                                                <option value="castanho_claro">Castanho Claro</option>
-                                                <option value="loiro_escuro">Loiro Escuro</option>
-                                                <option value="loiro">Loiro</option>
-                                                <option value="loiro_claro">Loiro Claro</option>
-                                                <option value="ruivo">Ruivo</option>
-                                                <option value="grisalho">Grisalho</option>
-                                                <option value="branco">Branco</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Altura do Cabelo:</label>
-                                            <select name="altura_cabelo_humano">
-                                                <option value="">Selecione...</option>
-                                                <option value="careca">Careca</option>
-                                                <option value="muito_curto">Muito Curto</option>
-                                                <option value="curto">Curto</option>
-                                                <option value="medio">Médio</option>
-                                                <option value="longo">Longo</option>
-                                                <option value="muito_longo">Muito Longo</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Corte do Cabelo:</label>
-                                            <select name="corte_cabelo_humano">
-                                                <option value="">Selecione...</option>
-                                                <option value="liso">Liso</option>
-                                                <option value="ondulado">Ondulado</option>
-                                                <option value="crespo">Crespo</option>
-                                                <option value="cacheado">Cacheado</option>
-                                                <option value="afro">Afro</option>
-                                                <option value="coque">Coque</option>
-                                                <option value="tranca">Trança</option>
-                                                <option value="rabo_cavalo">Rabo de Cavalo</option>
-                                                <option value="moicano">Moicano</option>
-                                                <option value="undercut">Undercut</option>
-                                            </select>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label>Altura do Cabelo:</label>
+                                                <select name="altura_cabelo_humano">
+                                                    <option value="">Selecione...</option>
+                                                    <option value="careca">Careca</option>
+                                                    <option value="muito_curto">Muito Curto</option>
+                                                    <option value="curto">Curto</option>
+                                                    <option value="medio">Médio</option>
+                                                    <option value="longo">Longo</option>
+                                                    <option value="muito_longo">Muito Longo</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Corte do Cabelo:</label>
+                                                <select name="corte_cabelo_humano">
+                                                    <option value="">Selecione...</option>
+                                                    <option value="liso">Liso</option>
+                                                    <option value="ondulado">Ondulado</option>
+                                                    <option value="crespo">Crespo</option>
+                                                    <option value="cacheado">Cacheado</option>
+                                                    <option value="afro">Afro</option>
+                                                    <option value="coque">Coque</option>
+                                                    <option value="tranca">Trança</option>
+                                                    <option value="rabo_cavalo">Rabo de Cavalo</option>
+                                                    <option value="moicano">Moicano</option>
+                                                    <option value="undercut">Undercut</option>
+                                                </select>
+                                            </div>
                                         </div>
                                         <div class="form-group">
                                             <label>Cor dos Olhos:</label>
@@ -2014,6 +2023,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                                 <option value="heterocromia">Heterocromia</option>
                                             </select>
                                         </div>
+                                        
                                         <div class="form-group">
                                             <label>Descrição Complementar:</label>
                                             <textarea name="descricao_complementar_humano" placeholder="Descreva outras características como tatuagens, cicatrizes, marcas de nascença, piercings, etc..." rows="3"></textarea>
