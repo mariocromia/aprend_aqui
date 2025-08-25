@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Botão Avatar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .avatar-button {
+            background: #19203a;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            min-width: 320px;
+            max-width: 500px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .avatar-button:hover {
+            background: #242c4d;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .avatar-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #667eea 0%, #a855f7 50%, #ec4899 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+        }
+
+        .avatar-icon svg {
+            width: 32px;
+            height: 32px;
+            fill: white;
+        }
+
+        .avatar-content {
+            flex: 1;
+            color: white;
+        }
+
+        .avatar-name {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            letter-spacing: -0.5px;
+        }
+
+        .avatar-attributes {
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .star-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            padding: 8px;
+        }
+
+        .star-button:hover {
+            transform: scale(1.2) rotate(20deg);
+        }
+
+        .star-button svg {
+            width: 28px;
+            height: 28px;
+            fill: #fbbf24;
+            filter: drop-shadow(0 2px 4px rgba(251, 191, 36, 0.3));
+        }
+
+        .menu-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            transition: opacity 0.2s ease;
+        }
+
+        .menu-button:hover {
+            opacity: 0.7;
+        }
+
+        .menu-dots {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .menu-dot {
+            width: 5px;
+            height: 5px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .add-button {
+            width: 48px;
+            height: 48px;
+            background: #3b82f6;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .add-button:hover {
+            background: #2563eb;
+            transform: scale(1.05);
+        }
+
+        .add-button svg {
+            width: 28px;
+            height: 28px;
+            fill: white;
+        }
+
+        @media (max-width: 480px) {
+            .avatar-button {
+                min-width: 280px;
+                padding: 12px 16px;
+            }
+
+            .avatar-name {
+                font-size: 20px;
+            }
+
+            .avatar-attributes {
+                font-size: 14px;
+            }
+
+            .avatar-icon {
+                width: 48px;
+                height: 48px;
+            }
+
+            .add-button {
+                width: 42px;
+                height: 42px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="avatar-button">
+        <div class="avatar-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+        </div>
+        
+        <div class="avatar-content">
+            <div class="avatar-name">Nome do Avatar</div>
+            <div class="avatar-attributes">Atributos do avatar (resumido)</div>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="star-button" aria-label="Favoritar">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+            </button>
+            
+            <button class="menu-button" aria-label="Menu">
+                <div class="menu-dots">
+                    <div class="menu-dot"></div>
+                    <div class="menu-dot"></div>
+                    <div class="menu-dot"></div>
+                </div>
+            </button>
+            
+            <button class="add-button" aria-label="Adicionar">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+</body>
+</html>

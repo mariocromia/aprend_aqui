@@ -1,0 +1,437 @@
+<!-- ABA AVATAR REDESENHADA COM DESIGN MODERNO -->
+<div class="avatar-manager-modern">
+    <!-- Header compacto e moderno -->
+    <div class="avatar-header-compact">
+        <div class="header-title-section">
+            <h2 class="section-title-modern">
+                <i class="material-icons icon-gradient">auto_awesome</i>
+                <span class="title-text">Avatares</span>
+                <span class="title-counter">(<span id="total-avatars">0</span>)</span>
+            </h2>
+            <div class="quick-stats">
+                <div class="stat-badge stat-public">
+                    <i class="material-icons">public</i>
+                    <span id="public-avatars">0</span>
+                </div>
+                <div class="stat-badge stat-favorites">
+                    <i class="material-icons">star</i>
+                    <span id="favorite-avatars">0</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="header-controls-modern">
+            <div class="search-box-compact">
+                <i class="material-icons">search</i>
+                <input type="text" id="avatar-search-main" placeholder="Buscar avatares..." class="search-input-modern">
+            </div>
+            <div class="view-toggle-modern">
+                <button class="view-btn active" data-view="grid" title="Grade">
+                    <i class="material-icons">grid_view</i>
+                </button>
+                <button class="view-btn" data-view="list" title="Lista">
+                    <i class="material-icons">view_list</i>
+                </button>
+            </div>
+            <button class="btn-create-modern" id="toggle-create-form">
+                <i class="material-icons">add</i>
+                <span>Criar</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Layout principal redesenhado -->
+    <div class="avatar-layout-modern">
+        <!-- Filtros compactos laterais -->
+        <div class="filters-compact" id="filters-panel">
+            <div class="filters-header">
+                <h3>
+                    <i class="material-icons">tune</i>
+                    Filtros
+                </h3>
+                <button class="close-filters" id="close-filters">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            
+            <div class="filter-chips">
+                <div class="chip-group">
+                    <span class="filter-chip-label">Categoria:</span>
+                    <div class="chips-container">
+                        <button class="filter-chip active" data-category="">
+                            <span>Todas</span>
+                        </button>
+                        <button class="filter-chip" data-category="humano">
+                            <i class="material-icons">person</i>
+                            <span>Humanos</span>
+                        </button>
+                        <button class="filter-chip" data-category="animal">
+                            <i class="material-icons">pets</i>
+                            <span>Animais</span>
+                        </button>
+                        <button class="filter-chip" data-category="fantastico">
+                            <i class="material-icons">auto_awesome</i>
+                            <span>Fantásticos</span>
+                        </button>
+                        <button class="filter-chip" data-category="extraterrestre">
+                            <i class="material-icons">rocket_launch</i>
+                            <span>Aliens</span>
+                        </button>
+                        <button class="filter-chip" data-category="robotico">
+                            <i class="material-icons">smart_toy</i>
+                            <span>Robôs/IA</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="chip-group">
+                    <span class="filter-chip-label">Status:</span>
+                    <div class="chips-container">
+                        <button class="filter-chip toggle active" data-status="meus">
+                            <i class="material-icons">person</i>
+                            <span>Meus</span>
+                        </button>
+                        <button class="filter-chip toggle" data-status="publicos">
+                            <i class="material-icons">public</i>
+                            <span>Públicos</span>
+                        </button>
+                        <button class="filter-chip toggle" data-status="favoritos">
+                            <i class="material-icons">star</i>
+                            <span>Favoritos</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="sort-section">
+                    <label class="sort-label">Ordenar:</label>
+                    <select id="sort-by-modern" class="sort-select-modern">
+                        <option value="created">Mais recentes</option>
+                        <option value="name">Nome A-Z</option>
+                        <option value="used">Últimos usados</option>
+                        <option value="type">Por tipo</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulário de criação modal compacto -->
+        <div class="creation-modal" id="creation-modal">
+            <div class="modal-content-modern">
+                <div class="modal-header">
+                    <h3 class="modal-title">
+                        <i class="material-icons">person_add</i>
+                        Criar Novo Avatar
+                    </h3>
+                    <button class="close-modal" id="close-creation-modal">
+                        <i class="material-icons">close</i>
+                    </button>
+                </div>
+                
+                <form id="avatar-creation-form-modern" class="creation-form-modern">
+                    <div class="form-grid-modern">
+                        <div class="form-field-modern form-field-full">
+                            <label class="field-label">Nome do Avatar</label>
+                            <div class="input-wrapper">
+                                <i class="material-icons">badge</i>
+                                <input type="text" id="avatar-name" name="name" placeholder="Ex: Elena Rodriguez" class="input-modern" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-field-modern">
+                            <label class="field-label">Tipo</label>
+                            <div class="select-wrapper">
+                                <select id="avatar-type" name="type" class="select-modern" required>
+                                    <option value="">Selecione o tipo...</option>
+                                    <option value="humano">👤 Humano</option>
+                                    <option value="animal">🐾 Animal</option>
+                                    <option value="fantastico">✨ Fantástico</option>
+                                    <option value="extraterrestre">🚀 Extraterrestre</option>
+                                    <option value="robotico">🤖 Robótico/IA</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-field-modern">
+                            <label class="field-label">Gênero</label>
+                            <div class="select-wrapper">
+                                <select id="avatar-gender" name="gender" class="select-modern">
+                                    <option value="neutro">Neutro</option>
+                                    <option value="masculino">Masculino</option>
+                                    <option value="feminino">Feminino</option>
+                                    <option value="outro">Outro</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-field-modern">
+                            <label class="field-label">Idade</label>
+                            <div class="input-wrapper">
+                                <i class="material-icons">cake</i>
+                                <input type="number" id="avatar-age" name="age" class="input-modern" placeholder="25" min="1" max="120" value="25">
+                            </div>
+                        </div>
+                        
+                        <div class="form-field-modern">
+                            <label class="field-label">Visibilidade</label>
+                            <div class="visibility-toggle">
+                                <button type="button" class="visibility-btn active" data-value="privado">
+                                    <i class="material-icons">lock</i>
+                                    <span>Privado</span>
+                                </button>
+                                <button type="button" class="visibility-btn" data-value="publico">
+                                    <i class="material-icons">public</i>
+                                    <span>Público</span>
+                                </button>
+                            </div>
+                            <input type="hidden" id="avatar-visibility" name="visibility" value="privado">
+                        </div>
+                        
+                        <div class="form-field-modern form-field-full">
+                            <label class="field-label">Descrição</label>
+                            <div class="textarea-wrapper">
+                                <textarea id="avatar-description" name="description" placeholder="Descreva as características principais do avatar..." class="textarea-modern" rows="3"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-field-modern form-field-full">
+                            <label class="field-label">Tags</label>
+                            <div class="input-wrapper">
+                                <i class="material-icons">local_offer</i>
+                                <input type="text" id="avatar-tags" name="tags" placeholder="médica, jovem, profissional" class="input-modern">
+                            </div>
+                            <small class="field-hint">Separe as tags com vírgulas</small>
+                        </div>
+                        
+                        <!-- Campos dinâmicos baseados no tipo -->
+                        <div id="dynamic-fields-modern" class="form-field-full"></div>
+                    </div>
+                    
+                    <div class="form-actions-modern">
+                        <button type="button" class="btn-cancel" id="cancel-creation">
+                            <i class="material-icons">close</i>
+                            Cancelar
+                        </button>
+                        <button type="button" class="btn-clear" id="clear-form">
+                            <i class="material-icons">refresh</i>
+                            Limpar
+                        </button>
+                        <button type="submit" class="btn-create">
+                            <i class="material-icons">add_circle</i>
+                            Criar Avatar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Área principal de conteúdo -->
+        <div class="content-main">
+            <!-- Toolbar superior compacta -->
+            <div class="toolbar-modern">
+                <div class="toolbar-left">
+                    <button class="filter-toggle" id="toggle-filters">
+                        <i class="material-icons">tune</i>
+                        <span>Filtros</span>
+                    </button>
+                    <div class="results-badge">
+                        <span id="filtered-count">0</span>/<span id="total-count">0</span>
+                    </div>
+                </div>
+                
+                <div class="toolbar-right">
+                    <div class="bulk-actions-modern" id="bulk-actions-modern" style="display: none;">
+                        <span class="selection-info">
+                            <span class="selected-count">0</span> selecionados
+                        </span>
+                        <div class="bulk-buttons">
+                            <button class="bulk-btn" data-action="public" title="Tornar público">
+                                <i class="material-icons">public</i>
+                            </button>
+                            <button class="bulk-btn" data-action="favorite" title="Favoritar">
+                                <i class="material-icons">star</i>
+                            </button>
+                            <button class="bulk-btn" data-action="delete" title="Excluir">
+                                <i class="material-icons">delete</i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button class="refresh-btn" id="refresh-avatars" title="Atualizar">
+                        <i class="material-icons">refresh</i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Grid de avatares redesenhado -->
+            <div class="avatars-container" id="avatars-container">
+                <!-- Loading state moderno -->
+                <div class="loading-modern" id="loading-state">
+                    <div class="loading-animation">
+                        <div class="loading-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <p class="loading-text">Carregando avatares...</p>
+                </div>
+                
+                <!-- Grid de avatares -->
+                <div class="avatars-grid-modern" id="avatars-grid">
+                    <!-- Avatares serão carregados aqui dinamicamente -->
+                </div>
+
+                <!-- Estado vazio redesenhado -->
+                <div class="empty-modern" id="empty-state" style="display: none;">
+                    <div class="empty-illustration">
+                        <i class="material-icons">person_add</i>
+                        <div class="empty-particles">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <h3>Nenhum avatar encontrado</h3>
+                    <p>Crie seu primeiro avatar clicando no botão "Criar" ou ajuste os filtros de busca.</p>
+                    <button class="btn-create-first" id="create-first-avatar">
+                        <i class="material-icons">add_circle</i>
+                        Criar Primeiro Avatar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Painel de detalhes lateral moderno -->
+        <div class="details-panel-modern" id="details-panel">
+            <div class="details-header-modern">
+                <div class="header-info">
+                    <h3 class="details-title-modern">
+                        <i class="material-icons">info</i>
+                        Detalhes
+                    </h3>
+                    <span class="details-subtitle" id="details-subtitle">Selecione um avatar</span>
+                </div>
+                <button class="close-details-modern" id="close-details">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+
+            <div class="details-body-modern" id="details-content">
+                <!-- Avatar preview moderno -->
+                <div class="avatar-preview-modern">
+                    <div class="avatar-image-modern" id="avatar-image">
+                        <i class="material-icons">person</i>
+                        <div class="image-overlay">
+                            <button class="edit-image-btn" title="Editar imagem">
+                                <i class="material-icons">photo_camera</i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="avatar-quick-info">
+                        <h4 class="avatar-name-modern" id="avatar-name-display">Nome do Avatar</h4>
+                        <div class="avatar-badges">
+                            <span class="type-badge" id="avatar-type-badge">Tipo</span>
+                            <span class="status-badge" id="avatar-status-badge">Status</span>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-actions-modern">
+                        <button class="quick-action primary" id="add-to-prompt-quick" title="Adicionar ao Prompt">
+                            <i class="material-icons">add_circle</i>
+                        </button>
+                        <button class="quick-action" id="toggle-favorite" title="Favoritar">
+                            <i class="material-icons">star_border</i>
+                        </button>
+                        <button class="quick-action" id="duplicate-avatar" title="Duplicar">
+                            <i class="material-icons">content_copy</i>
+                        </button>
+                        <button class="quick-action" id="share-avatar" title="Compartilhar">
+                            <i class="material-icons">share</i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Informações detalhadas -->
+                <div class="info-sections">
+                    <div class="info-section">
+                        <h5 class="section-title-small">
+                            <i class="material-icons">schedule</i>
+                            Metadados
+                        </h5>
+                        <div class="meta-grid">
+                            <div class="meta-item">
+                                <span class="meta-label">Criado</span>
+                                <span class="meta-value" id="created-date">-</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Último uso</span>
+                                <span class="meta-value" id="last-used">-</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Usos</span>
+                                <span class="meta-value" id="usage-count">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h5 class="section-title-small">
+                            <i class="material-icons">description</i>
+                            Descrição
+                        </h5>
+                        <p class="description-text" id="avatar-description-display">Selecione um avatar para ver detalhes</p>
+                    </div>
+
+                    <div class="info-section">
+                        <h5 class="section-title-small">
+                            <i class="material-icons">local_offer</i>
+                            Tags
+                        </h5>
+                        <div class="tags-modern" id="tags-display">
+                            <!-- Tags serão carregadas aqui -->
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h5 class="section-title-small">
+                            <i class="material-icons">auto_awesome</i>
+                            Prompt Gerado
+                        </h5>
+                        <div class="prompt-preview" id="prompt-display">
+                            <div class="prompt-text-modern">O prompt será gerado automaticamente baseado nas características do avatar</div>
+                            <div class="prompt-actions-modern">
+                                <button class="action-btn secondary" id="generate-prompt">
+                                    <i class="material-icons">auto_awesome</i>
+                                    Gerar
+                                </button>
+                                <button class="action-btn secondary" id="copy-prompt">
+                                    <i class="material-icons">content_copy</i>
+                                    Copiar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ações principais -->
+                <div class="main-actions-modern">
+                    <button class="action-btn primary full" id="add-to-prompt">
+                        <i class="material-icons">add_circle</i>
+                        Adicionar ao Prompt
+                    </button>
+                    <div class="action-row">
+                        <button class="action-btn secondary" id="edit-avatar">
+                            <i class="material-icons">edit</i>
+                            Editar
+                        </button>
+                        <button class="action-btn danger" id="delete-avatar">
+                            <i class="material-icons">delete</i>
+                            Excluir
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

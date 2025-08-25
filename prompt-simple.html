@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Builder IA - Simple</title>
+    <link rel="stylesheet" href="assets/css/prompt-builder.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <main class="main-container">
+        <section class="progress-compact">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 16.67%"></div>
+            </div>
+            <div class="step-indicator">
+                <span class="current-step">Etapa 1 de 6</span>
+                <span class="step-title">Tipo de Conteúdo</span>
+            </div>
+        </section>
+
+        <div class="content-grid">
+            <section class="options-column">
+                <div class="step-content">
+                    <h2 class="step-title">
+                        <i class="fas fa-image"></i>
+                        Tipo de Conteúdo
+                    </h2>
+                    <p class="step-description">Escolha o tipo de conteúdo que deseja gerar</p>
+                    <div class="options-grid">
+                        <div class="option-card" onclick="selectOption('image')">
+                            <div class="option-icon">
+                                <i class="fas fa-image"></i>
+                            </div>
+                            <div class="option-title">Imagem</div>
+                            <div class="option-description">Gerar imagem estática</div>
+                        </div>
+                        <div class="option-card" onclick="selectOption('video')">
+                            <div class="option-icon">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            <div class="option-title">Vídeo</div>
+                            <div class="option-description">Gerar vídeo/animação</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="prompt-column">
+                <div class="prompt-header-compact">
+                    <h3>
+                        <i class="fas fa-code"></i>
+                        Prompt Gerado
+                    </h3>
+                </div>
+                
+                <div class="prompt-textarea-container">
+                    <textarea 
+                        id="promptText" 
+                        placeholder="Seu prompt será construído conforme você faz suas escolhas..."
+                        readonly
+                    >Crie uma imagem</textarea>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        function selectOption(type) {
+            document.querySelectorAll('.option-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.target.closest('.option-card').classList.add('selected');
+            
+            if (type === 'image') {
+                document.getElementById('promptText').value = 'Crie uma imagem';
+            } else {
+                document.getElementById('promptText').value = 'Crie um vídeo';
+            }
+            
+            console.log('Selected:', type);
+        }
+    </script>
+</body>
+</html>

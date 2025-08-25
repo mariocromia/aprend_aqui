@@ -1,0 +1,644 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
+    background: #f8fafc;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Container principal - layout split */
+.main-container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+
+/* Seção da imagem (60%) */
+.image-section {
+    flex: 0 0 60%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-image: url('/aprend_aqui/midia/gerador.jpg'), url('../../midia/gerador.jpg'), url('../../../midia/gerador.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    image-rendering: auto;
+}
+
+.image-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: none;
+}
+
+/* Hero content removido - apenas imagem de fundo */
+
+/* Seção de login (40%) */
+.login-section {
+    flex: 0 0 40%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    position: relative;
+}
+
+.login-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50px;
+    bottom: 0;
+    width: 100px;
+    background: linear-gradient(90deg, rgba(102, 126, 234, 0.05), transparent);
+}
+
+/* Container do formulário */
+.login-container {
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Logo no topo */
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+    gap: 12px;
+}
+
+.logo-icon {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 20px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.logo-text {
+    font-size: 28px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Header do login */
+.login-header {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.login-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 6px;
+}
+
+.login-header p {
+    color: #718096;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+/* Formulário */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* Grupos de formulário */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.form-group.required label::after {
+    content: ' *';
+    color: #e53e3e;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #2d3748;
+    font-size: 13px;
+    letter-spacing: 0.025em;
+}
+
+/* Input wrapper */
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Inputs */
+.form-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #ffffff;
+    transition: all 0.3s ease;
+    outline: none;
+    font-weight: 400;
+}
+
+.form-input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    transform: translateY(-1px);
+}
+
+.form-input.has-icon {
+    padding-left: 38px;
+}
+
+.form-input.has-toggle {
+    padding-right: 38px;
+}
+
+.form-input::placeholder {
+    color: #a0aec0;
+    font-weight: 400;
+}
+
+/* Ícones de input */
+.input-icon {
+    position: absolute;
+    left: 12px;
+    color: #a0aec0;
+    z-index: 1;
+    font-size: 14px;
+}
+
+.form-input:focus + .input-icon,
+.form-input:not(:placeholder-shown) + .input-icon {
+    color: #667eea;
+}
+
+/* Toggle de senha */
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    color: #a0aec0;
+    cursor: pointer;
+    z-index: 1;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    padding: 2px;
+}
+
+.password-toggle:hover {
+    color: #667eea;
+    transform: scale(1.1);
+}
+
+/* Botão de login */
+.login-button {
+    width: 100%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 6px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    letter-spacing: 0.025em;
+}
+
+.login-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.login-button:active {
+    transform: translateY(-1px);
+}
+
+.login-button:disabled {
+    background: #cbd5e0;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Link de recuperação de senha */
+.forgot-password-link {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.forgot-password-link a {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.forgot-password-link a:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+/* Link de cadastro */
+.signup-link {
+    text-align: center;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e2e8f0;
+    font-size: 13px;
+    color: #718096;
+}
+
+.signup-link a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.signup-link a:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+/* Mensagens */
+.error-message {
+    background: linear-gradient(135deg, #fed7d7, #feb2b2);
+    color: #c53030;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid #feb2b2;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 4px rgba(197, 48, 48, 0.1);
+}
+
+.success-message {
+    background: linear-gradient(135deg, #c6f6d5, #9ae6b4);
+    color: #2f855a;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid #9ae6b4;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 4px rgba(47, 133, 90, 0.1);
+}
+
+.demo-info {
+    background: linear-gradient(135deg, #ebf8ff, #bee3f8);
+    border: 1px solid #90cdf4;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 24px;
+    font-size: 14px;
+    color: #2c5282;
+    font-weight: 500;
+}
+
+.demo-info strong {
+    color: #2a4365;
+    font-weight: 700;
+}
+
+/* Modal styles */
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+}
+
+.modal-content {
+    background: white;
+    margin: 8% auto;
+    padding: 24px;
+    border: none;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 480px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+    animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes modalSlideIn {
+    from { 
+        transform: translateY(-30px) scale(0.95); 
+        opacity: 0; 
+    }
+    to { 
+        transform: translateY(0) scale(1); 
+        opacity: 1; 
+    }
+}
+
+.close {
+    color: #a0aec0;
+    float: right;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+    transition: all 0.3s ease;
+    padding: 5px;
+    border-radius: 8px;
+}
+
+.close:hover {
+    color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.modal h2 {
+    color: #1a202c;
+    margin-bottom: 8px;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.modal p {
+    color: #718096;
+    margin-bottom: 16px;
+    line-height: 1.4;
+    font-size: 14px;
+}
+
+/* Métodos de recuperação */
+.recovery-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.method-option {
+    display: flex;
+    align-items: center;
+    padding: 14px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.method-option:hover {
+    border-color: #667eea;
+    background: rgba(102, 126, 234, 0.02);
+    transform: translateY(-1px);
+}
+
+.method-option input[type="radio"] {
+    margin-right: 12px;
+    transform: scale(1.2);
+    accent-color: #667eea;
+}
+
+.method-option:has(input[type="radio"]:checked) {
+    border-color: #667eea;
+    background: rgba(102, 126, 234, 0.05);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.method-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.method-content i {
+    font-size: 16px;
+    margin-bottom: 3px;
+}
+
+.method-content span {
+    font-weight: 600;
+    font-size: 14px;
+    color: #2d3748;
+}
+
+.method-content small {
+    color: #718096;
+    font-size: 11px;
+    font-weight: 400;
+}
+
+.method-option input[type="radio"]:checked + .method-content i {
+    color: #667eea;
+}
+
+.method-option input[type="radio"]:checked + .method-content span {
+    color: #667eea;
+}
+
+.fab.fa-whatsapp {
+    color: #25d366;
+}
+
+.method-option input[type="radio"]:checked + .method-content .fa-whatsapp {
+    color: #25d366;
+}
+
+/* Estados de validação */
+.form-input.valid {
+    border-color: #48bb78;
+    background: rgba(72, 187, 120, 0.02);
+}
+
+.form-input.invalid {
+    border-color: #e53e3e;
+    background: rgba(229, 62, 62, 0.02);
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+    .main-container {
+        flex-direction: column;
+    }
+    
+    .image-section {
+        flex: 0 0 35%;
+        min-height: 35vh;
+    }
+    
+    .login-section {
+        flex: 0 0 65%;
+        padding: 30px 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .image-section {
+        flex: 0 0 30%;
+        min-height: 30vh;
+    }
+    
+    .login-section {
+        flex: 0 0 70%;
+        padding: 20px;
+    }
+    
+    .login-container {
+        max-width: 100%;
+    }
+    
+    .logo {
+        margin-bottom: 25px;
+    }
+    
+    .login-header h1 {
+        font-size: 24px;
+    }
+    
+    .modal-content {
+        margin: 12% auto;
+        padding: 20px;
+        width: 95%;
+    }
+}
+
+@media (max-width: 480px) {
+    .image-section {
+        flex: 0 0 25%;
+        min-height: 25vh;
+    }
+    
+    .login-section {
+        flex: 0 0 75%;
+        padding: 15px;
+    }
+    
+    .logo-text {
+        font-size: 22px;
+    }
+    
+    .login-header h1 {
+        font-size: 20px;
+    }
+    
+    .form-input {
+        padding: 14px 18px;
+        font-size: 16px; /* Previne zoom no iOS */
+    }
+    
+    .login-button {
+        padding: 14px 20px;
+    }
+}
+
+/* Animações suaves */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.login-container {
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* Loading states */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.loading .login-button {
+    background: #cbd5e0;
+    cursor: not-allowed;
+}
+
+/* Scrollbar customization para modal */
+.modal-content {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e0 transparent;
+}
+
+.modal-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 3px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: #a0aec0;
+}
+
+/* Verificação de código */
+.verification-code {
+    text-align: center;
+    font-size: 20px;
+    letter-spacing: 6px;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+}
+
+/* WhatsApp icon styling */
+.hero-icon .fab.fa-whatsapp {
+    color: #25d366;
+}
+
+/* Ajustes específicos para a proporção 37%/63% */
+@media (min-width: 1025px) {
+    .image-section {
+        flex: 0 0 63%;
+    }
+    
+    .login-section {
+        flex: 0 0 37%;
+    }
+}
+
+/* Form help text styling adicional */
+.form-help {
+    font-size: 11px;
+    color: #718096;
+    margin-top: 4px;
+    line-height: 1.3;
+    font-weight: 400;
+}

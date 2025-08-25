@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3:*)",
+      "Bash(grep:*)",
+      "Bash(curl:*)",
+      "Bash(php:*)",
+      "Bash(find:*)",
+      "Bash(rm:*)",
+      "Bash(composer show:*)",
+      "Bash(composer install:*)",
+      "Bash(mv:*)"
+    ],
+    "deny": [],
+    "defaultMode": "acceptEdits"
+  }
+}

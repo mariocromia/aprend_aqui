@@ -1,0 +1,349 @@
+# CentroService - Configurações do Servidor Apache
+# Otimizações de Performance e Segurança
+
+# Ativar compressão GZIP
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/json
+</IfModule>
+
+# Cache do navegador
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # Imagens
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/webp "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+    ExpiresByType image/x-icon "access plus 1 year"
+    
+    # Vídeos
+    ExpiresByType video/mp4 "access plus 1 month"
+    ExpiresByType video/webm "access plus 1 month"
+    ExpiresByType video/ogg "access plus 1 month"
+    
+    # CSS e JavaScript
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType application/x-javascript "access plus 1 month"
+    
+    # Fontes
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType application/font-woff "access plus 1 year"
+    ExpiresByType application/font-woff2 "access plus 1 year"
+    
+    # HTML
+    ExpiresByType text/html "access plus 1 hour"
+    
+    # Outros
+    ExpiresByType application/pdf "access plus 1 month"
+    ExpiresByType application/x-shockwave-flash "access plus 1 month"
+</IfModule>
+
+# Headers de segurança
+<IfModule mod_headers.c>
+    # Proteção XSS
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # Prevenção de clickjacking
+    Header always set X-Frame-Options "SAMEORIGIN"
+    
+    # Prevenção de MIME type sniffing
+    Header always set X-Content-Type-Options "nosniff"
+    
+    # Referrer Policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Content Security Policy (CSP)
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; media-src 'self' https:; connect-src 'self' https:; frame-src 'self' https:;"
+    
+    # Permissions Policy
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+    
+    # HSTS (HTTP Strict Transport Security)
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+</IfModule>
+
+# Redirecionamento para HTTPS (descomente se tiver SSL)
+# RewriteEngine On
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Redirecionamento www para non-www (ou vice-versa)
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+# Proteção contra ataques comuns
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Bloquear acesso a arquivos sensíveis
+    RewriteRule ^(\.htaccess|\.htpasswd|\.git|\.env|composer\.json|composer\.lock|package\.json|package-lock\.json|README\.md)$ - [F,L]
+    
+    # Bloquear acesso a diretórios sensíveis
+    RewriteRule ^(logs|tmp|temp|cache|config|vendor|node_modules)/ - [F,L]
+    
+    # Bloquear user agents maliciosos
+    RewriteCond %{HTTP_USER_AGENT} (bot|crawler|spider|scraper) [NC]
+    RewriteCond %{HTTP_USER_AGENT} !(googlebot|bingbot|yandexbot) [NC]
+    RewriteRule .* - [F,L]
+    
+    # Bloquear IPs maliciosos (adicione IPs específicos se necessário)
+    # RewriteCond %{REMOTE_ADDR} ^192\.168\.1\.100$
+    # RewriteRule .* - [F,L]
+</IfModule>
+
+# Proteção contra hotlinking de imagens
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTP_REFERER} !^$
+    RewriteCond %{HTTP_REFERER} !^https?://(www\.)?centroservice\.com\.br [NC]
+    RewriteCond %{HTTP_REFERER} !^https?://(www\.)?google\. [NC]
+    RewriteCond %{HTTP_REFERER} !^https?://(www\.)?bing\. [NC]
+    RewriteCond %{HTTP_REFERER} !^https?://(www\.)?yahoo\. [NC]
+    RewriteCond %{HTTP_REFERER} !^https?://(www\.)?facebook\. [NC]
+    RewriteCond %{HTTP_REFERER} !^https?://(www\.)?twitter\. [NC]
+    RewriteCond %{HTTP_REFERER} !^https?://(www\.)?linkedin\. [NC]
+    RewriteCond %{HTTP_REFERER} !^https?://(www\.)?instagram\. [NC]
+    RewriteRule \.(jpg|jpeg|png|gif|webp|svg)$ - [F,L]
+</IfModule>
+
+# Configurações de PHP (se disponível)
+<IfModule mod_php.c>
+    # Configurações de segurança
+    php_flag display_errors Off
+    php_flag log_errors On
+    php_flag allow_url_fopen Off
+    php_flag allow_url_include Off
+    php_flag file_uploads On
+    php_flag max_execution_time 30
+    php_flag memory_limit 128M
+    php_flag post_max_size 8M
+    php_flag upload_max_filesize 2M
+    
+    # Configurações de sessão
+    php_flag session.cookie_httponly On
+    php_flag session.cookie_secure Off
+    php_flag session.use_strict_mode On
+    php_flag session.cookie_samesite "Lax"
+</IfModule>
+
+# Configurações de diretório
+<Directory "/">
+    # Desabilitar listagem de diretórios
+    Options -Indexes
+    
+    # Permitir apenas métodos HTTP necessários
+    <LimitExcept GET POST>
+        Deny from all
+    </LimitExcept>
+    
+    # Configurações de arquivos
+    <Files "*.php">
+        # Permitir apenas acesso direto aos arquivos principais
+        <RequireAll>
+            Require all granted
+        </RequireAll>
+    </Files>
+    
+    <Files "process_contact.php">
+        # Permitir apenas POST para o formulário
+        <LimitExcept POST>
+            Deny from all
+        </LimitExcept>
+    </Files>
+</Directory>
+
+# Configurações específicas para arquivos de mídia
+<FilesMatch "\.(mp4|webm|ogg|avi|mov|wmv|flv|mkv)$">
+    Header set Accept-Ranges bytes
+    Header set Cache-Control "public, max-age=2592000"
+</FilesMatch>
+
+# Configurações para fontes
+<FilesMatch "\.(woff|woff2|ttf|eot|otf)$">
+    Header set Access-Control-Allow-Origin "*"
+    Header set Cache-Control "public, max-age=31536000"
+</FilesMatch>
+
+# Configurações para imagens
+<FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico)$">
+    Header set Cache-Control "public, max-age=2592000"
+</FilesMatch>
+
+# Configurações para CSS e JavaScript
+<FilesMatch "\.(css|js)$">
+    Header set Cache-Control "public, max-age=2592000"
+</FilesMatch>
+
+# Configurações para HTML
+<FilesMatch "\.(html|htm|php)$">
+    Header set Cache-Control "public, max-age=3600"
+</FilesMatch>
+
+# Bloquear acesso a arquivos de backup
+<FilesMatch "\.(bak|backup|old|orig|save|swp|tmp|temp)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Bloquear acesso a arquivos de configuração
+<FilesMatch "\.(ini|conf|config|cfg|cnf)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Configurações de erro personalizadas
+ErrorDocument 400 /error.php?code=400
+ErrorDocument 401 /error.php?code=401
+ErrorDocument 403 /error.php?code=403
+ErrorDocument 404 /error.php?code=404
+ErrorDocument 500 /error.php?code=500
+
+# Configurações de compressão para tipos específicos
+<IfModule mod_deflate.c>
+    # Comprimir HTML, CSS, JavaScript, XML, JSON
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/x-javascript application/json application/xml+rss application/atom+xml image/svg+xml
+    
+    # Comprimir fontes
+    AddOutputFilterByType DEFLATE font/opentype font/otf font/ttf application/font-woff application/font-woff2 application/vnd.ms-fontobject
+    
+    # Comprimir outros tipos
+    AddOutputFilterByType DEFLATE application/rss+xml application/vnd.ms-excel application/vnd.ms-powerpoint application/msword application/x-shockwave-flash
+</IfModule>
+
+# Configurações de performance
+<IfModule mod_headers.c>
+    # Preload de recursos críticos
+    <FilesMatch "\.(css|js|woff2)$">
+        Header set Link "</assets/css/style.css>; rel=preload; as=style, </assets/js/main.js>; rel=preload; as=script"
+    </FilesMatch>
+    
+    # DNS prefetch para recursos externos
+    Header set X-DNS-Prefetch-Control "on"
+</IfModule>
+
+# Configurações de logging (opcional)
+<IfModule mod_log_config.c>
+    LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
+    LogFormat "%h %l %u %t \"%r\" %>s %b" common
+    LogFormat "%{Referer}i -> %U" referer
+    LogFormat "%{User-agent}i" agent
+</IfModule>
+
+# Configurações de rate limiting (se disponível)
+<IfModule mod_ratelimit.c>
+    # Limitar requisições por IP
+    SetOutputFilter RATE_LIMIT
+    SetEnv rate-limit 400
+</IfModule>
+
+# Configurações de compressão de imagens (se disponível)
+<IfModule mod_pagespeed.c>
+    ModPagespeed on
+    ModPagespeedEnableFilters rewrite_images
+    ModPagespeedEnableFilters convert_jpeg_to_webp
+    ModPagespeedEnableFilters convert_png_to_jpeg
+    ModPagespeedEnableFilters strip_image_color_profile
+    ModPagespeedEnableFilters strip_image_meta_data
+</IfModule>
+
+# Configurações de segurança adicional
+<IfModule mod_security.c>
+    # Regras básicas do ModSecurity
+    SecRuleEngine On
+    SecRequestBodyAccess On
+    SecRequestBodyLimit 13107200
+    SecRequestBodyNoFilesLimit 131072
+    SecRequestBodyInMemoryLimit 131072
+    SecRequestBodyLimitAction Reject
+    SecRule REQUEST_HEADERS:Content-Type "text/xml" \
+        "id:'200000',phase:1,t:none,t:lowercase,pass,nolog,ctl:requestBodyProcessor=XML"
+    SecRule REQBODY_ERROR "!@eq 0" \
+        "id:'200001',phase:2,t:none,log,deny,status:400,msg:'Failed to parse request body.',logdata:'%{reqbody_error_msg}'"
+    SecRule XML "@gt 0" \
+        "id:'200002',phase:2,t:none,t:lowercase,log,deny,status:400,msg:'XML parsing failed.',logdata:'%{xml_error_msg}'"
+</IfModule>
+
+# Configurações de cache para CDN (se usar)
+<IfModule mod_headers.c>
+    # Cache para CDN
+    <FilesMatch "\.(css|js|png|jpg|jpeg|gif|webp|svg|woff|woff2|ttf|eot|mp4|webm|ogg)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+        Header set Vary "Accept-Encoding"
+    </FilesMatch>
+</IfModule>
+
+# Configurações de compressão para diferentes tipos de conteúdo
+<IfModule mod_mime.c>
+    # Adicionar tipos MIME para formatos modernos
+    AddType application/font-woff .woff
+    AddType application/font-woff2 .woff2
+    AddType image/webp .webp
+    AddType video/webm .webm
+    AddType application/json .json
+    AddType text/cache-manifest .appcache
+    AddType application/manifest+json .webmanifest
+</IfModule>
+
+# Configurações de segurança para formulários
+<IfModule mod_rewrite.c>
+    # Proteção contra CSRF em formulários
+    RewriteCond %{REQUEST_METHOD} POST
+    RewriteCond %{HTTP_REFERER} !^https?://(www\.)?centroservice\.com\.br [NC]
+    RewriteCond %{REQUEST_URI} ^/process_contact\.php$
+    RewriteRule .* - [F,L]
+</IfModule>
+
+# Configurações de backup automático (se disponível)
+<IfModule mod_backup.c>
+    # Backup automático de arquivos críticos
+    BackupEngine On
+    BackupDirectory /backups
+    BackupRetention 7
+    BackupCompression On
+</IfModule>
+
+# Configurações de monitoramento (se disponível)
+<IfModule mod_status.c>
+    # Página de status do servidor
+    <Location /server-status>
+        SetHandler server-status
+        Require ip 127.0.0.1 ::1
+        Require ip 192.168.0.0/16
+        Require ip 10.0.0.0/8
+    </Location>
+</IfModule>
+
+# Configurações de manutenção
+<IfModule mod_rewrite.c>
+    # Página de manutenção (descomente quando necessário)
+    # RewriteEngine On
+    # RewriteCond %{REMOTE_ADDR} !^127\.0\.0\.1$
+    # RewriteCond %{REMOTE_ADDR} !^::1$
+    # RewriteRule .* /maintenance.html [R=302,L]
+</IfModule>
+
+# Configurações finais
+<IfModule mod_rewrite.c>
+    # Redirecionar erros 404 para página personalizada
+    ErrorDocument 404 /404.php
+    
+    # Forçar HTTPS para páginas de login/formulários (se tiver SSL)
+    # RewriteCond %{HTTPS} off
+    # RewriteCond %{REQUEST_URI} ^/(login|admin|process_contact)\.php$
+    # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>

@@ -1,0 +1,8 @@
+# Backup do .htaccess original
+RewriteEngine On
+
+# Proteger apenas arquivos críticos
+<Files "env.config">
+    Order allow,deny
+    Deny from all
+</Files>

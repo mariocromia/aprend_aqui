@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CentroService - Teste</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2563eb;
+            text-align: center;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+        /* Wizard de criação de seres */
+        .wizard {
+            margin-top: 20px;
+        }
+        .wizard .progress {
+            position: relative;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+        .wizard .progress .bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #2563eb, #4f46e5);
+            transition: width 0.25s ease;
+        }
+        .wizard .steps { display: none; }
+        .wizard .steps.active { display: block; animation: fadeIn 0.2s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: translateY(0);} }
+        .wizard .step-title { font-weight: bold; margin-bottom: 8px; color: #111827; }
+        .wizard .hint { font-size: 0.9rem; color: #6b7280; margin-bottom: 10px; }
+        .wizard .field { margin: 12px 0 18px 0; }
+        .wizard label { display: block; margin-bottom: 6px; color: #374151; }
+        .wizard select,
+        .wizard input[type="text"],
+        .wizard input[type="number"],
+        .wizard input[type="range"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            outline: none;
+        }
+        .wizard .range-readout { font-size: 0.9rem; color: #374151; margin-top: 6px; }
+        .wizard .buttons { display: flex; gap: 8px; justify-content: space-between; flex-wrap: wrap; }
+        .wizard .buttons .left, .wizard .buttons .right { display: flex; gap: 8px; }
+        .btn { background: #2563eb; color: #fff; padding: 10px 14px; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; }
+        .btn.secondary { background: #6b7280; }
+        .btn.ghost { background: #e5e7eb; color: #111827; }
+        .btn.success { background: #16a34a; }
+        .btn.warning { background: #f59e0b; }
+        .summary { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; margin-top: 16px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CentroService - Página de Teste</h1>
+        
+        <div class="test-section info">
+            <h3>📋 Informações do Teste</h3>
+            <p>Esta é uma página HTML simples para testar se o servidor está funcionando corretamente.</p>
+            <p>Se você consegue ver esta página, o servidor Apache está funcionando.</p>
+        </div>
+        
+        <div class="test-section success">
+            <h3>✅ Teste de HTML</h3>
+            <p>Esta página HTML está funcionando perfeitamente!</p>
+            <p>Isso significa que o problema pode estar no PHP ou nas configurações do servidor.</p>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔍 Próximos Passos</h3>
+            <p>Para diagnosticar o problema:</p>
+            <ol>
+                <li>Teste o arquivo <code>test.php</code> acessando: <a href="test.php">http://localhost/centroservice/test.php</a></li>
+                <li>Verifique os logs de erro do Apache</li>
+                <li>Teste com o arquivo <code>.htaccess.simple</code> renomeando para <code>.htaccess</code></li>
+            </ol>
+        </div>
+        
+        <div class="test-section">
+            <h3>📁 Arquivos Disponíveis</h3>
+            <ul>
+                <li><strong>index.html</strong> - Esta página de teste (funcionando)</li>
+                <li><strong>index.php</strong> - Página principal (com problema)</li>
+                <li><strong>test.php</strong> - Diagnóstico de PHP</li>
+                <li><strong>.htaccess</strong> - Configurações do servidor</li>
+                <li><strong>.htaccess.simple</strong> - Configurações simplificadas</li>
+            </ul>
+        </div>
+        
+        <div class="test-section">
+            <h3>🚀 Teste de Funcionalidade</h3>
+            <p>Clique nos links abaixo para testar:</p>
+            <p><a href="test.php" style="background: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Testar PHP</a></p>
+            <p><a href="index.php" style="background: #dc3545; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Testar index.php</a></p>
+        </div>
+        <div class="test-section">
+            <h3>🧬 Criador de Seres (Multi-etapas)</h3>
+            <p class="hint">Crie o Ser 1 (Humano) definindo características em etapas. Você pode pular qualquer etapa. Depois, cadastre o Ser 2 (Animal - Cachorro).</p>
+
+            <!-- Wizard Ser 1: Humano -->
+            <div id="wizard-ser1" class="wizard">
+                <div class="progress"><div class="bar" id="bar-ser1"></div></div>
+
+                <!-- Etapa 1: Tipo (fixo humano) -->
+                <div class="steps active" data-step-ser1="0">
+                    <div class="step-title">Tipo do Ser 1</div>
+                    <div class="field">
+                        <label>Tipo</label>
+                        <select id="ser1-tipo" disabled>
+                            <option value="humano" selected>Humano</option>
+                        </select>
+                    </div>
+                    <div class="buttons">
+                        <div class="left"></div>
+                        <div class="right">
+                            <button class="btn" data-next-ser1>Próximo</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Etapa 2: Gênero -->
+                <div class="steps" data-step-ser1="1">
+                    <div class="step-title">Gênero</div>
+                    <div class="hint">Escolha um gênero ou pule para especificar depois.</div>
+                    <div class="field">
+                        <select id="ser1-genero">
+                            <option value="">Selecione...</option>
+                            <option>Masculino</option>
+                            <option>Feminino</option>
+                            <option>Não-binário</option>
+                            <option>Prefiro não informar</option>
+                        </select>
+                    </div>
+                    <div class="buttons">
+                        <div class="left">
+                            <button class="btn ghost" data-prev-ser1>Voltar</button>
+                        </div>
+                        <div class="right">
+                            <button class="btn secondary" data-skip-ser1>Pular</button>
+                            <button class="btn" data-next-ser1>Próximo</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Etapa 3: Idade -->
+                <div class="steps" data-step-ser1="2">
+                    <div class="step-title">Idade</div>
+                    <div class="field">
+                        <input id="ser1-idade" type="range" min="0" max="100" value="25">
+                        <div class="range-readout">Idade: <span id="ser1-idade-out">25</span> anos</div>
+                    </div>
+                    <div class="buttons">
+                        <div class="left"><button class="btn ghost" data-prev-ser1>Voltar</button></div>
+                        <div class="right">
+                            <button class="btn secondary" data-skip-ser1>Pular</button>
+                            <button class="btn" data-next-ser1>Próximo</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Etapa 4: Altura -->
+                <div class="steps" data-step-ser1="3">
+                    <div class="step-title">Altura</div>
+                    <div class="field">
+                        <label>Altura (cm)</label>
+                        <input id="ser1-altura" type="number" placeholder="Ex.: 175" min="50" max="250">
+                    </div>
+                    <div class="buttons">
+                        <div class="left"><button class="btn ghost" data-prev-ser1>Voltar</button></div>
+                        <div class="right">
+                            <button class="btn secondary" data-skip-ser1>Pular</button>
+                            <button class="btn" data-next-ser1>Próximo</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Etapa 5: Peso -->
+                <div class="steps" data-step-ser1="4">
+                    <div class="step-title">Peso</div>
+                    <div class="field">
+                        <label>Peso (kg)</label>
+                        <input id="ser1-peso" type="number" placeholder="Ex.: 72" min="10" max="400">
+                    </div>
+                    <div class="buttons">
+                        <div class="left"><button class="btn ghost" data-prev-ser1>Voltar</button></div>
+                        <div class="right">
+                            <button class="btn secondary" data-skip-ser1>Pular</button>
+                            <button class="btn" data-next-ser1>Próximo</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Etapa 6: Vestimenta -->
+                <div class="steps" data-step-ser1="5">
+                    <div class="step-title">Como está vestido?</div>
+                    <div class="field">
+                        <select id="ser1-vestimenta">
+                            <option value="">Selecione...</option>
+                            <option>Casual</option>
+                            <option>Formal</option>
+                            <option>Esportivo</option>
+                            <option>Social</option>
+                            <option>Fantasia</option>
+                            <option>Uniforme</option>
+                            <option>Outro</option>
+                        </select>
+                    </div>
+                    <div class="buttons">
+                        <div class="left"><button class="btn ghost" data-prev-ser1>Voltar</button></div>
+                        <div class="right">
+                            <button class="btn secondary" data-skip-ser1>Pular</button>
+                            <button class="btn success" id="save-ser1">Salvar Ser 1</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="summary-ser1" class="summary" style="display:none;"></div>
+            </div>
+
+            <!-- Wizard Ser 2: Animal (Cachorro) -->
+            <div id="wizard-ser2" class="wizard" style="display:none;">
+                <div class="progress"><div class="bar" id="bar-ser2"></div></div>
+
+                <!-- Etapa 1: Tipo -->
+                <div class="steps active" data-step-ser2="0">
+                    <div class="step-title">Tipo do Ser 2</div>
+                    <div class="field">
+                        <select id="ser2-tipo">
+                            <option value="animal" selected>Animal</option>
+                            <option value="humano">Humano</option>
+                        </select>
+                    </div>
+                    <div class="buttons">
+                        <div class="left"></div>
+                        <div class="right">
+                            <button class="btn" data-next-ser2>Próximo</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Etapa 2: Espécie (default Cachorro) -->
+                <div class="steps" data-step-ser2="1">
+                    <div class="step-title">Espécie</div>
+                    <div class="field">
+                        <select id="ser2-especie">
+                            <option value="cachorro" selected>Cachorro</option>
+                            <option value="gato">Gato</option>
+                            <option value="ave">Ave</option>
+                            <option value="outro">Outro</option>
+                        </select>
+                    </div>
+                    <div class="buttons">
+                        <div class="left"><button class="btn ghost" data-prev-ser2>Voltar</button></div>
+                        <div class="right">
+                            <button class="btn secondary" data-skip-ser2>Pular</button>
+                            <button class="btn" data-next-ser2>Próximo</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Etapa 3: Raça (para cachorro) -->
+                <div class="steps" data-step-ser2="2">
+                    <div class="step-title">Raça</div>
+                    <div class="field">
+                        <select id="ser2-raca">
+                            <option value="">Selecione...</option>
+                            <option>Vira-lata</option>
+                            <option>Labrador</option>
+                            <option>Golden Retriever</option>
+                            <option>Poodle</option>
+                            <option>Bulldog</option>
+                            <option>Pastor Alemão</option>
+                            <option>Beagle</option>
+                            <option>Shih Tzu</option>
+                            <option>Outro</option>
+                        </select>
+                    </div>
+                    <div class="buttons">
+                        <div class="left"><button class="btn ghost" data-prev-ser2>Voltar</button></div>
+                        <div class="right">
+                            <button class="btn secondary" data-skip-ser2>Pular</button>
+                            <button class="btn" data-next-ser2>Próximo</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Etapa 4: Porte -->
+                <div class="steps" data-step-ser2="3">
+                    <div class="step-title">Porte</div>
+                    <div class="field">
+                        <select id="ser2-porte">
+                            <option value="">Selecione...</option>
+                            <option>Pequeno</option>
+                            <option>Médio</option>
+                            <option>Grande</option>
+                        </select>
+                    </div>
+                    <div class="buttons">
+                        <div class="left"><button class="btn ghost" data-prev-ser2>Voltar</button></div>
+                        <div class="right">
+                            <button class="btn secondary" data-skip-ser2>Pular</button>
+                            <button class="btn" data-next-ser2>Próximo</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Etapa 5: Cor -->
+                <div class="steps" data-step-ser2="4">
+                    <div class="step-title">Cor</div>
+                    <div class="field">
+                        <input id="ser2-cor" type="text" placeholder="Ex.: marrom, preto, caramelo">
+                    </div>
+                    <div class="buttons">
+                        <div class="left"><button class="btn ghost" data-prev-ser2>Voltar</button></div>
+                        <div class="right">
+                            <button class="btn secondary" data-skip-ser2>Pular</button>
+                            <button class="btn" data-next-ser2>Próximo</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Etapa 6: Idade -->
+                <div class="steps" data-step-ser2="5">
+                    <div class="step-title">Idade</div>
+                    <div class="field">
+                        <input id="ser2-idade" type="range" min="0" max="20" value="3">
+                        <div class="range-readout">Idade: <span id="ser2-idade-out">3</span> anos</div>
+                    </div>
+                    <div class="buttons">
+                        <div class="left"><button class="btn ghost" data-prev-ser2>Voltar</button></div>
+                        <div class="right">
+                            <button class="btn secondary" data-skip-ser2>Pular</button>
+                            <button class="btn" data-next-ser2>Próximo</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Etapa 7: Pelagem / Acessórios -->
+                <div class="steps" data-step-ser2="6">
+                    <div class="step-title">Detalhes</div>
+                    <div class="field">
+                        <label>Pelagem</label>
+                        <select id="ser2-pelagem">
+                            <option value="">Selecione...</option>
+                            <option>Curta</option>
+                            <option>Média</option>
+                            <option>Longa</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Acessórios</label>
+                        <select id="ser2-acessorios">
+                            <option value="">Selecione...</option>
+                            <option>Coleira</option>
+                            <option>Peitoral</option>
+                            <option>Roupa</option>
+                            <option>Lenço</option>
+                            <option>Nenhum</option>
+                        </select>
+                    </div>
+                    <div class="buttons">
+                        <div class="left"><button class="btn ghost" data-prev-ser2>Voltar</button></div>
+                        <div class="right">
+                            <button class="btn secondary" data-skip-ser2>Pular</button>
+                            <button class="btn success" id="save-ser2">Salvar Ser 2</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="summary-ser2" class="summary" style="display:none;"></div>
+            </div>
+
+            <div id="summary-final" class="summary" style="display:none;"></div>
+        </div>
+    </div>
+<script>
+    // Utilidades de wizard
+    function setupWizard(prefix, totalSteps, barId) {
+        var current = 0;
+        var steps = document.querySelectorAll('[data-step-' + prefix + ']');
+        var bar = document.getElementById(barId);
+        function update() {
+            steps.forEach(function(s) { s.classList.remove('active'); });
+            var active = document.querySelector('[data-step-' + prefix + '="' + current + '"]');
+            if (active) active.classList.add('active');
+            var pct = ((current) / (totalSteps - 1)) * 100;
+            if (bar) bar.style.width = pct + '%';
+        }
+        function next() { if (current < totalSteps - 1) { current++; update(); } }
+        function prev() { if (current > 0) { current--; update(); } }
+
+        document.querySelectorAll('[data-next-' + prefix + ']').forEach(function(btn){ btn.addEventListener('click', next); });
+        document.querySelectorAll('[data-prev-' + prefix + ']').forEach(function(btn){ btn.addEventListener('click', prev); });
+        document.querySelectorAll('[data-skip-' + prefix + ']').forEach(function(btn){ btn.addEventListener('click', next); });
+        update();
+        return { next: next, prev: prev, getStep: function(){ return current; }, setStep: function(n){ current=n; update(); } };
+    }
+
+    // Leitura de sliders
+    var ser1Range = document.getElementById('ser1-idade');
+    var ser1RangeOut = document.getElementById('ser1-idade-out');
+    if (ser1Range && ser1RangeOut) {
+        ser1Range.addEventListener('input', function(){ ser1RangeOut.textContent = ser1Range.value; });
+    }
+    var ser2Range = document.getElementById('ser2-idade');
+    var ser2RangeOut = document.getElementById('ser2-idade-out');
+    if (ser2Range && ser2RangeOut) {
+        ser2Range.addEventListener('input', function(){ ser2RangeOut.textContent = ser2Range.value; });
+    }
+
+    // Inicialização dos wizards
+    var wiz1 = setupWizard('ser1', 6, 'bar-ser1');
+    var wiz2 = setupWizard('ser2', 7, 'bar-ser2');
+
+    // Salvar Ser 1
+    var save1 = document.getElementById('save-ser1');
+    if (save1) {
+        save1.addEventListener('click', function(){
+            var ser1 = {
+                tipo: 'humano',
+                genero: document.getElementById('ser1-genero').value || null,
+                idade: document.getElementById('ser1-idade').value || null,
+                altura_cm: document.getElementById('ser1-altura').value || null,
+                peso_kg: document.getElementById('ser1-peso').value || null,
+                vestimenta: document.getElementById('ser1-vestimenta').value || null
+            };
+            var sum1 = document.getElementById('summary-ser1');
+            sum1.style.display = 'block';
+            sum1.textContent = 'Ser 1 (Humano) salvo:\n' + JSON.stringify(ser1, null, 2);
+            // habilitar Ser 2
+            var wiz2El = document.getElementById('wizard-ser2');
+            if (wiz2El) wiz2El.style.display = 'block';
+            // rolar para o Ser 2
+            setTimeout(function(){ wiz2El.scrollIntoView({ behavior: 'smooth' }); }, 150);
+        });
+    }
+
+    // Salvar Ser 2
+    var save2 = document.getElementById('save-ser2');
+    if (save2) {
+        save2.addEventListener('click', function(){
+            var ser1Txt = document.getElementById('summary-ser1').textContent;
+            var ser1Json = {};
+            try {
+                var start = ser1Txt.indexOf('{');
+                ser1Json = JSON.parse(ser1Txt.slice(start));
+            } catch(e) {}
+
+            var ser2 = {
+                tipo: document.getElementById('ser2-tipo').value || 'animal',
+                especie: document.getElementById('ser2-especie').value || null,
+                raca: document.getElementById('ser2-raca').value || null,
+                porte: document.getElementById('ser2-porte').value || null,
+                cor: document.getElementById('ser2-cor').value || null,
+                idade: document.getElementById('ser2-idade').value || null,
+                pelagem: document.getElementById('ser2-pelagem').value || null,
+                acessorios: document.getElementById('ser2-acessorios').value || null
+            };
+            var sum2 = document.getElementById('summary-ser2');
+            sum2.style.display = 'block';
+            sum2.textContent = 'Ser 2 (Animal) salvo:\n' + JSON.stringify(ser2, null, 2);
+
+            var final = document.getElementById('summary-final');
+            final.style.display = 'block';
+            final.textContent = 'Resumo Final:\n' + JSON.stringify({ ser1: ser1Json, ser2: ser2 }, null, 2);
+            setTimeout(function(){ final.scrollIntoView({ behavior: 'smooth' }); }, 150);
+        });
+    }
+</script>
+</body>
+</html>

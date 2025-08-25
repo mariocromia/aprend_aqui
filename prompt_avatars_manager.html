@@ -1,0 +1,52 @@
+<!-- GERENCIADOR DE AVATARES NO PROMPT -->
+<div class="prompt-avatars-manager" id="prompt-avatars-manager">
+    <div class="prompt-avatars-header">
+        <h3 class="prompt-avatars-title">
+            <i class="material-icons">people</i>
+            Avatares no Prompt
+            <span class="avatars-count" id="prompt-avatars-count">0</span>
+        </h3>
+        <div class="prompt-avatars-actions">
+            <button class="btn-icon" id="clear-all-avatars" title="Remover todos os avatares">
+                <i class="material-icons">clear_all</i>
+            </button>
+            <button class="btn-icon" id="toggle-prompt-avatars" title="Expandir/Recolher">
+                <i class="material-icons">expand_less</i>
+            </button>
+        </div>
+    </div>
+    
+    <div class="prompt-avatars-content" id="prompt-avatars-content">
+        <!-- Lista de avatares adicionados -->
+        <div class="prompt-avatars-list" id="prompt-avatars-list">
+            <!-- Avatares serão adicionados aqui dinamicamente -->
+        </div>
+        
+        <!-- Estado vazio -->
+        <div class="prompt-avatars-empty" id="prompt-avatars-empty">
+            <div class="empty-icon">
+                <i class="material-icons">person_add</i>
+            </div>
+            <p>Nenhum avatar adicionado ao prompt</p>
+            <small>Use o gerenciador de avatares para adicionar personagens</small>
+        </div>
+        
+        <!-- Visualização do prompt gerado -->
+        <div class="prompt-preview-section" id="prompt-preview-section" style="display: none;">
+            <h4>Prompt Combinado</h4>
+            <div class="combined-prompt-display" id="combined-prompt-display">
+                <!-- Prompt combinado será gerado aqui -->
+            </div>
+            <div class="prompt-actions">
+                <button class="btn-small btn-outline" id="regenerate-combined-prompt">
+                    <i class="material-icons">refresh</i>
+                    Regenerar
+                </button>
+                <button class="btn-small btn-primary" id="copy-combined-prompt">
+                    <i class="material-icons">content_copy</i>
+                    Copiar Prompt
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

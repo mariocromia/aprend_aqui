@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Caminho de Câmara 2D Simplificado</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        #app-container {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: 100%;
+        }
+
+        #canvas-container {
+            flex-grow: 1;
+            position: relative;
+        }
+
+        #myCanvas {
+            background-color: #2a2a2a;
+            border-radius: 10px;
+        }
+
+        .controls-panel {
+            width: 350px;
+            background-color: #2a2a2a;
+            padding: 20px;
+            box-sizing: border-box;
+            border-radius: 10px;
+            margin: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #4a4a4a;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background-color: #6a6a6a;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            border-bottom: 1px solid #4a4a4a;
+            padding-bottom: 5px;
+        }
+
+        .info-text {
+            font-size: 14px;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .input-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .input-row label {
+            flex-grow: 1;
+        }
+
+        .input-row input {
+            width: 80px;
+            padding: 5px;
+            background-color: #1a1a1a;
+            color: #fff;
+            border: 1px solid #555;
+            border-radius: 4px;
+        }
+
+        .keyframe-list {
+            max-height: 250px;
+            overflow-y: auto;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+
+        .keyframe-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #3a3a3a;
+        }
+        
+        .keyframe-item:last-child {
+            border-bottom: none;
+        }
+
+        .keyframe-item .coords {
+            display: flex;
+            gap: 10px;
+            font-family: monospace;
+        }
+        
+        #output-area {
+            width: 100%;
+            height: 150px;
+            background-color: #111;
+            border: 1px solid #4a4a4a;
+            border-radius: 8px;
+            padding: 10px;
+            box-sizing: border-box;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+            overflow-y: auto;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app-container">
+    <div id="canvas-container">
+        <canvas id="myCanvas"></canvas>
+    </div>
+    <div class="controls-panel">
+        <h2>Controles</h2>
+        <div class="info-text">
+            Clique no canvas para adicionar pontos para a **Câmera**. Segure **Shift** e clique para adicionar pontos para o **Alvo**.
+        </div>
+        
+        <div class="input-group">
+            <div class="input-row">
+                <label for="cameraHeightInput">Altura da Câmera (Y):</label>
+                <input type="number" id="cameraHeightInput" value="1.5" step="0.1">
+            </div>
+            <div class="input-row">
+                <label for="lookAtHeightInput">Altura do Alvo (Y):</label>
+                <input type="number" id="lookAtHeightInput" value="1.0" step="0.1">
+            </div>
+            <div class="input-row">
+                <label for="segmentTimeInput">Tempo por Segmento (s):</label>
+                <input type="number" id="segmentTimeInput" value="2.0" step="0.1">
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button id="addExampleButton">Adicionar Exemplo</button>
+            <button id="playButton">Reproduzir Animação</button>
+            <button id="pauseButton">Pausar Animação</button>
+            <button id="resetButton">Reiniciar</button>
+        </div>
+        
+        <div class="section-title">Pontos de Controlo</div>
+        <div class="keyframe-list" id="keyframe-list-container">
+            <!-- Pontos serão adicionados aqui -->
+        </div>
+
+        <button id="generateButton">Gerar Coordenadas</button>
+        <h3>Dados de Posição</h3>
+        <textarea id="output-area" readonly></textarea>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('myCanvas');
+    const ctx = canvas.getContext('2d');
+    const controlsPanel = document.querySelector('.controls-panel');
+    const keyframeListContainer = document.getElementById('keyframe-list-container');
+    const outputArea = document.getElementById('output-area');
+    const cameraHeightInput = document.getElementById('cameraHeightInput');
+    const lookAtHeightInput = document.getElementById('lookAtHeightInput');
+    const segmentTimeInput = document.getElementById('segmentTimeInput');
+    const addExampleButton = document.getElementById('addExampleButton');
+    const playButton = document.getElementById('playButton');
+    const pauseButton = document.getElementById('pauseButton');
+    const resetButton = document.getElementById('resetButton');
+    const generateButton = document.getElementById('generateButton');
+
+    let cameraPoints = [];
+    let lookAtPoints = [];
+    let isAnimating = false;
+    let animationProgress = 0;
+    let animationFrameId;
+
+    const scale = 10; // Pixels por unidade
+    const gridSize = 50; // Tamanho total da grelha
+
+    function setupCanvas() {
+        canvas.width = window.innerWidth - controlsPanel.clientWidth - 40;
+        canvas.height = window.innerHeight - 20;
+        draw();
+    }
+    
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#2a2a2a';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Desenhar a grelha
+        ctx.strokeStyle = '#3a3a3a';
+        ctx.lineWidth = 0.5;
+        const gridStep = scale * 5;
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+
+        for (let x = -centerX; x <= centerX; x += gridStep) {
+            ctx.beginPath();
+            ctx.moveTo(centerX + x, 0);
+            ctx.lineTo(centerX + x, canvas.height);
+            ctx.stroke();
+        }
+        for (let y = -centerY; y <= centerY; y += gridStep) {
+            ctx.beginPath();
+            ctx.moveTo(0, centerY + y);
+            ctx.lineTo(canvas.width, centerY + y);
+            ctx.stroke();
+        }
+
+        // Desenhar os eixos
+        ctx.strokeStyle = '#6a6a6a';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(0, centerY);
+        ctx.lineTo(canvas.width, centerY);
+        ctx.moveTo(centerX, 0);
+        ctx.lineTo(centerX, canvas.height);
+        ctx.stroke();
+
+        // Desenhar o caminho da câmara e os pontos
+        if (cameraPoints.length > 0) {
+            ctx.strokeStyle = '#ff5722';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(cameraPoints[0].x * scale + centerX, -cameraPoints[0].y * scale + centerY);
+            for (let i = 1; i < cameraPoints.length; i++) {
+                ctx.lineTo(cameraPoints[i].x * scale + centerX, -cameraPoints[i].y * scale + centerY);
+            }
+            ctx.stroke();
+
+            for (const point of cameraPoints) {
+                const screenX = point.x * scale + centerX;
+                const screenY = -point.y * scale + centerY;
+                ctx.fillStyle = '#ff5722';
+                ctx.beginPath();
+                ctx.arc(screenX, screenY, 4, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+        }
+        
+        // Desenhar o caminho do alvo e os pontos
+        if (lookAtPoints.length > 0) {
+            ctx.strokeStyle = '#00ff00';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(lookAtPoints[0].x * scale + centerX, -lookAtPoints[0].y * scale + centerY);
+            for (let i = 1; i < lookAtPoints.length; i++) {
+                ctx.lineTo(lookAtPoints[i].x * scale + centerX, -lookAtPoints[i].y * scale + centerY);
+            }
+            ctx.stroke();
+
+            for (const point of lookAtPoints) {
+                const screenX = point.x * scale + centerX;
+                const screenY = -point.y * scale + centerY;
+                ctx.fillStyle = '#00ff00';
+                ctx.beginPath();
+                ctx.arc(screenX, screenY, 4, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+        }
+    }
+
+    function animate() {
+        animationFrameId = requestAnimationFrame(animate);
+
+        if (!isAnimating || cameraPoints.length < 2 || lookAtPoints.length < 2) {
+            draw();
+            return;
+        }
+
+        const camPos = getPointOnPath(cameraPoints, animationProgress);
+        const lookAtPos = getPointOnPath(lookAtPoints, animationProgress);
+        
+        draw();
+
+        const camScreenX = camPos.x * scale + canvas.width / 2;
+        const camScreenY = -camPos.y * scale + canvas.height / 2;
+        const lookAtScreenX = lookAtPos.x * scale + canvas.width / 2;
+        const lookAtScreenY = -lookAtPos.y * scale + canvas.height / 2;
+        
+        const cameraHeight = parseFloat(cameraHeightInput.value);
+        const lookAtHeight = parseFloat(lookAtHeightInput.value);
+        const dist3D = Math.sqrt(Math.pow(lookAtPos.x - camPos.x, 2) + Math.pow(lookAtHeight - cameraHeight, 2) + Math.pow(lookAtPos.y - camPos.y, 2)).toFixed(2);
+        
+        // Desenhar a linha de visão
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(camScreenX, camScreenY);
+        ctx.lineTo(lookAtScreenX, lookAtScreenY);
+        ctx.stroke();
+
+        // Desenhar ícone da câmara (triângulo)
+        ctx.fillStyle = '#ff5722';
+        const angle = Math.atan2(lookAtScreenY - camScreenY, lookAtScreenX - camScreenX);
+        ctx.beginPath();
+        ctx.moveTo(camScreenX + 8 * Math.cos(angle), camScreenY + 8 * Math.sin(angle));
+        ctx.lineTo(camScreenX + 8 * Math.cos(angle + 2 * Math.PI / 3), camScreenY + 8 * Math.sin(angle + 2 * Math.PI / 3));
+        ctx.lineTo(camScreenX + 8 * Math.cos(angle + 4 * Math.PI / 3), camScreenY + 8 * Math.sin(angle + 4 * Math.PI / 3));
+        ctx.closePath();
+        ctx.fill();
+        
+        ctx.font = '12px Inter';
+        ctx.fillStyle = '#ff5722';
+        ctx.textAlign = 'center';
+        ctx.fillText(`Câmera`, camScreenX, camScreenY - 15);
+
+        // Desenhar ícone do alvo (círculo)
+        ctx.fillStyle = '#00ff00';
+        ctx.beginPath();
+        ctx.arc(lookAtScreenX, lookAtScreenY, 7, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        ctx.font = '12px Inter';
+        ctx.fillStyle = '#00ff00';
+        ctx.textAlign = 'center';
+        ctx.fillText(`Alvo`, lookAtScreenX, lookAtScreenY - 15);
+        
+        // Atualizar a área de saída com dados em tempo real
+        outputArea.value = `Tempo: ${(animationProgress * parseFloat(segmentTimeInput.value) * (cameraPoints.length - 1)).toFixed(2)}s\n` +
+                          `Distância: ${dist3D}\n` +
+                          `Pos. Câmera: X: ${camPos.x.toFixed(2)}, Y: ${cameraHeight.toFixed(2)}, Z: ${camPos.y.toFixed(2)}\n` +
+                          `Pos. Alvo: X: ${lookAtPos.x.toFixed(2)}, Y: ${lookAtHeight.toFixed(2)}, Z: ${lookAtPos.y.toFixed(2)}`;
+
+        animationProgress += (1 / 60) / (parseFloat(segmentTimeInput.value) * (cameraPoints.length - 1));
+        if (animationProgress > 1) {
+            animationProgress = 0;
+        }
+    }
+    
+    function getPointOnPath(pathPoints, t) {
+        if (pathPoints.length < 2) return { x: 0, y: 0 };
+        
+        const totalSegments = pathPoints.length - 1;
+        const segmentIndex = Math.floor(t * totalSegments);
+        const segmentProgress = (t * totalSegments) - segmentIndex;
+        
+        const startPoint = pathPoints[segmentIndex];
+        const endPoint = pathPoints[Math.min(segmentIndex + 1, totalSegments)];
+
+        const x = startPoint.x + segmentProgress * (endPoint.x - startPoint.x);
+        const y = startPoint.y + segmentProgress * (endPoint.y - startPoint.y);
+        
+        return { x, y };
+    }
+    
+    function updateKeyframeList() {
+        keyframeListContainer.innerHTML = '';
+        
+        cameraPoints.forEach((point, i) => {
+            const item = document.createElement('div');
+            item.className = 'keyframe-item';
+            item.style.color = '#ff5722';
+            item.innerHTML = `
+                <span>Câmera ${i + 1}</span>
+                <div class="coords">X: ${point.x.toFixed(2)}, Y: ${parseFloat(cameraHeightInput.value).toFixed(2)}, Z: ${point.y.toFixed(2)}</div>
+            `;
+            keyframeListContainer.appendChild(item);
+        });
+
+        lookAtPoints.forEach((point, i) => {
+            const item = document.createElement('div');
+            item.className = 'keyframe-item';
+            item.style.color = '#00ff00';
+            item.innerHTML = `
+                <span>Alvo ${i + 1}</span>
+                <div class="coords">X: ${point.x.toFixed(2)}, Y: ${parseFloat(lookAtHeightInput.value).toFixed(2)}, Z: ${point.y.toFixed(2)}</div>
+            `;
+            keyframeListContainer.appendChild(item);
+        });
+    }
+
+    function resetApp() {
+        isAnimating = false;
+        animationProgress = 0;
+        cameraPoints = [];
+        lookAtPoints = [];
+        cameraHeightInput.value = '1.5';
+        lookAtHeightInput.value = '1.0';
+        segmentTimeInput.value = '2.0';
+        draw();
+        updateKeyframeList();
+        outputArea.value = 'Adicione pontos para começar.';
+    }
+
+    function addExamplePaths() {
+        resetApp();
+        
+        cameraPoints = [
+            { x: -15, y: -10 },
+            { x: 15, y: -10 },
+            { x: 15, y: 10 },
+            { x: -15, y: 10 }
+        ];
+
+        lookAtPoints = [
+            { x: -15, y: 10 },
+            { x: 15, y: 10 },
+            { x: 15, y: -10 },
+            { x: -15, y: -10 }
+        ];
+        
+        draw();
+        updateKeyframeList();
+        outputArea.value = 'Exemplo de caminho adicionado. Clique em "Reproduzir Animação" para ver.';
+    }
+
+    canvas.addEventListener('click', (event) => {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = event.clientX - rect.left;
+        const mouseY = event.clientY - rect.top;
+        
+        const x = (mouseX - canvas.width / 2) / scale;
+        const y = -(mouseY - canvas.height / 2) / scale;
+        
+        if (event.shiftKey) {
+            lookAtPoints.push({ x: x, y: y });
+        } else {
+            cameraPoints.push({ x: x, y: y });
+        }
+        draw();
+        updateKeyframeList();
+        isAnimating = false;
+    });
+
+    addExampleButton.addEventListener('click', addExamplePaths);
+    playButton.addEventListener('click', () => {
+        if (cameraPoints.length < 2 || lookAtPoints.length < 2) {
+            outputArea.value = 'Adicione pelo menos 2 pontos para cada caminho para iniciar a animação.';
+            return;
+        }
+        isAnimating = true;
+        animationProgress = 0;
+    });
+    pauseButton.addEventListener('click', () => { isAnimating = false; });
+    resetButton.addEventListener('click', resetApp);
+
+    generateButton.addEventListener('click', () => {
+        if (cameraPoints.length < 2 || lookAtPoints.length < 2) {
+            outputArea.value = 'Adicione pelo menos 2 pontos para cada caminho para gerar as coordenadas.';
+            return;
+        }
+        
+        isAnimating = false;
+
+        const numSteps = 100;
+        const generatedData = [];
+        const camHeight = parseFloat(cameraHeightInput.value);
+        const lookAtHeight = parseFloat(lookAtHeightInput.value);
+        const totalTime = parseFloat(segmentTimeInput.value) * (Math.max(cameraPoints.length, lookAtPoints.length) - 1);
+
+        for (let i = 0; i < numSteps; i++) {
+            const t = i / (numSteps - 1);
+            const camPos = getPointOnPath(cameraPoints, t);
+            const lookAtPos = getPointOnPath(lookAtPoints, t);
+            
+            generatedData.push({
+                time: (t * totalTime).toFixed(2),
+                position: [camPos.x.toFixed(2), camHeight.toFixed(2), camPos.y.toFixed(2)],
+                lookAt: [lookAtPos.x.toFixed(2), lookAtHeight.toFixed(2), lookAtPos.y.toFixed(2)]
+            });
+        }
+        
+        outputArea.value = JSON.stringify(generatedData, null, 2);
+    });
+
+    window.addEventListener('resize', setupCanvas);
+
+    setupCanvas();
+    animate();
+</script>
+
+</body>
+</html>
